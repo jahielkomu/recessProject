@@ -15,13 +15,13 @@ class CreateAgentsTable extends Migration
     {
         Schema::create('agents', function (Blueprint $table) {
             $table->bigIncrements('agentid');
+            $table->string('firstName');
+            $table->string('lastName');
             $table->enum('role',['Agent','Agent head'])->default('Agent');
             $table->string('userName');
-            $table->string('Member_Id');
             $table->string('district_Id');
             $table->boolean('status');
             $table->string('signature');
-            $table->integer('payment_No')->nullable()->default('0');
             $table->timestamps();
         });
     }
@@ -36,3 +36,46 @@ class CreateAgentsTable extends Migration
         Schema::dropIfExists('agents');
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

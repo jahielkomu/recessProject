@@ -77,79 +77,116 @@
                         <a   href="/stat" style="background: #3980b5"><i class="fa fa-bar-chart-o fa-3x"></i> Statistics</a>
                     </li>	
                       <li  >
-                        <a  href="/records" style="background: #3980b5"><i class="fa fa-table fa-3x"></i> Records</a>
+                        <a  href="/record" style="background: #3980b5"><i class="fa fa-table fa-3x"></i> Records</a>
                     </li>
                     <li  >
                         <a  href="/upgrade" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> Upgrade</a>
                     </li>				
-			
+			        <li  >
+                        <a  href="/newuser" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> New record</a>
+                    </li>	
+                    <li  >
+                            <a  href="/newdist" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> New District</a>
+                        </li> 
+                </ul>
                 </ul>
                
             </div>
+          
             
+        
+            @if(session('success'))
+            
+                   <script>window.alert('{{session('success')}}')  </script>
+            @endif
         </nav>   
          <!-- /. NAV SIDE  -->
          <div id="page-wrapper" >
             <div id="page-inner">
                 <div class="row">
                     <div class="col-md-12">
-                     <h2>Payments </h2>   
+                     <h2>PAYMENTS </h2>   
                         <h5>Welcome Lwanga Aksam , Love to see you back. </h5>
                        
                     </div>
                 </div>
                  <!-- /. ROW  -->
                  <hr />
-                        
+                 @foreach ($errors->all() as $error)
+                    <div class="alert alert-danger" role="alert">
+                      <ul>  <li>{{ $error }}</li></ul>
+                    </div>
+                @endforeach 
                     <!-- /. ROW  -->
                     <div class="row">
+                      <div class="col-md-8">
+                        <caption>FUNDS REGISTRATION</caption>
+                         <form action="/newpayment" method="post"style="padding-left:100px;">
+                              {{ csrf_field() }}
+                               <div class="form-group">
+                                 <label for="">Source of funds:</label>
+                                 <input type="text"
+                                 class="form-control" name="source" id="" aria-describedby="helpId" placeholder="Enter the name of the organisation/individual ">
+                                </div>
+                                 
+                                <div class="form-group">
+                                 <label for="">Amount :</label>
+                                 <input type="number"
+                                 class="form-control" name="amount" id="" aria-describedby="helpId" placeholder="Enter the amount recieved by the organisation">
+                                </div>
+                             
+                                <div class="form-group">
+                                  <label for="">date recieved:</label>
+                                  <input type="date" 
+                                  class="form-control" name="date" id="" aria-describedby="helpId" placeholder="Enter the month the amount is recieved" >
+
+                                </div>
+                                <div class="form-group">
+                                 <label for="">District of the sponsor</label>
+                                 <input type="text"
+                                 class="form-control" name="district" id="" aria-describedby="helpId" placeholder="district of the sponsor">
+                                 <small id="helpId" class="form-text text-muted">This field is optional</small>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary" name="submit">Submit</button>
+                          </form>
+                          <br><br>
+                       </div>
                     
                         <div class="col-md-7" style="width: 900px">
                           <div class="panel panel-default" style="width: 900px">
-                              <div class="panel-heading" style="width: 900px">
-                               Selects District to view <select name="district" id="" style="float: right">
-                                 <option value="">Wakiso</option>
-                                 <option value="">Kampala</option>
-                               </select>
-                            </div>
-                            <h2>Payroll</h2>
+                            <h2 style="text-align: center">Payroll statement as {{date('d-m-y')}}</h2>
                             <div class="table-responsive">
-                                    <table class="table">
+                                    <table class="table" border="4">
                                         <tr style="background-color: #3980f8;color:#fff">
-                                            <th>ID</th>
-                                            <th>Name</th>
+                                               
+                                            <th>role </th>
                                             <th>Amount (UGX)</th>
-                                            <th>Status</th>
+                                            
                                         </tr>
                                         <tr>
-                                            <td>01</td>
-                                            <td>Oguma</td>
-                                            <td>200,000</td>
-                                            <td><input type="checkbox" name="" id=""></td>
+                                            <td>Administrator</td>
+                                            <td>{{number_format($amountagent/2,0)}}</td>
                                         </tr>
                                         <tr>
-                                                <td>02</td>
-                                                <td>Dumba</td>
-                                                <td>350,000</td>
-                                                <td><input type="checkbox" name="" id=""></td>
+                                                <td>Agent head</td>
+                                                <td>{{number_format($amountagent*(7/4),0)}}</td>
+                                        
                                         </tr>
                                         <tr>
-                                                <td>03</td>
-                                                <td>Opio</td>
-                                                <td>100,000</td>
-                                                <td><input type="checkbox" name="" id=""></td>
+                                                <td>Agent</td>
+                                                <td>{{number_format($amountagent,0)}}</td>
+                                                
                                         </tr>
                                         <tr>
-                                                <td>04</td>
-                                                <td>Kasule</td>
-                                                <td>200,000</td>
-                                                <td><input type="checkbox" name="" id=""></td>
+                                                <td>Agent with highest enrollment</td>
+                                                <td>{{number_format(2*$amountagent,0)}}</td>
+                                                
                                         </tr>
-                                        <tr>
-                                                <td>05</td>
-                                                <td>Mutyaba</td>
-                                                <td>200,000</td>
-                                                <td><input type="checkbox" name="" id=""></td>
+                                        <tr>      
+                                                <td>Agent head with highest enrollment</td>
+                                                <td>{{number_format((7/2)*$amountagent,0)}}</td>
+                                                
                                         </tr>
                                     </table>
                                 </div>
@@ -160,6 +197,7 @@
 
                     <!-- /. ROW  -->
 
+                    
     </div>
              <!-- /. PAGE INNER  -->
             </div>

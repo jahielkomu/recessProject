@@ -18,8 +18,7 @@ class CreateTreasuriesTable extends Migration
             $table->integer('Amount')->default('2,000,000');
             $table->string('source');
             $table->date('date');
-            $table->string('district');
-            $table->string('Admin_Id');
+            $table->string('district')->nullable();
             $table->timestamps();
         });
     }

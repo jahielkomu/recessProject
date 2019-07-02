@@ -83,7 +83,13 @@
                     <li  >
                         <a  href="/upgrade" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> Upgrade</a>
                     </li>				
-			
+			        <li  >
+                        <a  href="/newuser" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> New record</a>
+                    </li>	
+                    <li  >
+                            <a  href="/newdist" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> New Dist</a>
+                        </li>
+                </ul>
                 </ul>
                
             </div>
@@ -109,8 +115,11 @@
                     <i class="fa fa-envelope-o"></i>
                 </span>
                 <div class="text-box" >
-                    <p class="main-text">{{$result}} Enrolled</p>
-                    <p class="text-muted">New members</p>
+                    <p class="main-text">
+                    <!-- displaying agents enrolled -->
+                      {{$results}}
+                     Enrolled</p>
+                    <p class="text-muted">Members</p>
                 </div>
              </div>
 		     </div>
@@ -121,7 +130,8 @@
                     <i class="fa fa-bars"></i>
                 </span>
                 <div class="text-box" >
-                    <p class="main-text">30 Agents</p>
+                         <!-- displaying all agents available  -->
+                    <p class="main-text">{{$agents}} Agents</p>
                     <p class="text-muted">Available</p>
                 </div>
              </div>
@@ -132,7 +142,12 @@
                     <i class="fa fa-bell-o"></i>
                 </span>
                 <div class="text-box" >
-                    <p class="main-text">40 Districts</p>
+                    <p class="main-text">
+                    <!-- displaying district with no agents -->
+                    @foreach($district as $dist)
+                    {{$dist->nums}}
+                    @endforeach
+                     Districts</p>
                     <p class="text-muted">With no agent</p>
                 </div>
              </div>
@@ -143,7 +158,11 @@
                     <i class="fa fa-rocket"></i>
                 </span>
                 <div class="text-box" >
-                    <p class="main-text">5 Member</p>
+                    <p class="main-text">
+                
+                      {{$co}}
+                    
+                      Member</p>
                     <p class="text-muted">Qualifed upgrade</p>
                 </div>
              </div>

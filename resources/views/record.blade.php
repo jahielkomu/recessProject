@@ -78,16 +78,20 @@
                         <a   href="/stat" style="background: #3980b5"><i class="fa fa-bar-chart-o fa-3x"></i> Statistics</a>
                     </li>	
                       <li  >
-                        <a  href="/records" style="background: #104075;"><i class="fa fa-table fa-3x"></i> Records</a>
+                        <a  href="/record" style="background: #104075;"><i class="fa fa-table fa-3x"></i> Records</a>
                     </li>
                     <li  >
                         <a  href="/upgrade" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> Upgrade</a>
                     </li>				
-			
+			        <li  >
+                        <a  href="/newuser" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> New record</a>
+                    </li>	
+                    <li  >
+                            <a  href="/newdist" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> New District</a>
+                        </li>
                 </ul>
                
             </div>
-            
         </nav> 
         <!-- /. NAV SIDE  -->
         <div id="page-wrapper" >
@@ -103,7 +107,7 @@
                  <hr />
                
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-6">
                     <!-- Advanced Tables -->
                     <div class="panel panel-default">
                         <div class="">
@@ -133,32 +137,20 @@
                                             <th>AgentID</th>
                                             <th>Agents Name</th>
                                             <th>District</th>
-                                            <th>No. of enrolls</th>
+                                            <!-- <th>No. of enrolls</th> -->
                                             <th>sign</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>Otto</td>
-                                            <td>Wakiso</td>
-                                            <td>15</td>
-                                            <td>M</td>
-                                        </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td>Jacob</td>
-                                            <td>Kampala</td>
-                                            <td>27</td>
-                                            <td>J</td>
-                                        </tr>
-                                        <tr>
-                                            <td>3</td>
-                                            <td>Oguma</td>
-                                            <td>Gulu</td>
-                                            <td>34</td>
-                                            <td>O</td>
-                                        </tr>
+                                        @foreach($agentstable as $row)
+                                       <tr>     
+                                          <td>{{$row->agentid}}</td>
+                                          <td>{{$row->userName}}</td>
+                                          <td>{{ $row->name}}</td>
+                                          <td>{{$row->signature}}</td>
+                                       </tr>
+                                       @endforeach
+                                        
                                     </tbody>
                                 </table>
                             </div>
@@ -180,32 +172,20 @@
                                             <th>ID</th>
                                             <th>Name</th>
                                             <th>Gender</th>
-                                            <th>District</th>
-                                            <th>Recom</th>
                                             <th>Recomended</th>
-                                            <th>sign</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>Opio Ema</td>
-                                            <td>Male</td>
-                                            <td>Ibanda</td>
-                                            <td>Komu</td>
-                                            <td>26</td>
-                                            <td>OE</td>
-                                        </tr>
-                                        
-                                            <tr>
-                                                    <td>1</td>
-                                                    <td>Male John</td>
-                                                    <td>M</td>
-                                                    <td>Ibanda</td>
-                                                    <td>Komu</td>
-                                                    <td>26</td>
-                                                    <td>MJ</td>
-                                                </tr>
+                                  
+                                    @foreach($membertable as $row)
+                                       <tr>     
+                                          <td>{{$row->districtNO}}</td>
+                                          <td>{{$row->fname}}</td>
+                                          <td>{{ $row->gender}}</td>
+                                          <td>{{ $row->recommender}}</td>
+                                       </tr>
+                                       @endforeach
+                                            
                                         
                                     </tbody>
                                 </table>
@@ -217,6 +197,10 @@
             </div>
                 <!-- /. ROW  -->
             <div class="row">
+
+
+
+            
                 <div class="col-md-6">
                       <!--    Striped Rows Table  -->
                     <div class="panel panel-default">
@@ -231,28 +215,17 @@
                                             <th>ID</th>
                                             <th>First Name</th>
                                             <th>District</th>
-                                            <th>subjects</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>Mark</td>
-                                            <td>Wakiso</td>
-                                            <td>10</td>
-                                        </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td>Jacob</td>
-                                            <td>Kampala</td>
-                                            <td>27</td>
-                                        </tr>
-                                        <tr>
-                                            <td>3</td>
-                                            <td>Opio</td>
-                                            <td>Gulu</td>
-                                            <td>14</td>
-                                        </tr>
+                                    @foreach($headtable as $row)
+                                       <tr>     
+                                          <td>{{$row->agentid}}</td>
+                                          <td>{{$row->userName}}</td>
+                                          <td>{{ $row->name}}</td>
+                                       </tr>
+                                       @endforeach
+                                        
                                     </tbody>
                                 </table>
                             </div>
@@ -274,135 +247,29 @@
                                         <tr>
                                             <th>Code</th>
                                             <th>Name</th>
-                                            <th>Number of agents</th>
+                                            <!-- <th>Number of agents</th> -->
                                             
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>01</td>
-                                            <td>Kampala</td>
-                                            <td>30</td>
-                                            
-                                        </tr>
-                                        <tr>
-                                            <td>02</td>
-                                            <td>Wakiso</td>
-                                            <td>20</td>
-                                            
-                                        </tr>
-                                        <tr>
-                                            <td>03</td>
-                                            <td>Gulu</td>
-                                            <td>8</td>
-                                            <td></td>
-                                        </tr>
+                                        @foreach($districttable as $row)
+                                       <tr>     
+                                          <td>{{$row->id}}</td>
+                                          <td>{{ $row->name}}</td>
+                                       </tr>
+                                       @endforeach
+                                        
+                                
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
                      <!--  End  Bordered Table  -->
-                </div>
-            </div>
-                <!-- /. ROW  -->
-            <div class="row">
-                <div class="col-md-6">
-                     <!--    Hover Rows  -->
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Hover Rows
-                        </div>
-                        <div class="panel-body">
-                            <div class="table-responsive">
-                                <table class="table table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>First Name</th>
-                                            <th>Last Name</th>
-                                            <th>Username</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>Mark</td>
-                                            <td>Otto</td>
-                                            <td>@mdo</td>
-                                        </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td>Jacob</td>
-                                            <td>Thornton</td>
-                                            <td>@fat</td>
-                                        </tr>
-                                        <tr>
-                                            <td>3</td>
-                                            <td>Larry</td>
-                                            <td>the Bird</td>
-                                            <td>@twitter</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End  Hover Rows  -->
-                </div>
-                <div class="col-md-6">
-                     <!--    Context Classes  -->
-                    <div class="panel panel-default">
-                       
-                        <div class="panel-heading">
-                            Context Classes
-                        </div>
-                        
-                        <div class="panel-body">
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>First Name</th>
-                                            <th>Last Name</th>
-                                            <th>Username</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr class="success">
-                                            <td>1</td>
-                                            <td>Mark</td>
-                                            <td>Otto</td>
-                                            <td>@mdo</td>
-                                        </tr>
-                                        <tr class="info">
-                                            <td>2</td>
-                                            <td>Jacob</td>
-                                            <td>Thornton</td>
-                                            <td>@fat</td>
-                                        </tr>
-                                        <tr class="warning">
-                                            <td>3</td>
-                                            <td>Larry</td>
-                                            <td>the Bird</td>
-                                            <td>@twitter</td>
-                                        </tr>
-                                        <tr class="danger">
-                                            <td>4</td>
-                                            <td>John</td>
-                                            <td>Smith</td>
-                                            <td>@jsmith</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <!--  end  Context Classes  -->
-                </div>
-            </div>
-                <!-- /. ROW  -->
+
+          
+             
         </div>
                
     </div>

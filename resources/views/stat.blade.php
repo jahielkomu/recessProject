@@ -17,10 +17,12 @@
             <link href="assets/css/custom.css" rel="stylesheet" />
 
         <!-- Styles -->
+        
         <style>
           
           
         </style>
+        {!! Charts::styles() !!}
     </head>
     <body>
       <div id="wrapper">
@@ -78,10 +80,16 @@
                       <li  >
                         <a  href="/record" style="background: #3980b5"><i class="fa fa-table fa-3x"></i> Records</a>
                     </li>
-                    <li  >
+                    <li>
                         <a  href="/upgrade" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> Upgrade</a>
                     </li>				
-			
+			        <li>
+                      <a  href="/newuser" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> New record</a>
+                    </li>
+                    <li>
+                      <a  href="/newdist" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> New District</a>
+                    </li>	
+                </ul>
                 </ul>
                
             </div>
@@ -100,41 +108,44 @@
                  <!-- /. ROW  -->
                  <hr />
              
-                <div class="row"> 
+                  <div class="row">                     
+                      
+                    <div class="col-md-12 col-sm-12 col-xs-12">                     
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                Agents registration
+                            </div>
+                            <div class="panel-body">
+                                <div class="app" > 
+                                    <center>
+                  
+                                      {!! $chart->html() !!}
+                                  
+                                   </center>
+                                  </div> 
+                            </div>
+                        </div>            
                     
-                      
-                               <div class="col-md-6 col-sm-12 col-xs-12">                     
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Graph showing growth of members with agents
-                        </div>
-                        <div class="panel-body">
-                            <div id="morris-bar-chart"></div>
-                        </div>
-                    </div>            
-                </div>
-                      <div class="col-md-6 col-sm-12 col-xs-12">                     
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Income
-                        </div>
-                        <div class="panel-body">
-                            <div id="morris-area-chart"></div>
-                        </div>
-                    </div>            
-                </div> 
-                
-           </div>
+                    
+               </div>
+                     <!-- /. ROW  -->
+        </div>
                  <!-- /. ROW  -->
-                <div class="row">                     
+             <div class="row">                     
                       
-                               <div class="col-md-6 col-sm-12 col-xs-12">                     
+                <div class="col-md-12 col-sm-12 col-xs-12">                     
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            Sales
+                            members Enrollment
                         </div>
                         <div class="panel-body">
-                            <div id="morris-donut-chart"></div>
+                            <div class="app" > 
+                                <center>
+         
+                                  {{-- {!! $chart2->html() !!} --}}
+                              
+                               </center>
+                              </div> 
                         </div>
                     </div>            
                 
@@ -143,6 +154,9 @@
                  <!-- /. ROW  -->
     </div>
              <!-- /. PAGE INNER  -->
+            
+        
+
             </div>
          <!-- /. PAGE WRAPPER  -->
         </div>
@@ -159,6 +173,10 @@
     <script src="assets/js/morris/morris.js"></script>
       <!-- CUSTOM SCRIPTS -->
     <script src="assets/js/custom.js"></script>
+     {!! Charts::scripts() !!}
+
+     {!! $chart->script() !!}
+     {!! $chart2->script() !!}
     
    
 </body>

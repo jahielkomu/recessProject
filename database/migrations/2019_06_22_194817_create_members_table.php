@@ -17,6 +17,7 @@ class CreateMembersTable extends Migration
             $table->bigIncrements('member_Id');
             $table->string('name');
             $table->string('recommender');
+            $table->string('gender');
             $table->integer('agentid');
             $table->timestamps();
         });

@@ -61,7 +61,7 @@
                 <ul class="nav" id="main-menu" style="background: #3980b5">
 				<li class="text-center" style="background: #3980b5">
                     <img src="assets/img/find_user.png" class="user-image img-responsive"/>
-					</li>
+				</li>
 				
 					
                     <li style="background-color: rgb(0, 85, 182)">
@@ -83,7 +83,13 @@
                     <li  >
                         <a  href="/upgrade" style="background: #104075"><i class="fa fa-edit fa-3x"></i> Upgrade</a>
                     </li>				
-			
+                    <li  >
+                        <a  href="/newuser" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> New record</a>
+                    </li>	
+                    <li >
+                        <a  href="/newdist" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> New District</a>
+                    </li>
+                </ul>
                 </ul>
                
             </div>
@@ -110,43 +116,15 @@
                                 <tr>
                                 <th>Id</th>
                                 <th>Name</th>
-                                <th>Registeration Date</th>
-                                <th>Recomender</th>
-                                <th>District</th>
-                                <th>sign</th>
+                                <th>gender</th>
                                 </tr>
-                                <tr>
-                                    <td>WK001</td>
-                                    <td>Tendo J. Caleb</td>
-                                    <td>09 May 2019</td>
-                                    <td>Komu</td>
-                                    <td>Nakaseke</td>
-                                    <td>TC</td>
-                                </tr>
-                                <tr>
-                                    <td>KL005</td>
-                                    <td>T. Jecniah</td>
-                                    <td>07 June 2019</td>
-                                    <td>Komu</td>
-                                    <td>Wakiso</td>
-                                    <td>TJ</td>
-                                </tr>
-                                <tr>
-                                    <td>KO001</td>
-                                    <td>Kom Komu</td>
-                                    <td>05 June 2019</td>
-                                    <td>Aksam</td>
-                                    <td>Kampala</td>
-                                    <td>KK</td>
-                                </tr>
-                                <tr>
-                                    <td>KT001</td><!--KT for Kitugum-->
-                                    <td>Oboth Julius</td>
-                                    <td>24 July 2019</td>
-                                    <td>Aksam</td>
-                                    <td>Kalangala</td>
-                                    <td>OJ</td>
-                                </tr>
+                                     @foreach($memberqualify as $row)
+                                       <tr>     
+                                          <td>{{$row->districtNO}}</td>
+                                          <td>{{$row->fname}}</td>
+                                          <td>{{ $row->gender}}</td>
+                                       </tr>
+                                       @endforeach
                             </table>
                         </div>
                         <script>
@@ -155,8 +133,9 @@
                                         $(this).hide();
                                     });
                                 });
-                                </script>
-                        <button onclick="rand()">Random distribute</button>
+                                </script> 
+                                <form>
+                        <button><a href="/upgrade">Random distribute</a></button>
                     </div>
                     <div class="qualify panel-body">
                         <h2>Districts available</h2>
@@ -166,39 +145,22 @@
                             <table class="table table-striped table-bordered">
                                 <tr>                                    
                                     <th>Distric number</th>
-                                    <th>Initial</th>
+                                    <!-- <th>Initial</th> -->
                                     <th>Name</th>
-                                    <th> No. of agents</th>
+                            
                                 </tr>
-                                <tr>
-                                    <td>01</td>
-                                    <td>WK</td>
-                                    <td>Wakiso</td>
-                                    <td>10</td>
-                                </tr>
-                                <tr>
-                                <tr>
-                                        <td>34</td>
-                                        <td>KA</td>
-                                        <td>Kalangala</td>
-                                        <td>2</td>
-                                </tr>
-                                <tr>
-                                        <td>02</td>
-                                        <td>KL</td>
-                                        <td>Kampala</td>
-                                        <td>15</td>
-                                </tr>
-                                <tr>
-                                        <td>09</td>
-                                        <td>MK</td>
-                                        <td>Mukono</td>
-                                        <td>3</td>
-                                </tr>
+                                @foreach($districtAvailable as $row)
+                                       <tr>     
+                                          <td>{{$row->id}}</td>
+                                          <td>{{$row->name}}</td>
+                                       </tr>
+                                       @endforeach
                             </table>
                         </div>
+                        
                     </div>
                 </div>
+                
 
 
 
