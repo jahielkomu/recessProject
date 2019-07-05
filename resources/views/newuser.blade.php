@@ -133,12 +133,6 @@
                                </div>
                                 
                                 <div class="form-group">
-                                   <label for="">Signature</label>
-                                   <input type="text"
-                                  class="form-control" name="signature" id="" aria-describedby="helpId" placeholder="Agent's signature" maxlength="1">
-                                  <small id="helpId" class="form-text text-muted">single character</small>
-                                </div>
-                                <div class="form-group">
                                     <label for="">Username</label>
                                     <input type="text"
                                     class="form-control" name="userName" id="" aria-describedby="helpId" placeholder="" maxlength="5">
