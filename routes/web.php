@@ -45,12 +45,15 @@ Route::get('/stat', 'HomeController@stat')->name('home');
 Route::get('/record', 'HomeController@records')->name('home');
 
 Route::get('/upgrade', 'HomeController@upgrades')->name('home');
+Route::get('/upgrade/do', 'HomeController@becomeAgent')->name('home');
 
 Route::post('/newpayment','HomeController@newpayment')->name('home');
 
 Route::post('/newuser/dis', 'HomeController@formdata1')->name('home');
 Route::post('/newuser/id', 'HomeController@formdata')->name('home');
-route::get('/dis','HomeController@changeid')->name('home');
+// changes district id to the one required .
+route::get('/dis','HomeController@changeid')->name('home'); 
+
 Route::group(['Middleware'=>'Auth'],function(){
     
     Route::get('/newuser', 'HomeController@form')->name('home');

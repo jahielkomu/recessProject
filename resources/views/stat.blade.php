@@ -113,7 +113,7 @@
                     <div class="col-md-12 col-sm-12 col-xs-12">                     
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                Agents registration
+                                Members  enrollment
                             </div>
                             <div class="panel-body">
                                 <div class="app" > 
@@ -136,13 +136,13 @@
                 <div class="col-md-12 col-sm-12 col-xs-12">                     
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            members Enrollment
+                            Wellwisher's support per month
                         </div>
                         <div class="panel-body">
                             <div class="app" > 
                                 <center>
          
-                                  {{-- {!! $chart2->html() !!} --}}
+                                  {!! $chart2->html() !!}
                               
                                </center>
                               </div> 

@@ -64,9 +64,12 @@ class HomeController extends Controller
     }
     // show the payment details
     public function payment()
-    { 
+    
+    { $date=date('m-y');
+        
         // calculating the amount of money recieved by agents ,admin agent headers
-        $amount=DB::select(DB::raw('SELECT amount from treasuries'));
+        $amount=DB::select(DB::raw("SELECT amount from treasuries "));
+        // return $amount;
         $agents= DB::table('agents')->where('role','Agent')->count();
         $agenthead= DB::table('agents')->where('role','Agent head')->count();
     
@@ -113,15 +116,15 @@ class HomeController extends Controller
         }
     else{
      
-        // foreach($gentlowenr as $lown){
-        //        // adding payment details for each agent and agent not in highest enrollment
-        //         DB::statement('INSERT INTO  payments set payment_Id=(SELECT agentid from agents where agentid='.$lown->agentid.'),paymentDate=CURRENT_TIMESTAMP,amountpaid= case when (select role from agents where agentid='.$lown->agentid.')="Agent" then '. $amountagent.' when (select role from agents WHERE agentid='.$lown->agentid.')="Agent head"  then '.($amountagent * (7/4)).' end');
+        foreach($gentlowenr as $lown){
+               // adding payment details for each agent and agent not in highest enrollment
+                DB::statement('INSERT INTO  payments set payment_Id=(SELECT agentid from agents where agentid='.$lown->agentid.'),paymentDate=CURRENT_TIMESTAMP,amountpaid= case when (select role from agents where agentid='.$lown->agentid.')="Agent" then '. $amountagent.' when (select role from agents WHERE agentid='.$lown->agentid.')="Agent head"  then '.($amountagent * (7/4)).' end');
 
-        //     }
+            }
          
-        //  foreach($genthigenr as $higenr){
-        //      // agents belonging to districts with the highest enrollment  
-        //      DB::statement('INSERT INTO  payments set payment_Id=(SELECT agentid from agents where agentid='.$higenr->agentid.'),paymentDate=CURRENT_TIMESTAMP,amountpaid= case when (select role from agents where agentid='.$higenr->agentid.')="Agent" then '. ($amountagent * 2).' when (select role from agents WHERE agentid='.$higenr->agentid.')="Agent head"  then '.($amountagent *(7/4) *2).' end');
+         foreach($genthigenr as $higenr){
+             // agents belonging to districts with the highest enrollment  
+             DB::statement('INSERT INTO  payments set payment_Id=(SELECT agentid from agents where agentid='.$higenr->agentid.'),paymentDate=CURRENT_TIMESTAMP,amountpaid= case when (select role from agents where agentid='.$higenr->agentid.')="Agent" then '. ($amountagent * 2).' when (select role from agents WHERE agentid='.$higenr->agentid.')="Agent head"  then '.($amountagent *(7/4) *2).' end');
 
             
 
@@ -133,6 +136,7 @@ class HomeController extends Controller
     return view('payment',['amountagent'=>$amountagent]);
     
 }
+    }
 
     
         // declare payment to the database 
@@ -215,21 +219,94 @@ class HomeController extends Controller
     public function upgrades(){
         
 
-        $memberqualify=DB::select(DB::raw('SELECT * from members where fname IN (SELECT DISTINCT recommender
+        $memberqualify=DB::select(DB::raw('SELECT * from members where status=0 AND fname IN (SELECT DISTINCT recommender
         FROM members WHERE recommender IN
           (SELECT recommender FROM members GROUP BY recommender HAVING COUNT(*) >=40))'));
           
-          $districtAvailable=DB::select(DB::raw('SELECT * from districts where id NOT IN (SELECT district_Id from agents)'));
+          $districtAvailable=DB::select(DB::raw('SELECT * from districts where id NOT IN (SELECT district_Id from agents)
+          OR id=( SELECT  district_Id  FROM agents GROUP by district_Id order by COUNT(1) ASC LIMIT 1) ORDER BY RAND() LIMIT 5'));
           return view('upgrade',compact('memberqualify','districtAvailable'));
     }
 
+
+   // randomly distribute  members who qualify to be agents
+   public function becomeAgent(){
+
+       
+    $memberqualified=DB::select(DB::raw('SELECT * from members where status=0 AND fname IN (SELECT DISTINCT recommender
+    FROM members WHERE recommender IN
+    (SELECT recommender FROM members GROUP BY recommender HAVING COUNT(*) >=40))'));
+     $Agent;
+        $Agent=new agent;
+      foreach($memberqualified as $member){
+       if($member->fname!==NULL){
+      $Agent->firstName=$member->fname;
+      $Agent->lastName=$member->fname;
+      $Agent->userName=substr($member->fname,0,5);
+      $Agent->signature=chr(rand(65,90));
+    DB::statement('UPDATE members Set status=1 where member_Id='.$member->member_Id);
+      $district_id=DB::select('SELECT id from districts where id NOT IN (SELECT district_Id from agents)
+      OR id=( SELECT  district_Id  FROM agents GROUP by district_Id order by COUNT(1) ASC LIMIT 1) ORDER BY RAND() LIMIT 5');
+   
+     foreach($district_id as $dist){
+                 global $distt;
+               $distt=$dist->id;
+            
+       }
+        $Agent->district_Id=$distt ;
+  
+        $distNoAgenthead=DB::select(DB::raw('SELECT id as nums from districts where id NOT IN (SELECT district_Id from agents)'));
+      
+         foreach ($distNoAgenthead as $head){
+                 global $headno;
+                 $headno=$head->nums;
+        }
+     if($headno==$Agent->district_Id){
+        $Agent->role="Agent head";
+       }  $district_id=DB::select('SELECT id from districts where id NOT IN (SELECT district_Id from agents)
+       OR id=( SELECT  district_Id  FROM agents GROUP by district_Id order by COUNT(1) ASC LIMIT 1) ORDER BY RAND() LIMIT 5');
+      
+      foreach($district_id as $dist){
+                    global $distt;
+                  $distt=$dist->id;
+               
+       }
+       $Agent->district_Id=$distt ;
+     
+       $distNoAgenthead=DB::select(DB::raw('SELECT id as nums from districts where id NOT IN (SELECT district_Id from agents)'));
+         
+       foreach ($distNoAgenthead as $head){
+                    global $headno;
+                    $headno=$head->nums;
+                    // return $headno;
+       }
+       if($headno==$Agent->district_Id && $headno!=NULL){
+           $Agent->role="Agent head";
+           $Agent->save();
+           return redirect()->back()->withSuccess('New member has been upgraded  successfully');;
+       }
+       else {
+           $Agent->role="Agent";
+           $Agent->save();
+           return redirect()->back()->withSuccess('New member has been upgraded  successfully');;
+       }
+       
+    }
+
+    
+      
+    }
+    return redirect()->back()->withSuccess('No member has the required criteria');         
+    }
+
+
+
     public function formdata(Request $request){
-        // defininf the rules order_by('upload_time', 'desc')->first();that must be followed when sunmitting data 
+        // defininf the rules order_by('upload_time', 'desc')->first();that must be followed when submitting data 
         $this->validate($request,[
             'firstName'=>'required',
             'lastName'=>'required',
             // 'name'=>'required',
-            'signature'=>'required',
             'userName'=>'required',
         ]);
      
@@ -239,17 +316,32 @@ class HomeController extends Controller
         $Agent->firstName=$request->firstName;
         $Agent->lastName=$request->lastName;
         $Agent->userName=$request->userName;
-        $Agent->signature=$request->signature;
+        $Agent->signature=$request->chr(rand(65,90));
         // $district_id=DB::table('districts')->select('id')->where( 'name',$name)->first();
 
         // Select a random number from the database to return a value for the district
         $district_id=DB::select('SELECT id from districts where id NOT IN (SELECT district_Id from agents)
         OR id=( SELECT  district_Id  FROM agents GROUP by district_Id order by COUNT(1) ASC LIMIT 1) ORDER BY RAND() LIMIT 5');
-        foreach($district_id as $dist){
+       
+       foreach($district_id as $dist){
                      global $distt;
                    $distt=$dist->id;
+                
         }
         $Agent->district_Id=$distt ;
+        $Agent;
+        $distNoAgenthead=DB::select(DB::raw('SELECT id as nums from districts where id NOT IN (SELECT district_Id from agents)'));
+          
+        foreach ($distNoAgenthead as $head){
+                     global $headno;
+                     $headno=$head->nums;
+        }
+        if($headno==$Agent->district_Id){
+            $Agent->role="Agent head";
+        }
+        else {
+            $Agent->role="Agent";
+        }
         $Agent->save();
         if($Agent->save()){
             
@@ -300,7 +392,7 @@ class HomeController extends Controller
     return view('stat', compact('chart'));
     
     }
-
+    //  change the id of the member to required id by the administrator
     public function changeid(){
         $distname=district::all();
         $membern=DB::select('select * from districts,members where memberDistrict=id');
@@ -311,17 +403,12 @@ class HomeController extends Controller
            { 
             $ini=substr($mem->name,0,4);
            $new= strtoupper($ini).$mem->member_Id;
-
         
            DB::statement("update members SET districtNO='$new' where member_Id='$mem->member_Id'");
-           echo $new."<br>";
+           echo $new."<br>";   
            }
-        
 
-
-       
-
-
+         
     }
 
         
