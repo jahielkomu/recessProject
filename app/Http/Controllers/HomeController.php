@@ -111,7 +111,7 @@ class HomeController extends Controller
     // return $timepayment;
         if($timepayment==$lastpayment || $timepayment<$lastpayment){
             
-            return view('payment',['amountagent'=>$amountagent]);
+            return view('payment',['amountagent'=>$amountagent,'remainingagent'=>$remainingagent,'noageentsinhigh'=>$noagentsinhigh]);
         
         }
     else{

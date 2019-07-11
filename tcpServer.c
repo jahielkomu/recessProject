@@ -79,6 +79,22 @@ int main()
                 else
                 {
                     printf("Client: %s\n", buffer);
+
+                    char delim[]=",";
+                    char *mydist=".txt";
+                    char mycopy[1000];
+                    char  start[2000]="DistrictFiles/";
+                    strcat(start,buffer);
+                    char *newcopy=strcpy(mycopy,start);
+
+                    // getting the district for the current user 
+                    char *file=strtok(newcopy,delim);
+                    
+                    strcat(file,mydist);
+                    
+                    printf("%s\n",file);
+
+
                     FILE *fp;
                     // char *string, *found;
 
@@ -87,8 +103,8 @@ int main()
 
                     // found = strsep(&string, " ");
                     // printf("%s\n", found);
-                    fp = fopen("file.txt", "a+");
-                    if (fp)
+                    fp = fopen(file, "a+");
+                    if (fp) 
                     {
                         time_t now;
                         time(&now);

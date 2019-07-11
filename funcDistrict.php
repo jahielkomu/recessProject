@@ -38,14 +38,14 @@ function searchFile($var)
 
 #inserting district into database
 function insertDistrict($var){
-    $query ="INSERT INTO Districts(Name) VALUES('$var')";
+    $query ="INSERT INTO Districts(name) VALUES('$var')";
 
 }
 
 #searching  district
 function searchDistrict($var)
 {
- $query = "SELECT Name FROM Districts WHERE Name='$var' ";
+ $query = "SELECT Name FROM Districts WHERE name='$var' ";
  if($query == true){
      return 1;
  }else{
