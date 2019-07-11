@@ -66,6 +66,7 @@ class HomeController extends Controller
     public function payment()
     
     { $date=date('m-y');
+        global $amountagent;
         
         // calculating the amount of money recieved by agents ,admin agent headers
         $amount=DB::select(DB::raw("SELECT amount from treasuries "));
@@ -172,8 +173,8 @@ class HomeController extends Controller
 
            //member enrollment
         $data = myviews::select(
-            \ DB::raw("DATE_FORMAT(created_at,'%M %Y') as months"),
-            \DB::raw("COALESCE((LEAD(total) OVER (ORDER BY months DESC)-total)/total, 0) Percent_Change")
+            \ DB::raw("DATE_FORMAT(created_at,'%M %Y') as months")
+            // \DB::raw("COALESCE((LEAD(total) OVER (ORDER BY months DESC)-total)/total, 0) Percent_Change")
         )
         ->get();
 
