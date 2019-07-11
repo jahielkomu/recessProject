@@ -162,24 +162,24 @@
                                                
                                             <th>role </th>
                                             <th>Amount (UGX)</th>
-                                            
+                            
                                         </tr>
                                         <tr>
-                                            <td>Administrator</td>
+                                            <td>Administrator </td>
                                             <td>{{number_format($amountagent/2,0)}}</td>
                                         </tr>
                                         <tr>
-                                                <td>Agent head</td>
+                                        <td>{{$remaininghead}} Agent heads each recieving</td>
                                                 <td>{{number_format($amountagent*(7/4),0)}}</td>
                                         
                                         </tr>
                                         <tr>
-                                                <td>Agent</td>
+                                                <td>{{$remainingagent}}  Agents each recieving  </td>
                                                 <td>{{number_format($amountagent,0)}}</td>
                                                 
                                         </tr>
                                         <tr>
-                                                <td>Agent with highest enrollment</td>
+                                        <td>{{$noagentsinhigh}}  Agents with highest enrollment each recieving</td>
                                                 <td>{{number_format(2*$amountagent,0)}}</td>
                                                 
                                         </tr>

@@ -73,17 +73,20 @@ class HomeController extends Controller
         // return $amount;
         $agents= DB::table('agents')->where('role','Agent')->count();
         $agenthead= DB::table('agents')->where('role','Agent head')->count();
-    
-        $district =DB::select(DB::raw('SELECT id, count(*) as total from districts,agents where districts.id=agents.district_Id  and agents.role="Agent" GROUP BY id'));
+        
+        $district =DB::select(DB::raw('SELECT id, count(*) as total from districts,agents where districts.id=agents.district_Id  and agents.role="Agent" GROUP BY id ORDER BY 2 DESC'));
         // $head=DB::select(DB::raw('SELECT id,count(agentid) as agentid from districts,agents where districts.id=agents.district_Id and agents.role="Agent head" GROUP BY id'));
           foreach($district as $dist)
           {  
             // agents with district of the highest enrollment
            $noagentsinhigh=$dist->total;
+          
+           
 
             // agents within other country
            $remainingagent=$agents-$noagentsinhigh;
           
+           
           foreach($amount as $cash)
           {  
             //total amount
@@ -93,51 +96,62 @@ class HomeController extends Controller
           
          // agent head with the other enrollment
           $remaininghead=$agenthead-1;
+         
+          
            if ($totalamount>2000000){
-              $amountagent=($totalamount-2000000)/($remainingagent+0.5+(7/4)+(2*$noagentsinhigh)+(7/2));
-       
-          }
+               
+         // agent head with the other enrollment
+         // agent head with the other enrollment
+              $amountagent=($totalamount-2000000)/($remainingagent+0.5+(1.75*$remaininghead)+(2*$noagentsinhigh)+(7/2));
+              
+              
+                     // getting all agents with normal enrollment 
+                    $gentlowenr= DB::select(DB::raw('SELECT agentid ,role from agents where agentid  NOT in (select  agentid from agents where district_Id=(  SELECT district_Id from agents GROUP BY district_Id order by count(1) desc limit 1))'));
+                     // agents with the highest enrollment
+                     $genthigenr= DB::select(DB::raw('SELECT agentid ,role from agents where agentid   in (select  agentid from agents where district_Id=(  SELECT district_Id from agents GROUP BY district_Id order by count(1) desc limit 1))'));
+                     $dateofpayment=payment::all()->pluck('paymentDate')->last();
+                      $dateofreciv=treasury::all()->pluck('date')->last();
+                      $timepayment=date('m-y',strtotime($dateofreciv));
+                      $lastpayment=date('m-y',strtotime($dateofpayment));
+    
+                     // return $timepayment;
+                    if($timepayment==$lastpayment || $timepayment<$lastpayment){
+            
+            
+                     return view('payment',['amountagent'=>$amountagent,'remainingagent'=>$remainingagent,'noagentsinhigh'=>$noagentsinhigh,'remaininghead'=>$remaininghead]);
+                     }else{
+     
+                     foreach($gentlowenr as $lown){
+                           // adding payment details for each agent and agent not in highest enrollment
+                            DB::statement('INSERT INTO  payments set payment_Id=(SELECT agentid from agents where agentid='.$lown->agentid.'),paymentDate=CURRENT_TIMESTAMP,amountpaid= case when (select role from agents where agentid='.$lown->agentid.')="Agent" then '. $amountagent.' when (select role from agents WHERE agentid='.$lown->agentid.')="Agent head"  then '.($amountagent * (7/4)).' end');
+            
+                        }
+                     
+                     foreach($genthigenr as $higenr){
+                         // agents belonging to districts with the highest enrollment  
+                         DB::statement('INSERT INTO  payments set payment_Id=(SELECT agentid from agents where agentid='.$higenr->agentid.'),paymentDate=CURRENT_TIMESTAMP,amountpaid= case when (select role from agents where agentid='.$higenr->agentid.')="Agent" then '. ($amountagent * 2).' when (select role from agents WHERE agentid='.$higenr->agentid.')="Agent head"  then '.($amountagent *(7/4) *2).' end');
+            
+                        
+            
+            
+                       
+                    
+                    }
+                
+        }}
           else{
               $amountagent=0;
           }
-       }
-       // getting all agents with normal enrollment 
-        $gentlowenr= DB::select(DB::raw('SELECT agentid ,role from agents where agentid  NOT in (select  agentid from agents where district_Id=(  SELECT district_Id from agents GROUP BY district_Id order by count(1) desc limit 1))'));
-       // agents with the highest enrollment
-        $genthigenr= DB::select(DB::raw('SELECT agentid ,role from agents where agentid   in (select  agentid from agents where district_Id=(  SELECT district_Id from agents GROUP BY district_Id order by count(1) desc limit 1))'));
-        $dateofpayment=payment::all()->pluck('paymentDate')->last();
-        $dateofreciv=treasury::all()->pluck('date')->last();
-        $timepayment=date('m-y',strtotime($dateofreciv));
-        $lastpayment=date('m-y',strtotime($dateofpayment));
-    // return $timepayment;
-        if($timepayment==$lastpayment || $timepayment<$lastpayment){
-            
-            return view('payment',['amountagent'=>$amountagent,'remainingagent'=>$remainingagent,'noageentsinhigh'=>$noagentsinhigh]);
+       
+
         
-        }
-    else{
-     
-        foreach($gentlowenr as $lown){
-               // adding payment details for each agent and agent not in highest enrollment
-                DB::statement('INSERT INTO  payments set payment_Id=(SELECT agentid from agents where agentid='.$lown->agentid.'),paymentDate=CURRENT_TIMESTAMP,amountpaid= case when (select role from agents where agentid='.$lown->agentid.')="Agent" then '. $amountagent.' when (select role from agents WHERE agentid='.$lown->agentid.')="Agent head"  then '.($amountagent * (7/4)).' end');
-
-            }
-         
-         foreach($genthigenr as $higenr){
-             // agents belonging to districts with the highest enrollment  
-             DB::statement('INSERT INTO  payments set payment_Id=(SELECT agentid from agents where agentid='.$higenr->agentid.'),paymentDate=CURRENT_TIMESTAMP,amountpaid= case when (select role from agents where agentid='.$higenr->agentid.')="Agent" then '. ($amountagent * 2).' when (select role from agents WHERE agentid='.$higenr->agentid.')="Agent head"  then '.($amountagent *(7/4) *2).' end');
-
-            
-
-
-           
-        
-        }
+//         }
+//     
+//     return view('payment',['amountagent'=>$amountagent,'remainingagent'=>$remainingagent,'noagentsinhigh'=>$noagentsinhigh]);
     
-    return view('payment',['amountagent'=>$amountagent]);
-    
-}
+// }
     }
+}
 
     
         // declare payment to the database 
