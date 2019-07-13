@@ -6,7 +6,7 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
-#define PORT 9900
+#define PORT 9890
 #define BUFFERSIZE 1024
 #define clear() printf("\033[H\033[J")
 
@@ -18,6 +18,7 @@ int uftes_help(char **args);
 int uftes_exit(char **args);
 int uftes_Addmember(char **args);
 int uftes_Check_status(char **args);
+int uftes_Get_statement(char **args);
 /*
   List of builtin commands, followed by their corresponding functions.
  */
@@ -28,6 +29,7 @@ char *builtin_str[] = {
     "help",
     "Addmember",
     "Check_status",
+    "Get_statement",
     "exit"};
 
 int (*builtin_func[])(char **) = {
@@ -35,6 +37,7 @@ int (*builtin_func[])(char **) = {
     &uftes_help,
     &uftes_Addmember,
     &uftes_Check_status,
+    &uftes_Get_statement,
     &uftes_exit};
 
 int uftes_num_builtins()
@@ -58,6 +61,7 @@ int uftes_cd(char **args)
 }
 int uftes_Addmember(char **args)
 {
+    char command[] = "Addmember|";
     char lin[300];
     char *line = args[1];
     int clientSocket, ret;
@@ -86,29 +90,23 @@ int uftes_Addmember(char **args)
         exit(1);
     }
     printf("[+]Connected to Server.\n");
-
-    // while (1)
-    // {
-    // }
-    ////////////////////
     if (strstr(line, req))
     {
-        printf("Adding member..... \t\n");
+        printf("\n\t*****Adding Member***** \t\n");
         send(clientSocket, buffer, strlen(buffer), 0);
         FILE *file;
-        // FILE *fp1;
-        // fp1 = fopen("file.txt", "a+");
-        file = fopen(line, "r+");
+        file = fopen(line, "r");
         if (file)
         {
             while (!feof(file))
             {
                 fgets(lin, 250, file);
-
-                printf("Adding member..... \t\n");
-                strcpy(buffer, district);
+                printf("[+]Adding member..... \t\n");
+                strcpy(buffer, command);
+                strcat(buffer, district);
                 strcat(buffer, ",");
                 strcat(buffer, lin);
+                strcat(buffer, "|");
                 send(clientSocket, buffer, strlen(buffer), 0);
                 if (strcmp(buffer, ":exit") == 0)
                 {
@@ -131,15 +129,15 @@ int uftes_Addmember(char **args)
         {
             printf("file doesn't exist");
         }
-        // fclose(fp1);
         fclose(file);
     }
     else
     {
-        printf("Adding member..... \t\n");
-        strcpy(buffer, district);
-        strcat(buffer, ",");
+        printf("[+]Adding member..... \t\n");
+        strcpy(buffer, command);
+        strcat(buffer, district);
         strcat(buffer, line);
+        strcat(buffer, "|");
         send(clientSocket, buffer, strlen(buffer), 0);
 
         if (strcmp(buffer, ":exit") == 0)
@@ -158,40 +156,108 @@ int uftes_Addmember(char **args)
             printf("Added: \t%s\n", buffer);
         }
     }
-    ////////////////////////////////////
+    close(clientSocket);
+    return 1;
+}
+int uftes_Get_statement(char **args)
+{
+    int clientSocket, ret;
+    struct sockaddr_in serverAddr;
+    char buffer[1024];
+
+    clientSocket = socket(AF_INET, SOCK_STREAM, 0);
+    if (clientSocket < 0)
+    {
+        printf("[-]Error in connection.\n");
+        exit(1);
+    }
+    printf("[+]Client Socket is created.\n");
+
+    memset(&serverAddr, '\0', sizeof(serverAddr));
+    serverAddr.sin_family = AF_INET;
+    serverAddr.sin_port = htons(PORT);
+    serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+
+    ret = connect(clientSocket, (struct sockaddr *)&serverAddr, sizeof(serverAddr));
+    if (ret < 0)
+    {
+        printf("[-]Error in connection.\n");
+        exit(1);
+    }
+    printf("[+]Connected to Server.\n");
+
+    printf("\n\t*****Getting Statement***** \t\n");
+    strcpy(buffer, "Get_statement|");
+    strcat(buffer, district);
+    send(clientSocket, buffer, strlen(buffer), 0);
+    char message[5000];
+    if (strcmp(buffer, ":exit") == 0)
+    {
+        close(clientSocket);
+        printf("[-]Disconnected from server.\n");
+        exit(1);
+    }
+
+    if (recv(clientSocket, message, sizeof(message), 0) < 0)
+    {
+        printf("[-]Error in receiving data.\n");
+    }
+    else
+    {
+        puts(message);
+    }
+    close(clientSocket);
     return 1;
 }
 int uftes_Check_status(char **args)
 {
-    int sock = 0, valread;
-    struct sockaddr_in serv_addr;
-    char *hello = "Hello from client";
-    char buffer[1024] = {0};
-    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+    int clientSocket, ret;
+    struct sockaddr_in serverAddr;
+    char buffer[1024];
+
+    clientSocket = socket(AF_INET, SOCK_STREAM, 0);
+    if (clientSocket < 0)
     {
-        printf("\n Socket creation error \n");
-        return -1;
+        printf("[-]Error in connection.\n");
+        exit(1);
+    }
+    printf("[+]Client Socket is created.\n");
+
+    memset(&serverAddr, '\0', sizeof(serverAddr));
+    serverAddr.sin_family = AF_INET;
+    serverAddr.sin_port = htons(PORT);
+    serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+
+    ret = connect(clientSocket, (struct sockaddr *)&serverAddr, sizeof(serverAddr));
+    if (ret < 0)
+    {
+        printf("[-]Error in connection.\n");
+        exit(1);
+    }
+    printf("[+]Connected to Server.\n");
+
+    printf("\n\t*****Checking Status***** \t\n");
+    strcpy(buffer, "Check_status|");
+    strcat(buffer, district);
+    send(clientSocket, buffer, strlen(buffer), 0);
+
+    if (strcmp(buffer, ":exit") == 0)
+    {
+        close(clientSocket);
+        printf("[-]Disconnected from server.\n");
+        exit(1);
     }
 
-    serv_addr.sin_family = AF_INET;
-    serv_addr.sin_port = htons(PORT);
-
-    // Convert IPv4 and IPv6 addresses from text to binary form
-    if (inet_pton(AF_INET, "127.0.0.1", &serv_addr.sin_addr) <= 0)
+    if (recv(clientSocket, buffer, 1024, 0) < 0)
     {
-        printf("\nInvalid address/ Address not supported \n");
-        return -1;
+        printf("[-]Error in receiving data.\n");
+    }
+    else
+    {
+        printf("Server: \t%s\n", buffer);
     }
 
-    if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
-    {
-        printf("\nConnection Failed \n");
-        return -1;
-    }
-    send(sock, hello, strlen(hello), 0);
-    printf("Hello message sent\n");
-    valread = read(sock, buffer, 1024);
-    printf("%s\n", buffer);
+    close(clientSocket);
     return 1;
 }
 /**
@@ -427,6 +493,7 @@ void init_shell()
     printf("Enter password:\t");
     password = getchar();
     printf("district %s password %c\n", district, password);
+    strcat(district, "|");
 }
 int main(int argc, char **argv)
 {

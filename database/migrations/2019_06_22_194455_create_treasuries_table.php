@@ -15,7 +15,7 @@ class CreateTreasuriesTable extends Migration
     {
         Schema::create('treasuries', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('Amount')->default('2,000,000');
+            $table->integer('Amount')->default(2,000,000);
             $table->string('source');
             $table->date('date');
             $table->string('district')->nullable();

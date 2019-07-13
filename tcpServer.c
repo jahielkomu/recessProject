@@ -7,8 +7,8 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <time.h>
-
-#define PORT 9900
+#include <ctype.h>
+#define PORT 9890
 
 int main()
 {
@@ -62,7 +62,7 @@ int main()
         {
             exit(1);
         }
-        printf("Connection accepted from %s:%d\n", inet_ntoa(newAddr.sin_addr), ntohs(newAddr.sin_port));
+        printf("[+]Connection accepted from %s:%d\n", inet_ntoa(newAddr.sin_addr), ntohs(newAddr.sin_port));
 
         if ((childpid = fork()) == 0)
         {
@@ -73,12 +73,79 @@ int main()
                 recv(newSocket, buffer, 1024, 0);
                 if (strcmp(buffer, ":exit") == 0)
                 {
-                    printf("Disconnected from %s:%d\n", inet_ntoa(newAddr.sin_addr), ntohs(newAddr.sin_port));
+                    printf("[+]Disconnected from %s:%d\n", inet_ntoa(newAddr.sin_addr), ntohs(newAddr.sin_port));
                     break;
                 }
                 else
                 {
                     printf("Client: %s\n", buffer);
+<<<<<<< HEAD
+                    char *command = strtok(buffer, "|");
+                    char *district = strtok(NULL, "|");
+                    printf("%s\n", command);
+                    if (strstr(command, "Addmember"))
+                    {
+                        char *data = strtok(NULL, "|");
+
+                        printf("\n[+]Adding Member\t\n");
+                        char info[1025];
+                        char location[50] = "district_files/";
+                        strcat(location, district);
+                        strcat(location, ".txt");
+                        strcpy(info, district);
+                        strcat(info, ",");
+                        strcat(info, data);
+                        FILE *fp;
+                        for (int i = 0; i < strlen(location); i++)
+                        {
+                            if (location[i] >= 'A' && location[i] <= 'Z')
+                            {
+                                location[i] = location[i] + 32;
+                            }
+                        }
+                        fp = fopen(location, "a+");
+                        if (fp)
+                        {
+                            time_t now;
+                            time(&now);
+                            strcpy(timeNow, ctime(&now));
+                            strcat(info, ",");
+                            strcat(info, timeNow);
+                            fprintf(fp, info);
+                            fprintf(fp, "\n");
+                        }
+                        fclose(fp);
+                        send(newSocket, info, strlen(info), 0);
+                        printf("Added:\t %s\n", info);
+                        bzero(info, sizeof(info));
+                    }
+
+                    else if (strstr(command, "Check_status"))
+                    {
+                        printf("\n[+]Checking Status\t\n");
+                        printf("%s\t%s\n", command, district);
+                        send(newSocket, buffer, strlen(buffer), 0);
+                        printf("Added:\t %s\n", buffer);
+                        bzero(buffer, sizeof(buffer));
+                    }
+                    else if (strstr(command, "Get_statement"))
+=======
+
+                    char delim[]=",";
+                    char *mydist=".txt";
+                    char mycopy[1000];
+                    char  start[2000]="DistrictFiles/";
+                    strcat(start,buffer);
+                    char *newcopy=strcpy(mycopy,start);
+
+                    // getting the district for the current user 
+                    char *file=strtok(newcopy,delim);
+                    
+                    strcat(file,mydist);
+                    
+                    printf("%s\n",file);
+
+
                     FILE *fp;
                     // char *string, *found;
 
@@ -87,21 +154,27 @@ int main()
 
                     // found = strsep(&string, " ");
                     // printf("%s\n", found);
-                    fp = fopen("file.txt", "a+");
-                    if (fp)
+                    fp = fopen(file, "a+");
+                    if (fp) 
+>>>>>>> 05fa9c82f9f9fc2e37f6e0d0d77dcbd59b770cb4
                     {
-                        time_t now;
-                        time(&now);
-                        strcpy(timeNow, ctime(&now));
-                        strcat(buffer, ",");
-                        strcat(buffer, timeNow);
-                        fprintf(fp, buffer);
-                        fprintf(fp, "\n");
+                        char location[70] = "payment_files/payment.txt";
+                        printf("\n[+]Getting Statement\t\n");
+                        FILE *fp1;
+                        fp1 = fopen(location, "r");
+                        char message[5000] = "******Payment Details******\n";
+                        char lin[250];
+                        while (!feof(fp1))
+                        {
+                            fgets(lin, 250, fp1);
+                            strcat(message, lin);
+                            strcat(message, "\n");
+                        }
+                        puts(message);
+                        fclose(fp1);
+                        send(newSocket, message, strlen(message), 0);
+                        bzero(message, sizeof(message));
                     }
-                    fclose(fp);
-                    send(newSocket, buffer, strlen(buffer), 0);
-                    printf("Added:\t %s\n", buffer);
-                    bzero(buffer, sizeof(buffer));
                 }
             }
         }
