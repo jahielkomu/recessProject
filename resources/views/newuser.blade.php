@@ -99,7 +99,7 @@
             <div id="page-inner">
                 <div class="row">
                     <div class="col-md-8">
-                     <h2>Payments </h2>   
+                     <h2>New User </h2>   
                         <h5>Welcome Lwanga Aksam , Love to see you back. </h5>
                        
                     </div>

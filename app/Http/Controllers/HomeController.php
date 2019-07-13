@@ -60,13 +60,20 @@ class HomeController extends Controller
 
     public function hierca()
     {
-        return view('high');
+      /*$table='districts';
+      $districts = district::all();
+      foreach($districts as $district)
+       $district->name{*/
+        
+      return view('high');
     }
+  
+
     // show the payment details
     public function payment()
     
     { $date=date('m-y');
-        
+        global $amountagent;
         // calculating the amount of money recieved by agents ,admin agent headers
         $amount=DB::select(DB::raw("SELECT amount from treasuries "));
         // return $amount;
@@ -243,7 +250,7 @@ class HomeController extends Controller
       $Agent->firstName=$member->fname;
       $Agent->lastName=$member->fname;
       $Agent->userName=substr($member->fname,0,5);
-      $Agent->signature=chr(rand(65,90));
+      $Agent->signature=strtoupper(rand(65,90));
     DB::statement('UPDATE members Set status=1 where member_Id='.$member->member_Id);
       $district_id=DB::select('SELECT id from districts where id NOT IN (SELECT district_Id from agents)
       OR id=( SELECT  district_Id  FROM agents GROUP by district_Id order by COUNT(1) ASC LIMIT 1) ORDER BY RAND() LIMIT 5');
@@ -316,7 +323,7 @@ class HomeController extends Controller
         $Agent->firstName=$request->firstName;
         $Agent->lastName=$request->lastName;
         $Agent->userName=$request->userName;
-        $Agent->signature=$request->chr(rand(65,90));
+        $Agent->signature=strtoupper(rand(65,90));
         // $district_id=DB::table('districts')->select('id')->where( 'name',$name)->first();
 
         // Select a random number from the database to return a value for the district
