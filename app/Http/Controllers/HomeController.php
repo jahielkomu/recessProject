@@ -62,14 +62,20 @@ class HomeController extends Controller
 
     public function hierca()
     {
-        return view('high');
+      /*$table='districts';
+      $districts = district::all();
+      foreach($districts as $district)
+       $district->name{*/
+        
+      return view('high');
     }
+  
+
     // show the payment details
     public function payment()
     
     { $date=date('m-y');
         global $amountagent;
-        
         // calculating the amount of money recieved by agents ,admin agent headers
         $amount=DB::select(DB::raw("SELECT amount from salaries"));
         // return $amount;
@@ -365,6 +371,7 @@ class HomeController extends Controller
         $Agent->lastName=$request->lastName;
         $Agent->userName=$request->userName;
         $Agent->signature=strtoupper(chr(rand(65,90)));
+        // $Agent->signature=strtoupper(rand(65,90));
         // $district_id=DB::table('districts')->select('id')->where( 'name',$name)->first();
 
         // Select a random number from the database to return a value for the district

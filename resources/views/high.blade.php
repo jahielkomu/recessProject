@@ -115,13 +115,38 @@
                       <div class="col-md-7" style="width: 900px">
                     <div class="panel panel-default" style="width: 900px">
                         <div class="panel-heading" style="width: 900px">
-                         Selects District to view <select name="district" id="" style="float: right">
-                           <option value="">Wakiso</option>
-                           <option value="">Kampala</option>
+                          <?php
+                          $connect = mysqli_connect('localhost','root','','utfes_database' );
+                          $resultset =$connect->query("SELECT name FROM districts");
+                          ?>
+                         Select District to view <select name="district" id="" style="float: right">
+                          <?php 
+                          while ($rows = $resultset->fetch_assoc())
+                          {
+                            $name = $rows['name'];
+                          echo"<option value=''> $name </option>";
+                          }
+                          ?>                          
                          </select>
                         </div>        
                             <div class="panel" style="height: 350px;width: 500px;">
-                              <img src="assets/img/hierachy.png" style="width:auto;height:420px;padding-left:15%;margin-top:0px;padding-top: 0 ">
+                            <ul>
+                              <li>Administrator</li>
+                              <ul>
+                                <li>Agent Head</li>
+                                <ul>
+                                  <li>Agent stoni</li>
+                                 
+                                  <li>Agent levers</li>
+                                  
+                                  <li>Agent winschott</li>
+                                  
+                                  <li>Agent aple</li>
+                                </ul>
+
+                              </ul>
+
+                            </ul>
                             </div>          
                                    
             </div>
@@ -147,3 +172,5 @@
  
 </body>
 </html>
+<img src="assets/img/hierachy.png" style="width:auto;height:420px;padding-left:15%;margin-top:0px;padding-top: 0 "> 
+                           
