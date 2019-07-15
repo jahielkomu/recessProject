@@ -212,31 +212,31 @@ class HomeController extends Controller
     //     ->groupBy('months')
     //     ->values($data->pluck('Percent_Change'));
     // $data=DB::table('myviews')->get();
-    $ak=array();
-    $aks=array();
-    $aksam=array();
+    $value=array();
+    $updatedvalue=array();
+    $month=array();
     foreach($data as $i)
     {
-    array_push($ak,$i->total);
-    array_push($aksam,$i->months);
+    array_push($value,$i->total);
+    array_push($month,$i->months);
     }
-    for($i=0;$i<count($ak)-1;$i++){
-        array_push($aks,(($ak[$i+1]-$ak[$i])/$ak[$i]));
+    for($i=0;$i<count($value)-1;$i++){
+        array_push($updatedvalue,(($value[$i+1]-$value[$i])/$value[$i]));
     }
     // return $aksam;
     
 
-    $chart = Charts::create('bar', 'highcharts')
+        $chart = Charts::create('bar', 'highcharts')
 
-->title('HDTuto.com Laravel Pie Chart')
+        ->title('PERCENTAGE CHANGE IN ENROLLMENT FIGURES')
 
-->labels($aksam)
+        ->labels($month)
+        ->elementLabel("percentage change")
+        ->values($updatedvalue)
 
-->values($aks)
+        ->dimensions(1000,500)
 
-->dimensions(1000,500)
-
-->responsive(true);
+        ->responsive(true);
        
 
 
