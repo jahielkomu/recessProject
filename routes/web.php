@@ -36,13 +36,14 @@
 
 Auth::routes();
 
-Route::get('/', 'HomeController@index')->name('home');
+Route::get('/', 'HomeController@index');
 
 Route::get('/high', 'HomeController@hierca')->name('home');
 
 Route::get('/stat', 'HomeController@stat')->name('home');
-
 Route::get('/record', 'HomeController@records')->name('home');
+Route::post('/record', 'HomeController@records')->name('home');
+
 
 Route::get('/upgrade', 'HomeController@upgrades')->name('home');
 Route::get('/upgrade/do', 'HomeController@becomeAgent')->name('home');

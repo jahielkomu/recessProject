@@ -457,6 +457,7 @@ class ComposerStaticInitf15def75e877773bb3877d78053921fc
         'App\\member' => __DIR__ . '/../..' . '/app/member.php',
         'App\\myviews' => __DIR__ . '/../..' . '/app/myviews.php',
         'App\\payment' => __DIR__ . '/../..' . '/app/payment.php',
+        'App\\salaries' => __DIR__ . '/../..' . '/app/salaries.php',
         'App\\treasury' => __DIR__ . '/../..' . '/app/treasury.php',
         'BeyondCode\\DumpServer\\DumpServerCommand' => __DIR__ . '/..' . '/beyondcode/laravel-dump-server/src/DumpServerCommand.php',
         'BeyondCode\\DumpServer\\DumpServerServiceProvider' => __DIR__ . '/..' . '/beyondcode/laravel-dump-server/src/DumpServerServiceProvider.php',

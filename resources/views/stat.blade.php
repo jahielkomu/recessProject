@@ -136,7 +136,7 @@
                 <div class="col-md-12 col-sm-12 col-xs-12">                     
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            Wellwisher's support per month
+                            Wellwisher's contribution per month
                         </div>
                         <div class="panel-body">
                             <div class="app" > 
