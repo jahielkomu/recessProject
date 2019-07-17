@@ -129,7 +129,7 @@ int main()
                     }
                     else if (strstr(command, "Get_statement"))
                     {
-                        char location[70] = "payment_files/payment.txt";
+                        char location[200] = "storage/app/payment_files/payment.txt";
                         printf("\n[+]Getting Statement\t\n");
                         FILE *fp1;
                         fp1 = fopen(location, "r");

@@ -116,15 +116,15 @@
                     <div class="panel panel-default" style="width: 900px">
                         <div class="panel-heading" style="width: 900px">
                           <?php
-                          $connect = mysqli_connect('localhost','root','','utfes_database' );
-                          $resultset =$connect->query("SELECT name FROM districts");
+                          $connect = mysqli_connect('localhost','root','','UTFES_database' );
+                          $resultset =$connect->query("SELECT id,name FROM districts");
                           ?>
                          Select District to view <select name="district" id="" style="float: right">
                           <?php 
                           while ($rows = $resultset->fetch_assoc())
                           {
                             $name = $rows['name'];
-                          echo"<option value=''> $name </option>";
+                          echo"<option value=".$rows['id']."> $name </option>";
                           }
                           ?>                          
                          </select>
