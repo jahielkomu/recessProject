@@ -63,7 +63,7 @@ class HomeController extends Controller
 
     public function hierca()
     {
-        global $db_handle;
+       /* global $db_handle;
       //trying to set the hierachy displays
       $query =DB::select(DB::raw("SELECT name FROM districts"));
       $results=$db_handle->runQuery($query);
@@ -81,7 +81,7 @@ class HomeController extends Controller
       }
     
         
-      }
+      }*/
 
          return view('high');
 

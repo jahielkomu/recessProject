@@ -119,8 +119,8 @@
                           $connect = mysqli_connect('localhost','root','','UTFES_database' );
                           $resultset =$connect->query("SELECT id,name FROM districts");
                           global $color;
-                          $connect = mysqli_connect('localhost','root','','utfes_database' );
-                          $resultset =$connect->query("SELECT name FROM districts");
+                          $connect = mysqli_connect('localhost','root','','UTFES_database' );
+                          $resultset =$connect->query("SELECT id, name FROM districts");
 
                           $color1="lightblue";
                           $color2="blue";
@@ -133,7 +133,7 @@
                           {
                             $color==$color1 ? $color=$color2:$color=$color1;
                             $name = $rows['name'];
-                          echo"<option  value='' style='background:$color;'> $name </option>";
+                          echo"<option  value=".$rows['id']." style='background:$color;'> $name </option>";
                           }
                           ?>                          
                          </select>
