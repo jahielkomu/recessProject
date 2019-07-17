@@ -166,6 +166,17 @@
                         </div>
                         <div class="panel-body">
                             <div class="table-responsive">
+                                <form action="/record" method="POST">
+                                    {{ csrf_field() }}
+                                    <select name="district" id="">
+                                            @foreach($districttable as $row)
+                                              <option value="{{$row->id}}">{{ $row->name}}</option>
+                                            @endforeach    
+                                              </select>
+                                              <button  id="test" type="submit" class="btn btn-default">search</button>
+                                 </form>
+                                   
+
                                 <table class="table">
                                     <thead>
                                         <tr>
@@ -183,6 +194,7 @@
                                           <td>{{$row->fname}}</td>
                                           <td>{{ $row->gender}}</td>
                                           <td>{{ $row->recommender}}</td>
+                                          <td>{{ $row->created_at}}</td>
                                        </tr>
                                        @endforeach
                                             

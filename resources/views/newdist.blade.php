@@ -98,7 +98,7 @@
                <div id="page-inner">
                    <div class="row">
                        <div class="col-md-8">
-                        <h2>Payments </h2>   
+                        <h2 style="padding-left:100px">New District </h2> 
                            <h5>Welcome Lwanga Aksam , Love to see you back. </h5>
                           
                        </div>
@@ -117,7 +117,7 @@
                                <ul>  <li>{{ $error }}</li></ul>
                             </div>
                       @endforeach 
-                            <h2 style="padding-left:100px">New District </h2>
+                            
                        <form action="/newuser/dis" method="post"style="padding-left:100px;">
                         {{ csrf_field() }}
                           

@@ -11,6 +11,8 @@ use App\member;
 use DB;
 use Charts;
 use App\myviews;
+use App\salaries;
+
 
 
 class HomeController extends Controller
@@ -90,9 +92,13 @@ class HomeController extends Controller
     public function payment()
     
     { $date=date('m-y');
+<<<<<<< HEAD
         global $amountagent; 
+=======
+        global $amountagent;
+>>>>>>> dea6152ce09901b95771382afd0fb4db6473d7f0
         // calculating the amount of money recieved by agents ,admin agent headers
-        $amount=DB::select(DB::raw("SELECT amount from treasuries "));
+        $amount=DB::select(DB::raw("SELECT amount from salaries"));
         // return $amount;
         $agents= DB::table('agents')->where('role','Agent')->count();
         $agenthead= DB::table('agents')->where('role','Agent head')->count();
@@ -130,7 +136,9 @@ class HomeController extends Controller
               
                      // getting all agents with normal enrollment 
                     $gentlowenr= DB::select(DB::raw('SELECT agentid ,role from agents where agentid  NOT in (select  agentid from agents where district_Id=(  SELECT district_Id from agents GROUP BY district_Id order by count(1) desc limit 1))'));
-                     // agents with the highest enrollment
+            
+                    
+                    // agents with the highest enrollment
                      $genthigenr= DB::select(DB::raw('SELECT agentid ,role from agents where agentid   in (select  agentid from agents where district_Id=(  SELECT district_Id from agents GROUP BY district_Id order by count(1) desc limit 1))'));
                      $dateofpayment=payment::all()->pluck('paymentDate')->last();
                       $dateofreciv=treasury::all()->pluck('date')->last();
@@ -170,7 +178,7 @@ class HomeController extends Controller
         
 //         }
 //     
-//     return view('payment',['amountagent'=>$amountagent,'remainingagent'=>$remainingagent,'noagentsinhigh'=>$noagentsinhigh]);
+    return view('payment',['amountagent'=>$amountagent,'remainingagent'=>$remainingagent,'noagentsinhigh'=>$noagentsinhigh]);
     
 // }
     }
@@ -207,21 +215,49 @@ class HomeController extends Controller
     { 
     
 
-
+//  two alternatives to present the percentage choice any;
            //member enrollment
         $data = myviews::select(
             \ DB::raw("DATE_FORMAT(created_at,'%M %Y') as months")
+            ,\DB::raw("total")
             // \DB::raw("COALESCE((LEAD(total) OVER (ORDER BY months DESC)-total)/total, 0) Percent_Change")
         )
         ->get();
+        
 
-    $chart = Charts::database($data, 'bar', 'highcharts')
-        ->title("PERCENTAGE CHANGE IN ENROLLMENT FIGURES")
+    // $chart = Charts::database($data, 'bar', 'highcharts')
+    //     ->title("PERCENTAGE CHANGE IN ENROLLMENT FIGURES")
+    //     ->elementLabel("Percentage change")
+    //     ->dimensions(1000, 500)
+    //     ->responsive(true)
+    //     ->groupBy('months')
+    //     ->values($data->pluck('Percent_Change'));
+    // $data=DB::table('myviews')->get();
+    $value=array();
+    $updatedvalue=array();
+    $month=array();
+    foreach($data as $i)
+    {
+    array_push($value,$i->total);
+    array_push($month,$i->months);
+    }
+    for($i=0;$i<count($value)-1;$i++){
+        array_push($updatedvalue,(($value[$i+1]-$value[$i])/$value[$i]));
+    }
+    // return $aksam;
+    
+
+        $chart = Charts::create('bar', 'highcharts')
+
+        ->title('PERCENTAGE CHANGE IN ENROLLMENT FIGURES')
+
+        ->labels($month)
         ->elementLabel("percentage change")
-        ->dimensions(100, 500)
-        ->responsive(true)
-        ->groupBy('months')
-        ->values($data->pluck('Percent_Change'));
+        ->values($updatedvalue)
+
+        ->dimensions(1000,500)
+
+        ->responsive(true);
        
 
 
@@ -230,27 +266,28 @@ class HomeController extends Controller
     
         ->get();
  
-        $chart2 = Charts::database($money, 'pie', 'highcharts')
+        $chart2 = Charts::database($money, 'bar', 'highcharts')
         
         ->title("Monthly funds")
         
-        ->elementLabel("Total wellwushe")
+        ->elementLabel("Total wellwishers")
         
-        ->dimensions(500, 260)
+        ->dimensions(1000, 500)
         
-        ->responsive(true)
+        ->responsive(false)
         
         ->groupByMonth(date('Y'), true);
         return view('stat',["chart"=>$chart,"chart2"=>$chart2]);    
     } 
     // show records
-    public function records(){
+    public function records(Request $requests){
 
-        $membertable=DB::table('members')->orderBy('recommender')->get();
+        $membertable=DB::select("select * from members where memberDistrict='$requests->district'");
         $agentstable=DB::select('select * from districts,agents where id=district_Id and role="Agent"order by name asc');
         $headtable=DB::select('select * from districts,agents where id=district_Id  and role="Agent head" order by name asc');
         $districttable=DB::table('districts')->orderBy('name','desc')->get();
         
+        // return $membertable;
         return view('record',compact('membertable','agentstable','headtable','districttable'));
     }
     // show registration form
@@ -281,7 +318,7 @@ class HomeController extends Controller
       $Agent->firstName=$member->fname;
       $Agent->lastName=$member->fname;
       $Agent->userName=substr($member->fname,0,5);
-      $Agent->signature=strtoupper(rand(65,90));
+      $Agent->signature=strtoupper(chr(rand(65,90)));
     DB::statement('UPDATE members Set status=1 where member_Id='.$member->member_Id);
       $district_id=DB::select('SELECT id from districts where id NOT IN (SELECT district_Id from agents)
       OR id=( SELECT  district_Id  FROM agents GROUP by district_Id order by COUNT(1) ASC LIMIT 1) ORDER BY RAND() LIMIT 5');
@@ -354,7 +391,8 @@ class HomeController extends Controller
         $Agent->firstName=$request->firstName;
         $Agent->lastName=$request->lastName;
         $Agent->userName=$request->userName;
-        $Agent->signature=strtoupper(rand(65,90));
+        $Agent->signature=strtoupper(chr(rand(65,90)));
+        // $Agent->signature=strtoupper(rand(65,90));
         // $district_id=DB::table('districts')->select('id')->where( 'name',$name)->first();
 
         // Select a random number from the database to return a value for the district
@@ -369,12 +407,12 @@ class HomeController extends Controller
         $Agent->district_Id=$distt ;
         $Agent;
         $distNoAgenthead=DB::select(DB::raw('SELECT id as nums from districts where id NOT IN (SELECT district_Id from agents)'));
-          
+         global $headno;
         foreach ($distNoAgenthead as $head){
-                     global $headno;
+                    
                      $headno=$head->nums;
         }
-        if($headno==$Agent->district_Id){
+       if($headno==$Agent->district_Id){
             $Agent->role="Agent head";
         }
         else {

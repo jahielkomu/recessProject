@@ -79,7 +79,6 @@ int main()
                 else
                 {
                     printf("Client: %s\n", buffer);
-<<<<<<< HEAD
                     char *command = strtok(buffer, "|");
                     char *district = strtok(NULL, "|");
                     printf("%s\n", command);
@@ -129,34 +128,6 @@ int main()
                         bzero(buffer, sizeof(buffer));
                     }
                     else if (strstr(command, "Get_statement"))
-=======
-
-                    char delim[]=",";
-                    char *mydist=".txt";
-                    char mycopy[1000];
-                    char  start[2000]="DistrictFiles/";
-                    strcat(start,buffer);
-                    char *newcopy=strcpy(mycopy,start);
-
-                    // getting the district for the current user 
-                    char *file=strtok(newcopy,delim);
-                    
-                    strcat(file,mydist);
-                    
-                    printf("%s\n",file);
-
-
-                    FILE *fp;
-                    // char *string, *found;
-
-                    // string = strdup("Hello there, peasants!");
-                    // printf("Original string: '%s'\n", string);
-
-                    // found = strsep(&string, " ");
-                    // printf("%s\n", found);
-                    fp = fopen(file, "a+");
-                    if (fp) 
->>>>>>> 05fa9c82f9f9fc2e37f6e0d0d77dcbd59b770cb4
                     {
                         char location[70] = "payment_files/payment.txt";
                         printf("\n[+]Getting Statement\t\n");

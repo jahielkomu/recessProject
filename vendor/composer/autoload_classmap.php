@@ -34,6 +34,7 @@ return array(
     'App\\member' => $baseDir . '/app/member.php',
     'App\\myviews' => $baseDir . '/app/myviews.php',
     'App\\payment' => $baseDir . '/app/payment.php',
+    'App\\salaries' => $baseDir . '/app/salaries.php',
     'App\\treasury' => $baseDir . '/app/treasury.php',
     'BeyondCode\\DumpServer\\DumpServerCommand' => $vendorDir . '/beyondcode/laravel-dump-server/src/DumpServerCommand.php',
     'BeyondCode\\DumpServer\\DumpServerServiceProvider' => $vendorDir . '/beyondcode/laravel-dump-server/src/DumpServerServiceProvider.php',

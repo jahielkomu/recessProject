@@ -36,14 +36,19 @@
 
 Auth::routes();
 
-Route::get('/', 'HomeController@index')->name('home');
+Route::get('/', 'HomeController@index');
 
 Route::get('/high', 'HomeController@hierca')->name('home');
 
 Route::get('/stat', 'HomeController@stat')->name('home');
+<<<<<<< HEAD
 Route::post('/stat/district','HomeController@stat')->name('home');
 
+=======
+>>>>>>> dea6152ce09901b95771382afd0fb4db6473d7f0
 Route::get('/record', 'HomeController@records')->name('home');
+Route::post('/record', 'HomeController@records')->name('home');
+
 
 Route::get('/upgrade', 'HomeController@upgrades')->name('home');
 Route::get('/upgrade/do', 'HomeController@becomeAgent')->name('home');
