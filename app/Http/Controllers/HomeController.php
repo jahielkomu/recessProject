@@ -60,24 +60,37 @@ class HomeController extends Controller
 
     public function hierca()
     {
-      /*$table='districts';
-      $districts = district::all();
-      foreach($districts as $district)
-       $district->name{*/
+        global $db_handle;
+      //trying to set the hierachy displays
+      $query =DB::select(DB::raw("SELECT name FROM districts"));
+      $results=$db_handle->runQuery($query);
+      foreach($results as $name){
+        $name["id"]; 
+        $db_handle = New mysqli_connect();
+        if (!empty($_POST["id"])){
+        $query="SELECT * FROM agents WHERE id='".$_POST["id"]. "'";
+        $results=$db_handle->runQuery($query);
+        foreach ($results as $userName ) {
+      
+        }
+         $agents= DB::table('agents')->where('role','Agent');
+        $agenthead= DB::table('agents')->where('role','Agent head');
+      }
+    
         
-      return view('high');
-    }
+      }
+
+         return view('high');
+
+      }
+      
   
 
     // show the payment details
     public function payment()
     
     { $date=date('m-y');
-        global $amountagent;
-<<<<<<< HEAD
-=======
-        
->>>>>>> e6ce9b70250731cbc8075946ec1b50afa42d4eee
+        global $amountagent; 
         // calculating the amount of money recieved by agents ,admin agent headers
         $amount=DB::select(DB::raw("SELECT amount from treasuries "));
         // return $amount;
