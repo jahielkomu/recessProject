@@ -118,43 +118,45 @@
                           <?php
                           $connect = mysqli_connect('localhost','root','','UTFES_database' );
                           $resultset =$connect->query("SELECT id,name FROM districts");
+                          global $color;
+                          $connect = mysqli_connect('localhost','root','','utfes_database' );
+                          $resultset =$connect->query("SELECT name FROM districts");
+
+                          $color1="lightblue";
+                          $color2="blue";
+                          $color3=$color1;
+
                           ?>
-                         Select District to view <select name="district" id="" style="float: right">
+                         Select District to view <select name="district" id="id" style="float: right";">
                           <?php 
                           while ($rows = $resultset->fetch_assoc())
                           {
+                            $color==$color1 ? $color=$color2:$color=$color1;
                             $name = $rows['name'];
-                          echo"<option value=".$rows['id']."> $name </option>";
+                          echo"<option  value='' style='background:$color;'> $name </option>";
                           }
                           ?>                          
                          </select>
-                        </div>        
+                        </div>
                             <div class="panel" style="height: 350px;width: 500px;">
-                            <ul>
-                              <li>Administrator</li>
                               <ul>
-                                <li>Agent Head</li>
-                                <ul>
-                                  <li>Agent stoni</li>
-                                 
-                                  <li>Agent levers</li>
-                                  
-                                  <li>Agent winschott</li>
-                                  
-                                  <li>Agent aple</li>
-                                </ul>
+                                <li>Administrator
 
+                                  <ul>
+                                    <li>$userName</li>
+                                  </ul>
+                                </li>
                               </ul>
-
-                            </ul>
+                            
+                             
                             </div>          
                                    
-            </div>
-            </div>
+                           </div>
+                          </div>
                           </div>
                      
                 <!-- /. ROW  -->
-    </div>
+               </div>
              <!-- /. PAGE INNER  -->
             </div>
          <!-- /. PAGE WRAPPER  -->
@@ -173,4 +175,20 @@
 </body>
 </html>
 <img src="assets/img/hierachy.png" style="width:auto;height:420px;padding-left:15%;margin-top:0px;padding-top: 0 "> 
-                           
+                           <ul>
+                              <li>Administrator</li>
+                              <ul>
+                                <li>Agent Head</li>
+                                <ul>
+                                  <li>Agent stoni</li>
+                                 
+                                  <li>Agent levers</li>
+                                  
+                                  <li>Agent winschott</li>
+                                  
+                                  <li>Agent aple</li>
+                                </ul>
+
+                              </ul>
+
+                            </ul>
