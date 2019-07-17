@@ -23,7 +23,8 @@ int uftes_Get_statement(char **args);
   List of builtin commands, followed by their corresponding functions.
  */
 char district[30];
-char password;
+char password[2];
+char user[30];
 char *builtin_str[] = {
     "cd",
     "help",
@@ -465,6 +466,80 @@ void loop(void)
         free(args);
     } while (status);
 }
+int getPass()
+{
+    char *str;
+    int total = 0;
+    int r = 5, c = 3, i, j;
+    char *message[r][c];
+    //                                                                                                                                                         A                      B                 C                  D                  E                   F                 G                  H                   I                J                     K                 L                  M                N->n                0                  P                Q                  R                S                  T                U                  V                W                  X                 Y                 Z
+    char *key[2][26] = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "010101101111101", "110101110101110", "001010100010001", "110101101101110", "111100111100111", "111101111100100", "001010100011010", "101101111101101", "111010010010111", "111010010010110", "101110100110101", "100100100100111", "101111101101101", "010101101101101", "010101101101010", "110101110100100", "010101101111011", "110101110101101", "111100111001111", "111010010010010", "101101101101111", "101101101101010", "101101101111101", "101101010101101", "101101111001111", "111001010100111"};
+    for (int i = 0; i < r; i++)
+    {
+        for (int j = 0; j < c; j++)
+        {
+            printf("Cell(%d,%d): ", i, j);
+            message[i][j] = (char *)malloc(2);
+            scanf("%s", message[i][j]);
+            total += sizeof(message[i][j]);
+        }
+    }
+    for (int i = 0; i < r; i++)
+    {
+        for (int j = 0; j < c; j++)
+        {
+            if (strcmp(message[i][j], "1") == 0)
+            {
+                printf(" * ");
+            }
+            else
+            {
+                printf("   ");
+            }
+        }
+        printf("\n");
+    }
+    str = (char *)malloc(total + 1);
+    for (int i = 0; i < r; i++)
+    {
+        for (int j = 0; j < c; j++)
+        {
+            if (j == 0 && i == 0)
+            {
+                strcpy(str, message[i][j]);
+            }
+            else
+            {
+                strcat(str, message[i][j]);
+            }
+        }
+    }
+    printf("%s\n", str);
+    for (int i = 0; i < r; i++)
+    {
+        for (int j = 0; j < c; j++)
+        {
+            free(message[i][j]);
+        }
+    }
+    int found = 0;
+    for (int n = 0; n < 26; n++)
+    {
+        if (strcmp(key[1][n], str) == 0)
+        {
+            strcpy(password, key[0][n]);
+            found = 1;
+            break;
+        }
+    }
+    if (found = 0)
+    {
+        printf("Wrong password was entered\n");
+        return 1;
+    }
+    free(str);
+    return 0;
+}
 void init_shell()
 {
     clear();
@@ -490,9 +565,11 @@ void init_shell()
     printf("Use the man command for information on other programs.\n");
     printf("Enter district:\t");
     gets(district);
-    printf("Enter password:\t");
-    password = getchar();
-    printf("district %s password %c\n", district, password);
+    printf("Username:\t");
+    gets(user);
+    printf("Enter password\n\t");
+    getPass();
+    printf("district %s password %s\n", district, password);
     strcat(district, "|");
 }
 int main(int argc, char **argv)

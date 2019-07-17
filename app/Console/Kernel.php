@@ -26,6 +26,36 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
+       
+        // CHANGES APEAR HERE ONLY
+        $schedule->call(      
+
+
+            function (){
+    
+                $files = Storage::files('/DistrictFiles');
+                foreach($files as $district){
+        
+                $content = Storage::get($district);
+        
+                $contents = explode("\n",$content);
+                    foreach($contents as $arrays){
+                        $name = explode(",",$arrays);
+                        DB::table('members')->updateOrInsert(
+                            ['name'=>$name[0],'gender'=>$name[1],'recommender'=>$name[2],'date'=>$name[3]]
+                        );
+        
+                    }
+        
+                }
+                return '<script>alert("Data inserted check records");</script>';
+            }
+        
+        )->everyFiveMinutes();
+
+
+        
+        
     }
 
     /**
