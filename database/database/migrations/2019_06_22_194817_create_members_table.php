@@ -19,6 +19,7 @@ class CreateMembersTable extends Migration
             $table->string('recommender');
             $table->string('gender');
             $table->integer('agentid');
+            $table->date('date');
             $table->timestamps();
         });
     }
