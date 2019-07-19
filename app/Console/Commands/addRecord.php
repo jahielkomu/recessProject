@@ -16,7 +16,7 @@ class addRecord extends Command
      *
      * @var string
      */
-    protected $signature = 'command:addRecord';
+    protected $signature = 'addRecord';
 
     /**
      * The console command description.
@@ -66,11 +66,20 @@ class addRecord extends Command
             $agentsname= str_replace(' ', '',$username);
             $agentsign= str_replace(' ', '',$sign);
             $agent=agent::where(['userName'=>$agentsname,'signature'=>$agentsign])->first();
-            echo $agent->agentid;
+            // echo
+            return  $agent;
+
+        } 
+        function agentsid($username,$sign){
+            $agentsname= str_replace(' ', '',$username);
+            $agentsign= str_replace(' ', '',$sign);
+            $agent=agent::where(['userName'=>$agentsname,'signature'=>$agentsign])->first();
+            // echo
+            return  $agent->agentid;
 
         } 
        
-         agentids('kkom','d');
+        
         function deleterecord($arrays,$district,$content)
         {
             foreach ($arrays as $url) 
@@ -80,18 +89,34 @@ class addRecord extends Command
                  Storage::put($district, $contents);
             }   
         }
+        function getrecommendid($recom){
+            $recomid=member::where('member_Id',$recom)->first();
+             if($recomid){
+                 return 1;
+             }
+        }
           
 
         $files = Storage::files('/district_files');
+       
         foreach($files as $district)
            {
                $content = Storage::get($district);
                $contents = explode("\n",$content);
-            
+               $fail=0;
+               
+
                 foreach($contents as $arrays)
-                {
+                {   
+                  
+                  if(!isset($arrays)){
+                      continue;
+                  }
                     $name = explode(",",$arrays);
                 
+                 if(!agentids('kkom','e')==null)
+                  {
+                      
                     if(!isset($name[1])){
                         deleterecord($contents,$district,$content);
                         continue;
@@ -100,11 +125,12 @@ class addRecord extends Command
                       
                     if(count($name)>3){
                         
-                    
-                        DB::table('members')->updateOrInsert(
-                            ['districtNO'=>getdistrict($name[0]),'fname'=>$name[1],'gender'=>$name[2],'memberDistrict'->districtid($name[0])]
                         
+                        DB::table('members')->updateOrInsert(
+                            ['districtNO'=>getdistrict($name[0]),'fname'=>$name[1],'gender'=>$name[2],'memberDistrict'=>districtid($name[0]),'agentid'=>agentsid('kkom','d')]
+                         
                         );
+                        
                     }
                     }
                     else
@@ -113,15 +139,36 @@ class addRecord extends Command
                         if(count($name)>4)
                         {
 
-                        
+                            if(getrecommendid('11')){
                         DB::table('members')->updateOrInsert(
-                            ['districtNO'=>getdistrict($name[0]),'memberDistrict'=>districtid($name[0]),'fname'=>$name[1],'gender'=>$name[2],'recommender'=>$name[3]]
+                            ['districtNO'=>getdistrict($name[0]),'memberDistrict'=>districtid($name[0]),'fname'=>$name[1],'gender'=>$name[2],'recommender'=>$name[3],'agentid'=>agentsid('kkom','d')]
                         );
                         
+                    }else{
+
+                    }      Storage::append('error/'.$district,'wrong recommender id  '.$arrays.'');
                         }
                     }
-    
+                  }
+                  else{
+                    if(!isset($name[1]) and $arrays==end($contents)){
+                        // deleterecord($contents,$district,$content);
+                       
+                        
+                                Storage::put('success/'.$district,' total records not inserted into the database '.$fail.'');
+
+                        
+                        
+                        continue;
+                    }
+                    Storage::put('error/'.$district,'invalid signature with the following details '.$arrays.'');
+                    $fail=$fail+1;
+                    
+                  }
+                 
                 }
+
+                  
     
             }
     
