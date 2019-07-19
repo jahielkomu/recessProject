@@ -13,7 +13,16 @@
                             {{ session('status') }}
                         </div>
                     @endif
+                    <script type="text/javascript" src="jquery.min.js"></script> 
 
+                    <script type="text/javascript"> 
+                    function doSomething() { 
+                        $.get("/home",'home'); 
+                        return false; 
+                    } 
+                    </script>
+                    
+                    <a href="#" onclick="doSomething();">Click Me!</a>
                     
                 </div>
             </div>

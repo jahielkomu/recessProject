@@ -88,7 +88,7 @@ int main()
 
                         printf("\n[+]Adding Member\t\n");
                         char info[1025];
-                        char location[50] = "storage/district_files/";
+                        char location[150] = "storage/district_files/";
                         strcat(location, district);
                         strcat(location, ".txt");
                         strcpy(info, district);

@@ -6,7 +6,10 @@ use Illuminate\Console\Command;
 use DB;
 use Storage;
 use App\district;
+use App\member;
+use App\agent;
 class addRecord extends Command
+
 {
     /**
      * The name and signature of the console command.
@@ -38,49 +41,93 @@ class addRecord extends Command
      * @return mixed
      */
     public function handle()
-    {
+
+    {   
+        function getdistrict($distname)
+        {
+            
+            $distname= str_replace(' ', '', $distname);
+        $id=district::where('name',$distname)->first();
+        $memid=member::all()->pluck('member_Id')->last();
+        $memid=$memid+1;
+        $ini=substr($id->name,0,4);
+        $new= strtoupper($ini).$memid;
         
+        return $new;
+
+        } 
+        function districtid($ids)
+        {
+            $distname= str_replace(' ', '', $ids);
+            $did=district::where('name',$distname)->first();
+            return $did->id;
+        }
+        function agentids($username,$sign){
+            $agentsname= str_replace(' ', '',$username);
+            $agentsign= str_replace(' ', '',$sign);
+            $agent=agent::where(['userName'=>$agentsname,'signature'=>$agentsign])->first();
+            echo $agent->agentid;
+
+        } 
+       
+         agentids('kkom','d');
+        function deleterecord($arrays,$district,$content)
+        {
+            foreach ($arrays as $url) 
+            {
+                $tempcontent =" ";
+                 $contents = $tempcontent;
+                 Storage::put($district, $contents);
+            }   
+        }
+          
+
         $files = Storage::files('/district_files');
-        foreach($files as $district){
+        foreach($files as $district)
+           {
+               $content = Storage::get($district);
+               $contents = explode("\n",$content);
+            
+                foreach($contents as $arrays)
+                {
+                    $name = explode(",",$arrays);
+                
+                    if(!isset($name[1])){
+                        deleterecord($contents,$district,$content);
+                        continue;
+                    }
+                    if(!isset($name[4])){
+                      
+                    if(count($name)>3){
+                        
+                    
+                        DB::table('members')->updateOrInsert(
+                            ['districtNO'=>getdistrict($name[0]),'fname'=>$name[1],'gender'=>$name[2],'memberDistrict'->districtid($name[0])]
+                        
+                        );
+                    }
+                    }
+                    else
+                    {
+                        // doesnt allow to enter incomplete details
+                        if(count($name)>4)
+                        {
 
-        $content = Storage::get($district);
-
-        $contents = explode("\n",$content);
-            foreach($contents as $arrays){
-                $name = explode(",",$arrays);
-                if(!isset($name[1])){
-                    continue;
+                        
+                        DB::table('members')->updateOrInsert(
+                            ['districtNO'=>getdistrict($name[0]),'memberDistrict'=>districtid($name[0]),'fname'=>$name[1],'gender'=>$name[2],'recommender'=>$name[3]]
+                        );
+                        
+                        }
+                    }
+    
                 }
-                if(!isset($name[3])){
-                    DB::table('members')->updateOrInsert(
-                        ['fname'=>$name[1],'gender'=>$name[2],'created_at'=>$name[3]]
-                    );
-
-
-                }else{
-                    DB::table('members')->updateOrInsert(
-                        ['fname'=>$name[1],'gender'=>$name[2],'recommender'=>$name[3],'created_at'=>$name[4]]
-                    );
-                }
-
-
+    
             }
-
-        }
-        $distname=district::all();
-        $membern=DB::select('select * from districts,members where memberDistrict=id');
-     
+    
         
-           
-           foreach($membern as $mem)
-           { 
-            $ini=substr($mem->name,0,4);
-           $new= strtoupper($ini).$mem->member_Id;
-        
-           DB::statement("update members SET districtNO='$new' where member_Id='$mem->member_Id'");
-           echo "successful";   
-           }
-        }
+    
+    }
            
     
     
