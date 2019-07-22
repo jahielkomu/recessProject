@@ -9,13 +9,14 @@
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
         <link href="assets/css/bootstrap.css" rel="stylesheet" />
-            <!-- FONTAWESOME STYLES-->
-            <link href="assets/css/font-awesome.css" rel="stylesheet" />
+         <!-- FONTAWESOME STYLES-->
+        <link href="assets/css/font-awesome.css" rel="stylesheet" />
             <!-- MORRIS CHART STYLES-->
-            <link href="assets/js/morris/morris-0.4.3.min.css" rel="stylesheet" />
+        <link href="assets/js/morris/morris-0.4.3.min.css" rel="stylesheet" />
             <!-- CUSTOM STYLES-->
-            <link href="assets/css/custom.css" rel="stylesheet" />
-
+        <link href="assets/css/custom.css" rel="stylesheet" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>     
         <!-- Styles -->
         <style>
           
@@ -23,6 +24,54 @@
         </style>
     </head>
     <body>
+         <script>
+        // displays the agent records in hierachy format
+        $(document).ready(function(){
+          $(document).on('change','.district_id',function()
+          
+          {
+            // console.log("its working");
+            var ids=$(this).val();
+            var div=$(this).parent();
+            op="";
+            console.log(ids);
+            $.ajax({
+              type:'get',
+              url:'{!! URL::to('reco') !!}',
+              data:{'id':ids},
+              success:function(data) {
+                // console.log('success');
+                // console.log(data);
+                for(var i=0;i<data.length;i++){ 
+                  if(data[i].role=='Agent head'){
+                  op+='<label>Admininstrator</label><li>Aksam Lwanga </li> </label><label>Agent head </label><li value="">'+data[i].firstName+' '+data[i].LastName+'</li><label>Agents </label>'; 
+                  }   
+                  else{
+                  op+='<ul><li value="">'+data[i].firstName+' '+data[i].LastName+'</li></ul>';
+                  }
+                }
+            
+                $('#agent_id').html(op);
+                
+
+
+
+
+
+
+
+              },
+              error:function(){
+                console.log(data);
+
+              }
+
+
+          });
+        });
+      });
+        
+     </script>
       <div id="wrapper">
         <nav class="navbar navbar-default navbar-cls-top " role="navigation" style="margin-bottom: 0;background-color: rgb(0, 162, 255)">
             <div class="navbar-header">
@@ -115,38 +164,24 @@
                       <div class="col-md-7" style="width: 900px">
                     <div class="panel panel-default" style="width: 900px">
                         <div class="panel-heading" style="width: 900px">
-                          <?php
-                          $connect = mysqli_connect('localhost','root','','UTFES_database' );
-                          $resultset =$connect->query("SELECT id,name FROM districts");
-                          global $color;
-                          $connect = mysqli_connect('localhost','root','','UTFES_database' );
-                          $resultset =$connect->query("SELECT id, name FROM districts");
-
-                          $color1="lightblue";
-                          $color2="blue";
-                          $color3=$color1;
-
-                          ?>
-                         Select District to view <select name="district" id="id" style="float: right";">
-                          <?php 
-                          while ($rows = $resultset->fetch_assoc())
-                          {
-                            $color==$color1 ? $color=$color2:$color=$color1;
-                            $name = $rows['name'];
-                          echo"<option  value=".$rows['id']." style='background:$color;'> $name </option>";
-                          }
-                          ?>                          
-                         </select>
+                          
+                                <label for="agent_id">Hierachy display of agents to particular district</label>
+                         <select id="district_id" class="district_id" style="float: right";">
+                             <label for="agent_id">agent</label>
+                             <option value="">Select district</option>
+                             @foreach($district_list as $country)
+                             <option value="{{ $country->id}}">{{ $country->name }}</option>
+                             @endforeach                 
+                         </select> 
                         </div>
                             <div class="panel" style="height: 350px;width: 500px;">
-                              <ul>
-                                <li>Administrator
-
-                                  <ul>
-                                    <li>$userName</li>
-                                  </ul>
-                                </li>
-                              </ul>
+                                   <div class="list-group">
+  
+                                    
+                                    <ul name="agent_id" id="agent_id" class="agent_id">
+                                     <li value="">shows me hierarchy by selecting a particular district</li>
+                                    </ul>
+                                  </div>
                             
                              
                             </div>          
@@ -171,7 +206,9 @@
     <script src="assets/js/jquery.metisMenu.js"></script>
       <!-- CUSTOM SCRIPTS -->
     <script src="assets/js/custom.js"></script>
- 
+   
+  
+            
 </body>
 </html>
 <img src="assets/img/hierachy.png" style="width:auto;height:420px;padding-left:15%;margin-top:0px;padding-top: 0 "> 

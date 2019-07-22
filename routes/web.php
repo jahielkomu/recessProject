@@ -39,6 +39,7 @@ Auth::routes();
 Route::get('/', 'HomeController@index');
 
 Route::get('/high', 'HomeController@hierca')->name('home');
+Route::get('/reco', 'HomeController@fetchs')->name('home');
 
 Route::get('/stat', 'HomeController@stat')->name('home');
 Route::post('/stat/district','HomeController@stat')->name('home');
