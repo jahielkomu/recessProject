@@ -13,6 +13,8 @@ use Charts;
 use App\myviews;
 use App\salaries;
 use Storage;
+use response;
+
 
 
 
@@ -71,16 +73,19 @@ class HomeController extends Controller
         return view('high',compact('district_list'));
 
         
-
-      }
-      public function fetchs(Request $request)
-    {   
-        // determines the agents belonging to  aparticular district
-        $data = district::find($request->id)->AgentAvailable()->orderBy('role','DESC')->get(['agentid','LastName','firstName','role']);
-    
-       return response()->json($data);
     }
+
+                  
+
       
+      public function fetchs(Request $request)
+    {  
+        // determines the agents and agent heads belonging to  aparticular district
+        $data = district::find($request->id)->AgentAvailable()->orderBy('role','DESC')->get(['agentid','lastName','firstName','role']);
+        // $data= $district->AgentAvailable()->orderBy('role','ASC')->get(['agentid','LastName','firstName','role']);
+      
+    }
+   
   
 
     // show the payment details
@@ -290,13 +295,21 @@ class HomeController extends Controller
     // show records
     public function records(Request $requests){
 
-        $membertable=DB::select("select * from members where memberDistrict='$requests->district'");
+       // $membertable=DB::select("select * from members where memberDistrict='$requests->district'");
         $agentstable=DB::select('select * from districts,agents where id=district_Id and role="Agent"order by name asc');
         $headtable=DB::select('select * from districts,agents where id=district_Id  and role="Agent head" order by name asc');
         $districttable=DB::table('districts')->orderBy('name','desc')->get();
         
         // return $membertable;
-        return view('record',compact('membertable','agentstable','headtable','districttable'));
+        return view('record',compact('agentstable','headtable','districttable'));
+    }
+
+    //showing members enrolled in a selected particular district
+    public function members(Request $requests){
+
+       $membertable=DB::select("select * from members where memberDistrict='$requests->district'");
+       $districttable=DB::table('districts')->orderBy('name','desc')->get();
+       return view ('member', compact('membertable','districttable'));
     }
     // show registration form
     public function upgrades(){

@@ -1,5 +1,0 @@
-Agent head highest enrollment: 50000
-Other Agent heads : 25000
-agents highest enrollment: 40000
-other agents: 30000
-admin: 15000

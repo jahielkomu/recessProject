@@ -30,7 +30,11 @@
           $(document).on('change','.district_id',function()
           
           {
+<<<<<<< HEAD
+            console.log("its working");
+=======
             // console.log("its working");
+>>>>>>> aaa7c388b78ff6405af4c4b791e096400b1a6584
             var ids=$(this).val();
             var div=$(this).parent();
             op="";
@@ -40,8 +44,13 @@
               url:'{!! URL::to('reco') !!}',
               data:{'id':ids},
               success:function(data) {
+<<<<<<< HEAD
+                 console.log('success');
+                console.log(data);
+=======
                 // console.log('success');
                 // console.log(data);
+>>>>>>> aaa7c388b78ff6405af4c4b791e096400b1a6584
                 for(var i=0;i<data.length;i++){ 
                   if(data[i].role=='Agent head'){
                   op+='<label>Admininstrator</label><li>Aksam Lwanga </li> </label><label>Agent head </label><li value="">'+data[i].firstName+' '+data[i].LastName+'</li><label>Agents </label>'; 
@@ -51,6 +60,11 @@
                   }
                 }
             
+<<<<<<< HEAD
+                $('#agent_id').html(op);          
+
+             },
+=======
                 $('#agent_id').html(op);
                 
 
@@ -61,6 +75,7 @@
 
 
               },
+>>>>>>> aaa7c388b78ff6405af4c4b791e096400b1a6584
               error:function(){
                 console.log(data);
 
@@ -110,11 +125,11 @@
         <nav class="navbar-default navbar-side" role="navigation">
             <div class="sidebar-collapse" style="background-color: #999">
                 <ul class="nav" id="main-menu" style="background: #3980b5">
-				<li class="text-center" style="background: #3980b5">
+        <li class="text-center" style="background: #3980b5">
                     <img src="assets/img/find_user.png" class="user-image img-responsive"/>
-					</li>
-				
-					
+          </li>
+        
+          
                     <li style="background-color: rgb(0, 85, 182)">
                         <a href="/" style="background: #3980b5;"><i class="fa fa-dashboard fa-3x"></i> Dashboard</a>
                     </li>
@@ -125,11 +140,16 @@
                         <a  href="/payment" style="background: #3980b5"><i class="fa fa-qrcode fa-3x"></i> Payments</a>
                     </li>
                    
-						   <li  >
+               <li  >
                         <a   href="/stat" style="background: #3980b5"><i class="fa fa-bar-chart-o fa-3x"></i> Statistics</a>
-                    </li>	
+                    </li> 
                       <li  >
                         <a  href="/record" style="background: #3980b5"><i class="fa fa-table fa-3x"></i> Records</a>
+
+                    </li>
+                    <li  >
+                        <a  href="/member" style="background: #3980b5"><i class="fa fa-table fa-3x"></i> Members</a>
+                        
                     </li>
                     <li  >
                         <a  href="/upgrade" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> Upgrade</a>
@@ -140,8 +160,8 @@
                         </li>
                     <li >
                         <a  href="/newdist" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> New District</a>
-                    </li>				
-			
+                    </li>       
+      
                 </ul>
                
             </div>
@@ -170,10 +190,13 @@
                              <label for="agent_id">agent</label>
                              <option value="">Select district</option>
                              @foreach($district_list as $country)
-                             <option value="{{ $country->id}}">{{ $country->name }}</option>
+                             <option value="{{ $country->id}}"  onchange="function(data)">{{ $country->name }}</option>
                              @endforeach                 
-                         </select> 
+                         </select>
+                          
                         </div>
+                       
+
                             <div class="panel" style="height: 350px;width: 500px;">
                                    <div class="list-group">
   
@@ -211,21 +234,3 @@
             
 </body>
 </html>
-<img src="assets/img/hierachy.png" style="width:auto;height:420px;padding-left:15%;margin-top:0px;padding-top: 0 "> 
-                           <ul>
-                              <li>Administrator</li>
-                              <ul>
-                                <li>Agent Head</li>
-                                <ul>
-                                  <li>Agent stoni</li>
-                                 
-                                  <li>Agent levers</li>
-                                  
-                                  <li>Agent winschott</li>
-                                  
-                                  <li>Agent aple</li>
-                                </ul>
-
-                              </ul>
-
-                            </ul>

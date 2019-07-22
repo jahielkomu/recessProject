@@ -53,22 +53,24 @@
                                 </a>
                             </div>
                             
-                  </div>                  
-        </nav> 
+                  </div>
+            
+                            
+        </nav>   
            <!-- /. NAV TOP  -->
-                <nav class="navbar-default navbar-side" role="navigation">
+        <nav class="navbar-default navbar-side" role="navigation">
             <div class="sidebar-collapse" style="background-color: #999">
                 <ul class="nav" id="main-menu" style="background: #3980b5">
 				<li class="text-center" style="background: #3980b5">
                     <img src="assets/img/find_user.png" class="user-image img-responsive"/>
-				</li>
+					</li>
 				
 					
                     <li style="background-color: rgb(0, 85, 182)">
                         <a href="/" style="background: #3980b5;"><i class="fa fa-dashboard fa-3x"></i> Dashboard</a>
                     </li>
                     <li>
-                        <a   href="/high" style="background: #3980b5;"><i class="fa fa-desktop fa-3x"></i> Hierarchy</a>
+                        <a   href="/high" style="background: #104075;"><i class="fa fa-desktop fa-3x"></i> Hierarchy</a>
                     </li>
                         <li>
                         <a  href="/payment" style="background: #3980b5"><i class="fa fa-qrcode fa-3x"></i> Payments</a>
@@ -81,19 +83,16 @@
                         <a  href="/record" style="background: #3980b5"><i class="fa fa-table fa-3x"></i> Records</a>
                     </li>
                     <li  >
-                        <a  href="/member" style="background: #3980b5"><i class="fa fa-table fa-3x"></i> Members</a>
-                        
+                        <a  href="/upgrade" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> Upgrade</a>
+
                     </li>
                     <li  >
-                        <a  href="/upgrade" style="background: #104075"><i class="fa fa-edit fa-3x"></i> Upgrade</a>
-                    </li>				
-                    <li  >
-                        <a  href="/newuser" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> New record</a>
-                    </li>	
+                            <a  href="/newuser" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> New record</a>
+                        </li>
                     <li >
                         <a  href="/newdist" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> New District</a>
-                    </li>
-                </ul>
+                    </li>				
+			
                 </ul>
                
             </div>
@@ -104,77 +103,58 @@
             <div id="page-inner">
                 <div class="row">
                     <div class="col-md-12">
-                     <h2>Upgrade page</h2>   
+                     <h2>Hierarchy</h2>   
                         <h5>Welcome Lwanga Aksam , Love to see you back. </h5>
                        
                     </div>
                 </div>
+                 <!-- /. ROW  -->
+                 <hr />
+                 <div class="row">
+                    
+                      <div class="col-md-7" style="width: 900px">
+                    <div class="panel panel-default" style="width: 900px">
+                        <div class="panel-heading" style="width: 900px">
+                          <?php
+                          global $color;
+                          global $data;
+                          global $work;-
+                          $connect = mysqli_connect('localhost','root','','utfes_database' );
+                          $resultset =$connect->query("SELECT id, name FROM districts");
 
-                <!-- /.UPGRADE -->
-                <!--added for document purpose-->
-                <div id="upgrade panel panel-default">
-                    <div class="qualify panel-body">
-                        <h2 class="qualify">Qualify</h2>
-                        <div class="table-responsive">
-                            <table class="table table-striped table-bordered table-hover">
-                                <tr>
-                                <th>Id</th>
-                                <th>Name</th>
-                                <th>gender</th>
-                                </tr>
-                                     @foreach($memberqualify as $row)
-                                       <tr>     
-                                          <td>{{$row->districtNO}}</td>
-                                          <td>{{$row->fname}}</td>
-                                          <td>{{ $row->gender}}</td>
-                                       </tr>
-                                       @endforeach
-                            </table>
+                          $color1="lightblue";
+                          $color2="blue";
+                          $color3=$color1;
+
+                          ?>
+                      
+                           <button  id="test" type="submit" class="btn btn-default" onclick="hierachy" height="3px" width="5px"style="float:right">view</button> 
+                         Select District to view <select name="district" id="id" style="float: right";">
+                          <?php 
+                          while ($rows = $resultset->fetch_assoc())
+                          {
+                            $color==$color1 ? $color=$color2:$color=$color1;
+                            $name = $rows['name'];
+                          echo"<option  value=".$rows['id']."  (HTML::link_to_route('districts',$name,array(&district_Id))) style='background:$color;'> $name </option>";
+                          }
+                          ?>                          
+                         </select>
                         </div>
-                        <script>
-                                $(document).ready(function(){
-                                    $("table").click(function(){
-                                        $(this).hide();
-                                    });
-                                });
-                                </script> 
-                                <form>
-                        <button><a href="/upgrade/do">Random distribute</a></button>
-                        @if(session('success'))
-                 
-                         <h4 style="color:red">{{session('success')}}<h4>
-                       @endif
-                    </div>
-                    <div class="qualify panel-body">
-                        <h2>Districts available</h2>
-                        <!-- <select name="" id="" style="display: inline"><option value="Number of agets">Agents &lt;:<input type="number" name="" id=""></option><option value="members">Members &lt;: <input type="number" name="" id=""></option></select>
-                            -->
-                        <div class="district table-responsive">
-                            <table class="table table-striped table-bordered">
-                                <tr>                                    
-                                    <th>Distric number</th>
-                                    <!-- <th>Initial</th> -->
-                                    <th>Name</th>
-                            
-                                </tr>
-                                @foreach($districtAvailable as $row)
-                                       <tr>     
-                                          <td>{{$row->id}}</td>
-                                          <td>{{$row->name}}</td>
-                                       </tr>
-                                       @endforeach
-                            </table>
-                        </div>
+                        <div class="panel" style="height: 350px;width: 500px;">
                         
-                    </div>
-                </div>
-                
-
-
-
-              
+                          <ul>
+                            
+                            <li>{{$work}}</li>
+                          </ul>                                              
+                                                         
+                            </div>          
+                                   
+                           </div>
+                          </div>
+                          </div>
+                     
                 <!-- /. ROW  -->
-    </div>
+               </div>
              <!-- /. PAGE INNER  -->
             </div>
          <!-- /. PAGE WRAPPER  -->
@@ -189,7 +169,26 @@
     <script src="assets/js/jquery.metisMenu.js"></script>
       <!-- CUSTOM SCRIPTS -->
     <script src="assets/js/custom.js"></script>
-    
-   
+ 
 </body>
 </html>
+<img src="assets/img/hierachy.png" style="width:auto;height:420px;padding-left:15%;margin-top:0px;padding-top: 0 "> 
+                           <ul>
+                              <li>Administrator</li>
+                              <ul>
+                                <li>Agent Head</li>
+                                <ul>
+                                  <li>Agent stoni</li>
+                                 
+                                  <li>Agent levers</li>
+                                  
+                                  <li>Agent winschott</li>
+                                  
+                                  <li>Agent aple</li>
+                                </ul>
+
+                              </ul>
+
+                            </ul>
+                                                    
+                            
