@@ -114,7 +114,7 @@ class addRecord extends Command
                   }
                     $name = explode(",",$arrays);
                 
-                 if(!agentids('kkom','e')==null)
+                 if(!agentids('kkom','d')==null)
                   {
                       
                     if(!isset($name[1])){

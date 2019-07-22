@@ -53,7 +53,7 @@ class HomeController extends Controller
         FROM members WHERE recommender IN
           (SELECT recommender FROM members GROUP BY recommender HAVING COUNT(*) >=40)'));
           $co=count($member);
-          //district name with the higest enrollment
+          //district name with the higest enroll
           $districtname=DB::select(DB::raw('SELECT id,name, count(*) as total from districts,members where districts.id=members.memberDistrict  GROUP BY id ORDER BY 2 DESC limit 1'));
         
         //send data to the views
@@ -77,7 +77,7 @@ class HomeController extends Controller
     {   
         // determines the agents belonging to  aparticular district
         $data = district::find($request->id)->AgentAvailable()->orderBy('role','DESC')->get(['agentid','LastName','firstName','role']);
-        // $data= $district->AgentAvailable()->orderBy('role','ASC')->get(['agentid','LastName','firstName','role']);
+    
        return response()->json($data);
     }
       
@@ -101,7 +101,7 @@ class HomeController extends Controller
          
         foreach($district as $dist)
           { 
-            // agents with district of the highest enrollment
+            // agents with district of the highest enrollment after getting the id 
            $noagentsinhigh=DB::table('agents')->where('district_Id',$dist->id)->count();
           
            
