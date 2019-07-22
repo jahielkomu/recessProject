@@ -184,30 +184,20 @@
                       <div class="col-md-7" style="width: 900px">
                     <div class="panel panel-default" style="width: 900px">
                         <div class="panel-heading" style="width: 900px">
-<<<<<<< HEAD
 
-
-                          
-                                <label for="agent_id">Hierachy display of agents of a particular district</label>
-=======
-                          
+                                           
                                 <label for="agent_id">Hierachy display of agents to particular district</label>
->>>>>>> aaa7c388b78ff6405af4c4b791e096400b1a6584
+
                          <select id="district_id" class="district_id" style="float: right";">
                              <label for="agent_id">agent</label>
                              <option value="">Select district</option>
                              @foreach($district_list as $country)
-<<<<<<< HEAD
                              <option value="{{ $country->id}}"  onchange="function(data)">{{ $country->name }}</option>
                              @endforeach                 
                          </select>
                           
-=======
-                             <option value="{{ $country->id}}">{{ $country->name }}</option>
-                             @endforeach                 
-                         </select> 
->>>>>>> aaa7c388b78ff6405af4c4b791e096400b1a6584
-                        </div>
+
+                          </div>
                        
 
                             <div class="panel" style="height: 350px;width: 500px;">
@@ -216,17 +206,12 @@
                                     
                                     <ul name="agent_id" id="agent_id" class="agent_id">
                                      <li value="">shows me hierarchy by selecting a particular district</li>
-<<<<<<< HEAD
 
                                     </ul>
                                    
-                                    
-                                   
+                                                                      
 
-=======
-                                    </ul>
->>>>>>> aaa7c388b78ff6405af4c4b791e096400b1a6584
-                                  </div>
+                                    </div>
                             
                              
                             </div>          

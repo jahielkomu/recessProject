@@ -55,27 +55,14 @@ class HomeController extends Controller
         FROM members WHERE recommender IN
           (SELECT recommender FROM members GROUP BY recommender HAVING COUNT(*) >=40)'));
           $co=count($member);
-          //district name with the higest enrollment
-          $districtname=DB::select(DB::raw('SELECT id,name, count(*) as total from districts,members where districts.id=members.memberDistrict  GROUP BY id ORDER BY 2 DESC limit 1'));
-        
+          ;
         //send data to the views
-        return view('welcome',['results'=>$results,'agents'=>$agents,'district'=>$district,'co'=>$co,'districtname'=>$districtname]);
+        return view('welcome',['results'=>$results,'agents'=>$agents,'district'=>$district,'co'=>$co]);
     
         
     }
     // show the hierca'districts' display
 
-<<<<<<< HEAD
-=======
-    public function hierca()
-    {    
-        // getting all districts from the database
-        $district_list= district::orderby('name','ASC')->get(['id','name']);
-        
-        return view('high',compact('district_list'));
-
-        
->>>>>>> aaa7c388b78ff6405af4c4b791e096400b1a6584
 
     public function hierca() 
     {    
@@ -84,7 +71,6 @@ class HomeController extends Controller
         
         return view('high',compact('district_list'));
       }
-<<<<<<< HEAD
    
                   
 
@@ -95,13 +81,6 @@ class HomeController extends Controller
         $data = district::find($request->id)->AgentAvailable()->orderBy('role','DESC')->get(['agentid','lastName','firstName','role']);
         // $data= $district->AgentAvailable()->orderBy('role','ASC')->get(['agentid','LastName','firstName','role']);
       
-=======
-      public function fetchs(Request $request)
-    {   
-        // determines the agents belonging to  aparticular district
-        $data = district::find($request->id)->AgentAvailable()->orderBy('role','DESC')->get(['agentid','LastName','firstName','role']);
-        // $data= $district->AgentAvailable()->orderBy('role','ASC')->get(['agentid','LastName','firstName','role']);
->>>>>>> aaa7c388b78ff6405af4c4b791e096400b1a6584
        return response()->json($data);
     }
       
@@ -119,14 +98,12 @@ class HomeController extends Controller
         $agents= DB::table('agents')->where('role','Agent')->count();
         $agenthead= DB::table('agents')->where('role','Agent head')->count();
         
-        $district =DB::select(DB::raw('SELECT id, count(*) as total from districts,members where districts.id=members.memberDistrict  GROUP BY id ORDER BY 2 DESC'));
-       
+        $district =DB::select(DB::raw('SELECT id, count(*) as total from districts,agents where districts.id=agents.district_Id  and agents.role="Agent" GROUP BY id ORDER BY 2 DESC'));
         // $head=DB::select(DB::raw('SELECT id,count(agentid) as agentid from districts,agents where districts.id=agents.district_Id and agents.role="Agent head" GROUP BY id'));
-         
-        foreach($district as $dist)
-          { 
+          foreach($district as $dist)
+          {  
             // agents with district of the highest enrollment
-           $noagentsinhigh=DB::table('agents')->where('district_Id',$dist->id)->count();
+           $noagentsinhigh=$dist->total;
           
            
 
@@ -315,12 +292,12 @@ class HomeController extends Controller
     public function records(Request $requests){
 
        // $membertable=DB::select("select * from members where memberDistrict='$requests->district'");
-        $agentstable=DB::select('select * from districts,agents where id=district_Id and role="Agent"order by name asc');
-        $headtable=DB::select('select * from districts,agents where id=district_Id  and role="Agent head" order by name asc');
-        $districttable=DB::table('districts')->orderBy('name','desc')->get();
+        $agentstable=DB::select('select * from districts,agents where id=district_Id and role order by name asc');
+       // $headtable=DB::select('select * from districts,agents where id=district_Id  and role="Agent head" order by name asc');
+        //$districttable=DB::table('districts')->orderBy('name','desc')->get();
         
         // return $membertable;
-        return view('record',compact('agentstable','headtable','districttable'));
+        return view('record',compact('agentstable'));
     }
 
     //showing members enrolled in a selected particular district
