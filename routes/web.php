@@ -50,6 +50,9 @@ Route::post('/stat/district','HomeController@stat')->name('home');
 Route::get('/record', 'HomeController@records')->name('home');
 Route::post('/record', 'HomeController@records')->name('home');
 
+Route::get('/member','HomeController@members')->name('home');
+Route::post('/member', 'HomeController@members')->name('home');
+
 
 Route::get('/upgrade', 'HomeController@upgrades')->name('home');
 Route::get('/upgrade/do', 'HomeController@becomeAgent')->name('home');

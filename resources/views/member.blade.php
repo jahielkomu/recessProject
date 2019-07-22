@@ -54,14 +54,14 @@
                             </div>
                             
                   </div>                  
-        </nav> 
-           <!-- /. NAV TOP  -->
-                <nav class="navbar-default navbar-side" role="navigation">
+        </nav>
+  <!-- /. NAV TOP  -->
+  <nav class="navbar-default navbar-side" role="navigation">
             <div class="sidebar-collapse" style="background-color: #999">
                 <ul class="nav" id="main-menu" style="background: #3980b5">
 				<li class="text-center" style="background: #3980b5">
                     <img src="assets/img/find_user.png" class="user-image img-responsive"/>
-				</li>
+					</li>
 				
 					
                     <li style="background-color: rgb(0, 85, 182)">
@@ -78,107 +78,120 @@
                         <a   href="/stat" style="background: #3980b5"><i class="fa fa-bar-chart-o fa-3x"></i> Statistics</a>
                     </li>	
                       <li  >
-                        <a  href="/record" style="background: #3980b5"><i class="fa fa-table fa-3x"></i> Records</a>
+                        <a  href="/record" style="background: #3980b5;"><i class="fa fa-table fa-3x"></i> Records</a>
                     </li>
                     <li  >
-                        <a  href="/member" style="background: #3980b5"><i class="fa fa-table fa-3x"></i> Members</a>
+                        <a  href="/member" style="background: #104075"><i class="fa fa-table fa-3x"></i> Members</a>
                         
                     </li>
                     <li  >
-                        <a  href="/upgrade" style="background: #104075"><i class="fa fa-edit fa-3x"></i> Upgrade</a>
+                        <a  href="/upgrade" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> Upgrade</a>
                     </li>				
-                    <li  >
+			        <li  >
                         <a  href="/newuser" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> New record</a>
                     </li>	
-                    <li >
-                        <a  href="/newdist" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> New District</a>
-                    </li>
-                </ul>
+                    <li  >
+                            <a  href="/newdist" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> New District</a>
+                        </li>
                 </ul>
                
             </div>
-            
         </nav> 
         <!-- /. NAV SIDE  -->
         <div id="page-wrapper" >
             <div id="page-inner">
                 <div class="row">
                     <div class="col-md-12">
-                     <h2>Upgrade page</h2>   
+                     <h2>Members</h2>   
                         <h5>Welcome Lwanga Aksam , Love to see you back. </h5>
-                       
+                        
+                                              
                     </div>
                 </div>
+                 <!-- /. ROW  -->
+                 <hr />
 
-                <!-- /.UPGRADE -->
-                <!--added for document purpose-->
-                <div id="upgrade panel panel-default">
-                    <div class="qualify panel-body">
-                        <h2 class="qualify">Qualify</h2>
-                        <div class="table-responsive">
-                            <table class="table table-striped table-bordered table-hover">
-                                <tr>
-                                <th>Id</th>
-                                <th>Name</th>
-                                <th>gender</th>
-                                </tr>
-                                     @foreach($memberqualify as $row)
+                 <option>Select a particular district to see its members</option>
+                       
+               
+            <div class="row">
+                <div class="col-md-6">
+                    <!-- Advanced Tables -->
+                    <div class="panel panel-default">
+                        <div class="">
+                            
+                        </div>
+                        <div class="">
+                            
+                            
+                        </div>
+                    </div>
+                    <!--End Advanced Tables -->
+                </div>
+            </div>
+                <!-- /. ROW  -->
+           
+                <div class="col-md-6">
+                     <!--   Basic Table  -->
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Members
+                        </div>
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <form action="/member" method="POST">
+                                    {{ csrf_field() }}
+                                    <select name="district" id="">
+                                            @foreach($districttable as $row)
+                                              <option value="{{$row->id}}">{{ $row->name}}</option>
+                                            @endforeach    
+                                              </select>
+                                              <button  id="test" type="submit" class="btn btn-default">search</button>
+                                 </form>
+                                   
+
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Gender</th>
+                                            <th>Recomended</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                  
+                                    @foreach($membertable as $row)
                                        <tr>     
                                           <td>{{$row->districtNO}}</td>
                                           <td>{{$row->fname}}</td>
                                           <td>{{ $row->gender}}</td>
+                                          <td>{{ $row->recommender}}</td>
+                                          <td>{{ $row->created_at}}</td>
                                        </tr>
                                        @endforeach
-                            </table>
+                                            
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                        <script>
-                                $(document).ready(function(){
-                                    $("table").click(function(){
-                                        $(this).hide();
-                                    });
-                                });
-                                </script> 
-                                <form>
-                        <button><a href="/upgrade/do">Random distribute</a></button>
-                        @if(session('success'))
-                 
-                         <h4 style="color:red">{{session('success')}}<h4>
-                       @endif
                     </div>
-                    <div class="qualify panel-body">
-                        <h2>Districts available</h2>
-                        <!-- <select name="" id="" style="display: inline"><option value="Number of agets">Agents &lt;:<input type="number" name="" id=""></option><option value="members">Members &lt;: <input type="number" name="" id=""></option></select>
-                            -->
-                        <div class="district table-responsive">
-                            <table class="table table-striped table-bordered">
-                                <tr>                                    
-                                    <th>Distric number</th>
-                                    <!-- <th>Initial</th> -->
-                                    <th>Name</th>
-                            
-                                </tr>
-                                @foreach($districtAvailable as $row)
-                                       <tr>     
-                                          <td>{{$row->id}}</td>
-                                          <td>{{$row->name}}</td>
-                                       </tr>
-                                       @endforeach
-                            </table>
-                        </div>
-                        
-                    </div>
+                      <!-- End  Basic Table  -->
                 </div>
-                
-
-
-
-              
+            </div>
                 <!-- /. ROW  -->
+           
+                     <!--  End  Bordered Table  -->
+
+          
+             
+        </div>
+               
     </div>
              <!-- /. PAGE INNER  -->
             </div>
          <!-- /. PAGE WRAPPER  -->
-        </div>
      <!-- /. WRAPPER  -->
     <!-- SCRIPTS -AT THE BOTOM TO REDUCE THE LOAD TIME-->
     <!-- JQUERY SCRIPTS -->
@@ -187,7 +200,15 @@
     <script src="assets/js/bootstrap.min.js"></script>
     <!-- METISMENU SCRIPTS -->
     <script src="assets/js/jquery.metisMenu.js"></script>
-      <!-- CUSTOM SCRIPTS -->
+     <!-- DATA TABLE SCRIPTS -->
+    <script src="assets/js/dataTables/jquery.dataTables.js"></script>
+    <script src="assets/js/dataTables/dataTables.bootstrap.js"></script>
+        <script>
+            $(document).ready(function () {
+                $('#dataTables-example').dataTable();
+            });
+    </script>
+         <!-- CUSTOM SCRIPTS -->
     <script src="assets/js/custom.js"></script>
     
    

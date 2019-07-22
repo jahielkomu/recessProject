@@ -71,12 +71,8 @@ class HomeController extends Controller
         
         return view('high',compact('district_list'));
       }
-
-    
-    
-      
-      
-        
+   
+                  
 
       
       public function fetchs(Request $request)
@@ -295,13 +291,21 @@ class HomeController extends Controller
     // show records
     public function records(Request $requests){
 
-        $membertable=DB::select("select * from members where memberDistrict='$requests->district'");
+       // $membertable=DB::select("select * from members where memberDistrict='$requests->district'");
         $agentstable=DB::select('select * from districts,agents where id=district_Id and role="Agent"order by name asc');
         $headtable=DB::select('select * from districts,agents where id=district_Id  and role="Agent head" order by name asc');
         $districttable=DB::table('districts')->orderBy('name','desc')->get();
         
         // return $membertable;
-        return view('record',compact('membertable','agentstable','headtable','districttable'));
+        return view('record',compact('agentstable','headtable','districttable'));
+    }
+
+    //showing members enrolled in a selected particular district
+    public function members(Request $requests){
+
+       $membertable=DB::select("select * from members where memberDistrict='$requests->district'");
+       $districttable=DB::table('districts')->orderBy('name','desc')->get();
+       return view ('member', compact('membertable','districttable'));
     }
     // show registration form
     public function upgrades(){

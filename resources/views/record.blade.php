@@ -71,20 +71,24 @@
                         <a   href="/high" style="background: #3980b5;"><i class="fa fa-desktop fa-3x"></i> Hierarchy</a>
                     </li>
                         <li>
-                        <a  href="/payment" style="background: #3980b5"><i class="fa fa-qrcode fa-3x"></i> Payments</a>
+                        <a  href="/payment" style="background: #3980b5;"><i class="fa fa-qrcode fa-3x"></i> Payments</a>
                     </li>
                    
 						   <li  >
-                        <a   href="/stat" style="background: #3980b5"><i class="fa fa-bar-chart-o fa-3x"></i> Statistics</a>
+                        <a   href="/stat" style="background: #3980b5;"><i class="fa fa-bar-chart-o fa-3x"></i> Statistics</a>
                     </li>	
                       <li  >
                         <a  href="/record" style="background: #104075;"><i class="fa fa-table fa-3x"></i> Records</a>
                     </li>
                     <li  >
-                        <a  href="/upgrade" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> Upgrade</a>
+                        <a  href="/member" style="background: #3980b5;"><i class="fa fa-table fa-3x"></i> Members</a>
+                        
+                    </li>
+                    <li  >
+                        <a  href="/upgrade" style="background: #3980b5;"><i class="fa fa-edit fa-3x"></i> Upgrade</a>
                     </li>				
 			        <li  >
-                        <a  href="/newuser" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> New record</a>
+                        <a  href="/newuser" style="background: #3980b5;"><i class="fa fa-edit fa-3x"></i> New record</a>
                     </li>	
                     <li  >
                             <a  href="/newdist" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> New District</a>
@@ -158,56 +162,7 @@
                     </div>
                      <!-- End  Kitchen Sink -->
                 </div>
-                <div class="col-md-6">
-                     <!--   Basic Table  -->
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Members
-                        </div>
-                        <div class="panel-body">
-                            <div class="table-responsive">
-                                <form action="/record" method="POST">
-                                    {{ csrf_field() }}
-                                    <select name="district" id="">
-                                            @foreach($districttable as $row)
-                                              <option value="{{$row->id}}">{{ $row->name}}</option>
-                                            @endforeach    
-                                              </select>
-                                              <button  id="test" type="submit" class="btn btn-default">search</button>
-                                 </form>
-                                   
-
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Name</th>
-                                            <th>Gender</th>
-                                            <th>Recomended</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                  
-                                    @foreach($membertable as $row)
-                                       <tr>     
-                                          <td>{{$row->districtNO}}</td>
-                                          <td>{{$row->fname}}</td>
-                                          <td>{{ $row->gender}}</td>
-                                          <td>{{ $row->recommender}}</td>
-                                          <td>{{ $row->created_at}}</td>
-                                       </tr>
-                                       @endforeach
-                                            
-                                        
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                      <!-- End  Basic Table  -->
-                </div>
-            </div>
-                <!-- /. ROW  -->
+                
             <div class="row">
 
 
