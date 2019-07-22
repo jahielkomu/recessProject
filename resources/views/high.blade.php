@@ -30,7 +30,11 @@
           $(document).on('change','.district_id',function()
           
           {
+<<<<<<< HEAD
             console.log("its working");
+=======
+            // console.log("its working");
+>>>>>>> aaa7c388b78ff6405af4c4b791e096400b1a6584
             var ids=$(this).val();
             var div=$(this).parent();
             op="";
@@ -40,8 +44,13 @@
               url:'{!! URL::to('reco') !!}',
               data:{'id':ids},
               success:function(data) {
+<<<<<<< HEAD
                  console.log('success');
                 console.log(data);
+=======
+                // console.log('success');
+                // console.log(data);
+>>>>>>> aaa7c388b78ff6405af4c4b791e096400b1a6584
                 for(var i=0;i<data.length;i++){ 
                   if(data[i].role=='Agent head'){
                   op+='<label>Admininstrator</label><li>Aksam Lwanga </li> </label><label>Agent head </label><li value="">'+data[i].firstName+' '+data[i].LastName+'</li><label>Agents </label>'; 
@@ -51,9 +60,22 @@
                   }
                 }
             
+<<<<<<< HEAD
                 $('#agent_id').html(op);          
 
              },
+=======
+                $('#agent_id').html(op);
+                
+
+
+
+
+
+
+
+              },
+>>>>>>> aaa7c388b78ff6405af4c4b791e096400b1a6584
               error:function(){
                 console.log(data);
 
@@ -162,18 +184,29 @@
                       <div class="col-md-7" style="width: 900px">
                     <div class="panel panel-default" style="width: 900px">
                         <div class="panel-heading" style="width: 900px">
+<<<<<<< HEAD
 
 
                           
                                 <label for="agent_id">Hierachy display of agents of a particular district</label>
+=======
+                          
+                                <label for="agent_id">Hierachy display of agents to particular district</label>
+>>>>>>> aaa7c388b78ff6405af4c4b791e096400b1a6584
                          <select id="district_id" class="district_id" style="float: right";">
                              <label for="agent_id">agent</label>
                              <option value="">Select district</option>
                              @foreach($district_list as $country)
+<<<<<<< HEAD
                              <option value="{{ $country->id}}"  onchange="function(data)">{{ $country->name }}</option>
                              @endforeach                 
                          </select>
                           
+=======
+                             <option value="{{ $country->id}}">{{ $country->name }}</option>
+                             @endforeach                 
+                         </select> 
+>>>>>>> aaa7c388b78ff6405af4c4b791e096400b1a6584
                         </div>
                        
 
@@ -183,12 +216,16 @@
                                     
                                     <ul name="agent_id" id="agent_id" class="agent_id">
                                      <li value="">shows me hierarchy by selecting a particular district</li>
+<<<<<<< HEAD
 
                                     </ul>
                                    
                                     
                                    
 
+=======
+                                    </ul>
+>>>>>>> aaa7c388b78ff6405af4c4b791e096400b1a6584
                                   </div>
                             
                              

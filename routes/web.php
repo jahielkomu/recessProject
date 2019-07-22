@@ -42,7 +42,10 @@ Route::get('/', 'HomeController@index');
 
 Route::get('/high', 'HomeController@hierca')->name('home');
 Route::get('/reco', 'HomeController@fetchs')->name('home');
+<<<<<<< HEAD
 
+=======
+>>>>>>> aaa7c388b78ff6405af4c4b791e096400b1a6584
 
 Route::get('/stat', 'HomeController@stat')->name('home');
 Route::post('/stat/district','HomeController@stat')->name('home');
