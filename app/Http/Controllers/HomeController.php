@@ -12,6 +12,8 @@ use DB;
 use Charts;
 use App\myviews;
 use App\salaries;
+use Storage;
+use response;
 
 
 
@@ -60,31 +62,24 @@ class HomeController extends Controller
     }
     // show the hierca'districts' display
 
-    public function hierca()
-    {
-        global $db_handle;
-      //trying to set the hierachy displays
-      $query =DB::select(DB::raw("SELECT name FROM districts"));
-      $results=$db_handle->runQuery($query);
-      foreach($results as $name){
-        $name["id"]; 
-        $db_handle = New mysqli_connect();
-        if (!empty($_POST["id"])){
-        $query="SELECT * FROM agents WHERE id='".$_POST["id"]. "'";
-        $results=$db_handle->runQuery($query);
-        foreach ($results as $userName ) {
-      
-        }
-         $agents= DB::table('agents')->where('role','Agent');
-        $agenthead= DB::table('agents')->where('role','Agent head');
-      }
-    
+    public function hierca() 
+    {    
+        // getting all districts from the database
+        $district_list= district::orderby('name','ASC')->get(['id','name']);
         
-      }
+        return view('high',compact('district_list'));
 
-         return view('high');
+        
 
       }
+      public function fetchs(Request $request)
+    {  
+        // determines the agents and agent heads belonging to  aparticular district
+        $data = district::find($request->id)->AgentAvailable()->orderBy('role','DESC')->get(['agentid','lastName','firstName','role']);
+        // $data= $district->AgentAvailable()->orderBy('role','ASC')->get(['agentid','LastName','firstName','role']);
+      
+       return response()->json($data);
+    }
       
   
 
@@ -92,11 +87,8 @@ class HomeController extends Controller
     public function payment()
     
     { $date=date('m-y');
-<<<<<<< HEAD
         global $amountagent; 
-=======
         global $amountagent;
->>>>>>> dea6152ce09901b95771382afd0fb4db6473d7f0
         // calculating the amount of money recieved by agents ,admin agent headers
         $amount=DB::select(DB::raw("SELECT amount from salaries"));
         // return $amount;
@@ -145,7 +137,7 @@ class HomeController extends Controller
                       $timepayment=date('m-y',strtotime($dateofreciv));
                       $lastpayment=date('m-y',strtotime($dateofpayment));
     
-                     // return $timepayment;
+                    //  return date('d',strtotime($dateofpayment));
                     if($timepayment==$lastpayment || $timepayment<$lastpayment){
             
             
@@ -155,13 +147,27 @@ class HomeController extends Controller
                      foreach($gentlowenr as $lown){
                            // adding payment details for each agent and agent not in highest enrollment
                             DB::statement('INSERT INTO  payments set payment_Id=(SELECT agentid from agents where agentid='.$lown->agentid.'),paymentDate=CURRENT_TIMESTAMP,amountpaid= case when (select role from agents where agentid='.$lown->agentid.')="Agent" then '. $amountagent.' when (select role from agents WHERE agentid='.$lown->agentid.')="Agent head"  then '.($amountagent * (7/4)).' end');
-            
+                        
+
+                            
                         }
                      
                      foreach($genthigenr as $higenr){
                          // agents belonging to districts with the highest enrollment  
                          DB::statement('INSERT INTO  payments set payment_Id=(SELECT agentid from agents where agentid='.$higenr->agentid.'),paymentDate=CURRENT_TIMESTAMP,amountpaid= case when (select role from agents where agentid='.$higenr->agentid.')="Agent" then '. ($amountagent * 2).' when (select role from agents WHERE agentid='.$higenr->agentid.')="Agent head"  then '.($amountagent *(7/4) *2).' end');
-            
+                         
+                        $content="Administrator - ".number_format($amountagent/2,0)."
+                          Agent head- ".number_format($amountagent*(7/4),0)."
+                          Agent - ".number_format($amountagent,0)."
+                          Agent with highest enrollment - ".number_format(2*$amountagent,0)."
+                          Agent head with highest enrollment- " .number_format((7/2)*$amountagent,0)."
+                          payment Date -".date('d-m-y');
+                    //    one approach to write to file or i will consider the know php
+                      Storage::put('payment_files/payment.txt', $content);
+                    // $myfile=fopen("payment_files/payment.txt",'w+') or die("unble to open") ;
+                    // fwrite($myfile,$content);
+                    // fclose($myfile);
+                    // return $content;
                         
             
             
@@ -172,13 +178,14 @@ class HomeController extends Controller
         }}
           else{
               $amountagent=0;
+              Storage::put('payment_files/payment.txt', 'No payments were made this month,sorry check next month ');
           }
        
 
         
 //         }
 //     
-    return view('payment',['amountagent'=>$amountagent,'remainingagent'=>$remainingagent,'noagentsinhigh'=>$noagentsinhigh]);
+    return view('payment',['amountagent'=>$amountagent,'remainingagent'=>$remainingagent,'noagentsinhigh'=>$noagentsinhigh,'remaininghead'=>$remaininghead]);
     
 // }
     }
@@ -254,7 +261,6 @@ class HomeController extends Controller
         ->labels($month)
         ->elementLabel("percentage change")
         ->values($updatedvalue)
-
         ->dimensions(1000,500)
 
         ->responsive(true);

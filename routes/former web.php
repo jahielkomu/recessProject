@@ -1,5 +1,3 @@
-
-
 <?php
 
 /*
@@ -38,18 +36,17 @@
 
 Auth::routes();
 
-Route::get('/', 'HomeController@index');
+Route::get('/', 'HomeController@index')->name('home');
 
-Route::get('/high', 'HomeController@hierca')->name('home');
-Route::get('/reco', 'HomeController@fetchs')->name('home');
-
+Route::get('/high', array('as'=>'districts', 'uses'=>'HomeController@hierca'))->name('home');
+Route::get('district/(:any)',array('as'=>'district', 'uses'=>'districts@view'));
+Route::post('/high/id','HomeController@hierca')->name('home');
 
 Route::get('/stat', 'HomeController@stat')->name('home');
-Route::post('/stat/district','HomeController@stat')->name('home');
+
 
 Route::get('/record', 'HomeController@records')->name('home');
 Route::post('/record', 'HomeController@records')->name('home');
-
 
 Route::get('/upgrade', 'HomeController@upgrades')->name('home');
 Route::get('/upgrade/do', 'HomeController@becomeAgent')->name('home');
@@ -69,4 +66,3 @@ Route::group(['Middleware'=>'Auth'],function(){
 });
 
 
-?>
