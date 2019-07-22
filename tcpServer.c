@@ -88,7 +88,7 @@ int main()
 
                         printf("\n[+]Adding Member\t\n");
                         char info[1025];
-                        char location[50] = "district_files/";
+                        char location[150] = "storage/district_files/";
                         strcat(location, district);
                         strcat(location, ".txt");
                         strcpy(info, district);
@@ -129,7 +129,7 @@ int main()
                     }
                     else if (strstr(command, "Get_statement"))
                     {
-                        char location[70] = "payment_files/payment.txt";
+                        char location[200] = "storage/app/payment_files/payment.txt";
                         printf("\n[+]Getting Statement\t\n");
                         FILE *fp1;
                         fp1 = fopen(location, "r");

@@ -13,7 +13,10 @@ use Charts;
 use App\myviews;
 use App\salaries;
 use Storage;
+<<<<<<< HEAD
 use response;
+=======
+>>>>>>> refs/remotes/origin/master
 
 
 
@@ -62,12 +65,36 @@ class HomeController extends Controller
     }
     // show the hierca'districts' display
 
+<<<<<<< HEAD
     public function hierca() 
     {    
         // getting all districts from the database
         $district_list= district::orderby('name','ASC')->get(['id','name']);
         
         return view('high',compact('district_list'));
+=======
+    public function hierca()
+    {
+       /* global $db_handle;
+      //trying to set the hierachy displays
+      $query =DB::select(DB::raw("SELECT name FROM districts"));
+      $results=$db_handle->runQuery($query);
+      foreach($results as $name){
+        $name["id"]; 
+        $db_handle = New mysqli_connect();
+        if (!empty($_POST["id"])){
+        $query="SELECT * FROM agents WHERE id='".$_POST["id"]. "'";
+        $results=$db_handle->runQuery($query);
+        foreach ($results as $userName ) {
+      
+        }
+         $agents= DB::table('agents')->where('role','Agent');
+        $agenthead= DB::table('agents')->where('role','Agent head');
+      }
+    
+        
+      }*/
+>>>>>>> refs/remotes/origin/master
 
         
 

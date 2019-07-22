@@ -157,6 +157,7 @@
                       <div class="col-md-7" style="width: 900px">
                     <div class="panel panel-default" style="width: 900px">
                         <div class="panel-heading" style="width: 900px">
+<<<<<<< HEAD
 
                           
                                 <label for="agent_id">Hierachy display of agents of a particular district</label>
@@ -167,6 +168,30 @@
                              <option value="{{ $country->id}}"  onchange="function(data)">{{ $country->name }}</option>
                              @endforeach                 
                          </select> 
+=======
+                          <?php
+                          $connect = mysqli_connect('localhost','root','','UTFES_database' );
+                          $resultset =$connect->query("SELECT id,name FROM districts");
+                          global $color;
+                          $connect = mysqli_connect('localhost','root','','UTFES_database' );
+                          $resultset =$connect->query("SELECT id, name FROM districts");
+
+                          $color1="lightblue";
+                          $color2="blue";
+                          $color3=$color1;
+
+                          ?>
+                         Select District to view <select name="district" id="id" style="float: right";">
+                          <?php 
+                          while ($rows = $resultset->fetch_assoc())
+                          {
+                            $color==$color1 ? $color=$color2:$color=$color1;
+                            $name = $rows['name'];
+                          echo"<option  value=".$rows['id']." style='background:$color;'> $name </option>";
+                          }
+                          ?>                          
+                         </select>
+>>>>>>> refs/remotes/origin/master
                         </div>
                        
 

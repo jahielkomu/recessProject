@@ -117,11 +117,12 @@
                             </div>
                             <div class="panel-body">
                                 <div class="app" > 
-                                    <center>
+                                    
+                                
                   
                                       {!! $chart->html() !!}
                                   
-                                   </center>
+                                   
                                   </div> 
                             </div>
                         </div>            
@@ -140,11 +141,11 @@
                         </div>
                         <div class="panel-body">
                             <div class="app" > 
-                                <center>
+                                
          
                                   {!! $chart2->html() !!}
                               
-                               </center>
+                               
                               </div> 
                         </div>
                     </div>            
