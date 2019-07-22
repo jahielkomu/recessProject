@@ -59,7 +59,7 @@ class HomeController extends Controller
           $districtname=DB::select(DB::raw('SELECT id,name, count(*) as total from districts,members where districts.id=members.memberDistrict  GROUP BY id ORDER BY 2 DESC limit 1'));
         
         //send data to the views
-        return view('welcome',['results'=>$results,'agents'=>$agents,'district'=>$district,'co'=>$co,'districtname'=>$districtname]);
+        return view('welcome',['results'=>$results,'agents'=>$agents,'district'=>$district,'co'=>$co]);
     
         
     }
@@ -84,6 +84,7 @@ class HomeController extends Controller
         $data = district::find($request->id)->AgentAvailable()->orderBy('role','DESC')->get(['agentid','lastName','firstName','role']);
         // $data= $district->AgentAvailable()->orderBy('role','ASC')->get(['agentid','LastName','firstName','role']);
       
+       return response()->json($data);
     }
    
   
@@ -100,14 +101,12 @@ class HomeController extends Controller
         $agents= DB::table('agents')->where('role','Agent')->count();
         $agenthead= DB::table('agents')->where('role','Agent head')->count();
         
-        $district =DB::select(DB::raw('SELECT id, count(*) as total from districts,members where districts.id=members.memberDistrict  GROUP BY id ORDER BY 2 DESC'));
-       
+        $district =DB::select(DB::raw('SELECT id, count(*) as total from districts,agents where districts.id=agents.district_Id  and agents.role="Agent" GROUP BY id ORDER BY 2 DESC'));
         // $head=DB::select(DB::raw('SELECT id,count(agentid) as agentid from districts,agents where districts.id=agents.district_Id and agents.role="Agent head" GROUP BY id'));
-         
-        foreach($district as $dist)
-          { 
-            // agents with district of the highest enrollment after getting the id 
-           $noagentsinhigh=DB::table('agents')->where('district_Id',$dist->id)->count();
+          foreach($district as $dist)
+          {  
+            // agents with district of the highest enrollment
+           $noagentsinhigh=$dist->total;
           
            
 
@@ -296,12 +295,10 @@ class HomeController extends Controller
     public function records(Request $requests){
 
        // $membertable=DB::select("select * from members where memberDistrict='$requests->district'");
-        $agentstable=DB::select('select * from districts,agents where id=district_Id and role="Agent"order by name asc');
-        $headtable=DB::select('select * from districts,agents where id=district_Id  and role="Agent head" order by name asc');
-        $districttable=DB::table('districts')->orderBy('name','desc')->get();
-        
+        $agentstable=DB::select('select * from districts,agents where id=district_Id and role order by name asc');
+      
         // return $membertable;
-        return view('record',compact('agentstable','headtable','districttable'));
+        return view('record',compact('agentstable'));
     }
 
     //showing members enrolled in a selected particular district

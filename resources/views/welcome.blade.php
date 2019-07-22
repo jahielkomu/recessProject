@@ -156,22 +156,7 @@
                     </div>
              </div>
              </div>
-             <div class="col-md-4 col-sm-6 col-xs-12">           
-                <div class="panel panel-back noti-box">
-                    <span class="icon-box bg-color-blue set-icon">
-                      <i class="fa fa-bell-o"></i>
-                     </span>
-                      <div class="text-box" >
-                         <p class="main-text">
-                          <!-- displaying district with no agents -->
-                            @foreach($districtname as $dist)
-                             {{$dist->name}}
-                              @endforeach
-                              District</p>
-                            <p class="text-muted">With highest enrollment figure</p>
-                      </div>
-               </div>
-               </div>
+             
              
             <div class="col-md-4 col-sm-6 col-xs-12">           
 			<div class="panel panel-back noti-box">
