@@ -30,11 +30,7 @@
           $(document).on('change','.district_id',function()
           
           {
-<<<<<<< HEAD
             console.log("its working");
-=======
-            // console.log("its working");
->>>>>>> aaa7c388b78ff6405af4c4b791e096400b1a6584
             var ids=$(this).val();
             var div=$(this).parent();
             op="";
@@ -44,11 +40,16 @@
               url:'{!! URL::to('reco') !!}',
               data:{'id':ids},
               success:function(data) {
+<<<<<<< HEAD
 
                  
                 // console.log('success');
                 // console.log(data);
 
+=======
+                 console.log('success');
+                console.log(data);
+>>>>>>> 0c46a0847eac54b310b74cd3e88835431dc54d62
                 for(var i=0;i<data.length;i++){ 
                   if(data[i].role=='Agent head'){
                   op+='<label>Admininstrator</label><li>Aksam Lwanga </li> </label><label>Agent head </label><li value="">'+data[i].firstName+' '+data[i].LastName+'</li><label>Agents </label>'; 
@@ -58,6 +59,7 @@
                   }
                 }
             
+<<<<<<< HEAD
 
                 $('#agent_id').html(op);
                 
@@ -70,6 +72,11 @@
 
               },
 
+=======
+                $('#agent_id').html(op);          
+
+             },
+>>>>>>> 0c46a0847eac54b310b74cd3e88835431dc54d62
               error:function(){
                 console.log(data);
 
