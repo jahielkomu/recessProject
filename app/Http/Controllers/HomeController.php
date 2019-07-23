@@ -13,8 +13,6 @@ use Charts;
 use App\myviews;
 use App\salaries;
 use Storage;
-use response;
-
 
 
 
@@ -59,7 +57,7 @@ class HomeController extends Controller
           $districtname=DB::select(DB::raw('SELECT id,name, count(*) as total from districts,members where districts.id=members.memberDistrict  GROUP BY id ORDER BY 2 DESC limit 1'));
         
         //send data to the views
-        return view('welcome',['results'=>$results,'agents'=>$agents,'district'=>$district,'co'=>$co]);
+        return view('welcome',['results'=>$results,'agents'=>$agents,'district'=>$district,'co'=>$co,'districtname'=>$districtname]);
     
         
     }
@@ -73,20 +71,16 @@ class HomeController extends Controller
         return view('high',compact('district_list'));
 
         
-    }
 
-                  
-
-      
+      }
       public function fetchs(Request $request)
-    {  
-        // determines the agents and agent heads belonging to  aparticular district
-        $data = district::find($request->id)->AgentAvailable()->orderBy('role','DESC')->get(['agentid','lastName','firstName','role']);
-        // $data= $district->AgentAvailable()->orderBy('role','ASC')->get(['agentid','LastName','firstName','role']);
-      
+    {   
+        // determines the agents belonging to  aparticular district
+        $data = district::find($request->id)->AgentAvailable()->orderBy('role','DESC')->get(['agentid','LastName','firstName','role']);
+    
        return response()->json($data);
     }
-   
+      
   
 
     // show the payment details
@@ -101,14 +95,20 @@ class HomeController extends Controller
         $agents= DB::table('agents')->where('role','Agent')->count();
         $agenthead= DB::table('agents')->where('role','Agent head')->count();
         
-        $district =DB::select(DB::raw('SELECT id, count(*) as total from districts,agents where districts.id=agents.district_Id  and agents.role="Agent" GROUP BY id ORDER BY 2 DESC'));
+        $district =DB::select(DB::raw('SELECT id, count(*) as total from districts,members where districts.id=members.memberDistrict  GROUP BY id ORDER BY 2 DESC'));
+       
         // $head=DB::select(DB::raw('SELECT id,count(agentid) as agentid from districts,agents where districts.id=agents.district_Id and agents.role="Agent head" GROUP BY id'));
-          foreach($district as $dist)
-          {  
-            // agents with district of the highest enrollment
-           $noagentsinhigh=$dist->total;
-          
+        // return $remainingagent;
            
+        foreach($district as $dist)
+          {  
+              if($dist->id=null){
+                $noagentsinhigh=0;
+              }else{
+            // agents with district of the highest enrollment after getting the id 
+           $noagentsinhigh=DB::table('agents')->where('district_Id',$dist->id)->count();
+          
+              }
 
             // agents within other country
            $remainingagent=$agents-$noagentsinhigh;
@@ -123,8 +123,7 @@ class HomeController extends Controller
           
          // agent head with the other enrollment
           $remaininghead=$agenthead-1;
-         
-          
+       
            if ($totalamount>2000000){
                
          // agent head with the other enrollment
@@ -207,8 +206,10 @@ class HomeController extends Controller
                 ]);
                 $time=$request->all();
                 $time['date']=date('y-m-d',strtotime($request->date));
+                $time['source']=strtoupper($request->source);
+                $time['district']=strtoupper($request->district);
                 // return $time;
-                if(treasury::create($request->all())){
+                if(treasury::create($time)){
                     return redirect()->back()->withSuccess('New payment declaration  has been added successfully');
                 }
              
@@ -294,19 +295,13 @@ class HomeController extends Controller
     // show records
     public function records(Request $requests){
 
-       // $membertable=DB::select("select * from members where memberDistrict='$requests->district'");
-        $agentstable=DB::select('select * from districts,agents where id=district_Id and role order by name asc');
-      
+        $membertable=DB::select("select * from members where memberDistrict='$requests->district'");
+        $agentstable=DB::select('select * from districts,agents where id=district_Id and role="Agent"order by name asc');
+        $headtable=DB::select('select * from districts,agents where id=district_Id  and role="Agent head" order by name asc');
+        $districttable=DB::table('districts')->orderBy('name','desc')->get();
+        
         // return $membertable;
-        return view('record',compact('agentstable'));
-    }
-
-    //showing members enrolled in a selected particular district
-    public function members(Request $requests){
-
-       $membertable=DB::select("select * from members where memberDistrict='$requests->district'");
-       $districttable=DB::table('districts')->orderBy('name','desc')->get();
-       return view ('member', compact('membertable','districttable'));
+        return view('record',compact('membertable','agentstable','headtable','districttable'));
     }
     // show registration form
     public function upgrades(){
@@ -406,9 +401,9 @@ class HomeController extends Controller
 
     
         $Agent=new agent;
-        $Agent->firstName=$request->firstName;
-        $Agent->lastName=$request->lastName;
-        $Agent->userName=$request->userName;
+        $Agent->firstName=strtoupper($request->firstName);
+        $Agent->lastName=strtoupper($request->lastName);
+        $Agent->userName=strtoupper($request->userName);
         $Agent->signature=strtoupper(chr(rand(65,90)));
         // $Agent->signature=strtoupper(rand(65,90));
         // $district_id=DB::table('districts')->select('id')->where( 'name',$name)->first();
@@ -460,8 +455,8 @@ class HomeController extends Controller
         }
         else{
             $names=$request->all();
-            $names['name']=$request->name;
-            district::create($request->all());
+            $names['name']=strtoupper($request->name);
+            district::create($names);
             return redirect()->back()->withSuccess('New district has been added successfully');
 
         }
