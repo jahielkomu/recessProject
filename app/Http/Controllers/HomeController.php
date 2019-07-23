@@ -293,9 +293,7 @@ class HomeController extends Controller
 
        // $membertable=DB::select("select * from members where memberDistrict='$requests->district'");
         $agentstable=DB::select('select * from districts,agents where id=district_Id and role order by name asc');
-       // $headtable=DB::select('select * from districts,agents where id=district_Id  and role="Agent head" order by name asc');
-        //$districttable=DB::table('districts')->orderBy('name','desc')->get();
-        
+      
         // return $membertable;
         return view('record',compact('agentstable'));
     }
