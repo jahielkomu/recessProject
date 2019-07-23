@@ -292,7 +292,7 @@ class HomeController extends Controller
     public function records(Request $requests){
 
        // $membertable=DB::select("select * from members where memberDistrict='$requests->district'");
-        $agentstable=DB::select('select * from districts,agents where id=district_Id and role order by name asc');
+        $agentstable=DB::select('select * from districts,agents where id=district_Id and role order by name,role desc');
       
         // return $membertable;
         return view('record',compact('agentstable'));

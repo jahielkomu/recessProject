@@ -76,14 +76,15 @@
                    
 						   <li  >
                         <a   href="/stat" style="background: #3980b5;"><i class="fa fa-bar-chart-o fa-3x"></i> Statistics</a>
-                    </li>	
-                      <li  >
-                        <a  href="/record" style="background: #104075;"><i class="fa fa-table fa-3x"></i> Records</a>
                     </li>
                     <li  >
                         <a  href="/member" style="background: #3980b5;"><i class="fa fa-table fa-3x"></i> Members</a>
                         
+                    </li>	
+                      <li  >
+                        <a  href="/record" style="background: #104075;"><i class="fa fa-table fa-3x"></i> Records</a>
                     </li>
+                    
                     <li  >
                         <a  href="/upgrade" style="background: #3980b5;"><i class="fa fa-edit fa-3x"></i> Upgrade</a>
                     </li>				
@@ -126,8 +127,8 @@
                 </div>
             </div>
                 <!-- /. ROW  -->
-            <div class="row">
-                <div class="col-md-9">
+            <div class="row" >
+                <div class="col-md-11" style="padding-left: 100px;">
                   <!--   Kitchen Sink -->
                     <div class="panel panel-default">
                         <div class="panel-heading">
@@ -138,7 +139,8 @@
                                 <table class="table table-striped table-bordered table-hover">
                                     <thead>
                                         <tr>
-                                            <th>Agents User Name</th>
+                                            <th>First Name</th>
+                                            <th>Last Name</th>
                                             <th>District</th>
                                             <th>Role</th>
                                             <!-- <th>No. of enrolls</th> -->
@@ -149,7 +151,8 @@
                                         @foreach($agentstable as $row)
                                        <tr>     
                                           
-                                          <td>{{$row->userName}}</td>
+                                          <td>{{$row->firstName}}</td>
+                                          <td>{{$row->lastName}}</td>
                                           <td>{{ $row->name}}</td>
                                           <td>{{ $row->role}}</td>
                                           <td>{{$row->signature}}</td>
