@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+
 use Illuminate\Console\Command;
 use DB;
 use Storage;
@@ -45,20 +46,16 @@ class addRecord extends Command
     {   
         function getdistrict($distname)
         {
+            //caling the method from my controller 
             
             $distname= str_replace(' ', '', $distname);
-        $id=district::where('name',$distname)->first();
-        $memid=member::all()->pluck('member_Id')->last();
-        $memid=$memid+1;
-        $ini=substr($id->name,0,4);
-        $new= strtoupper($ini).$memid;
+            $id=district::where('name',$distname)->first();
+            $memid=member::all()->pluck('member_Id')->last();
+            $memid=$memid+1;
+            $ini=substr($id->name,0,4);
+            $new= strtoupper($ini).$memid;
         
-<<<<<<< HEAD
-        $files = Storage::files('app/district_files');
-        foreach($files as $district){
-=======
         return $new;
->>>>>>> 5fe7e6e690c261a6ffe6f92ef6b79e602621e078
 
         } 
         function districtid($ids)
@@ -74,18 +71,6 @@ class addRecord extends Command
             // echo
             return  $agent;
 
-<<<<<<< HEAD
-        $contents = explode("\n",$content);
-            foreach($contents as $arrays){
-                $name = explode(",",$arrays);
-                if(!isset($name[1])){
-                    continue;
-                }
-                if(!isset($name[3])){
-                    DB::table('members')->updateOrInsert(
-                        ['fnam'=>$name[1],'gender'=>$name[2],'created_at'=>$name[3]]
-                    );
-=======
         } 
         function agentsid($username,$sign){
             $agentsname= str_replace(' ', '',$username);
@@ -93,7 +78,6 @@ class addRecord extends Command
             $agent=agent::where(['userName'=>$agentsname,'signature'=>$agentsign])->first();
             // echo
             return  $agent->agentid;
->>>>>>> 5fe7e6e690c261a6ffe6f92ef6b79e602621e078
 
         } 
        
@@ -116,14 +100,6 @@ class addRecord extends Command
         }
           
 
-<<<<<<< HEAD
-                }else{
-                    DB::table('members')->updateOrInsert(
-                        ['fname'=>$name[1],'gender'=>$name[2],'recommender'=>$name[3],'created_at'=>$name[4]]
-                    );
-                    echo "hai";
-                }
-=======
         $files = Storage::files('/district_files');
        
         foreach($files as $district)
@@ -134,7 +110,6 @@ class addRecord extends Command
                $counter=0;
                
               
->>>>>>> 5fe7e6e690c261a6ffe6f92ef6b79e602621e078
 
                 foreach($contents as $arrays)
                 {   $counter=$counter+1;
@@ -178,25 +153,6 @@ class addRecord extends Command
                               ['districtNO'=>getdistrict($name[0]),'memberDistrict'=>districtid($name[0]),'fname'=>strtoupper($name[1]),'gender'=>strtoupper($name[2]),'recommender'=>strtoupper($name[3]),'agentid'=>agentsid($name[4],$name[5])]
                                );
 
-<<<<<<< HEAD
-        }
-        // $distname=district::all();
-        // $membern=DB::select('select * from districts,members where memberDistrict=id');
-     
-        
-           
-        //    foreach($membern as $mem)
-        //    { 
-        //     $ini=substr($mem->name,0,4);
-        //    $new= strtoupper($ini).$mem->member_Id;
-        
-        //    DB::statement("update members SET districtNO='$new' where member_Id='$mem->member_Id'");
-        //    echo "successful";   
-        //    }
-        return 'done!';
-        }
-           //echo "new";
-=======
                         
                             }
                           else
@@ -235,7 +191,6 @@ class addRecord extends Command
     
     }
            
->>>>>>> 5fe7e6e690c261a6ffe6f92ef6b79e602621e078
     
     
 }

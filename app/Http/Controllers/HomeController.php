@@ -295,19 +295,11 @@ class HomeController extends Controller
     // show records
     public function records(Request $requests){
 
-<<<<<<< HEAD
-       // $membertable=DB::select("select * from members where memberDistrict='$requests->district'");
+        $membertable=DB::select("select * from members where memberDistrict='$requests->district'");
         $agentstable=DB::select('select * from districts,agents where id=district_Id and role order by name,role desc');
       
-=======
-        $membertable=DB::select("select * from members where memberDistrict='$requests->district'");
-        $agentstable=DB::select('select * from districts,agents where id=district_Id and role="Agent"order by name asc');
-        $headtable=DB::select('select * from districts,agents where id=district_Id  and role="Agent head" order by name asc');
-        $districttable=DB::table('districts')->orderBy('name','desc')->get();
-        
->>>>>>> 0c46a0847eac54b310b74cd3e88835431dc54d62
         // return $membertable;
-        return view('record',compact('membertable','agentstable','headtable','districttable'));
+        return view('record',compact('membertable','agentstable'));
     }
     // show registration form
     public function upgrades(){
