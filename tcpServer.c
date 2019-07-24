@@ -8,8 +8,7 @@
 #include <arpa/inet.h>
 #include <time.h>
 #include <ctype.h>
-#define PORT 10007
-
+#define PORT 10008
 int main()
 {
 
@@ -125,6 +124,7 @@ int main()
                         char message[5000];
                         char locationError[100] = "storage/app/error/";
                         char locationDistrict[100] = "storage/app/district_files/";
+                        char locationTemp[100] = "storage/app/error/temp.txt";
                         char *user = strtok(NULL, "|");
                         char *userName;
                         userName = (char *)malloc(30);
@@ -148,6 +148,7 @@ int main()
                         else
                         {
                             char *req;
+                            int count = 0, count2 = 0;
                             while (getline(&line, &len, errorFile) != -1)
                             {
                                 req = (char *)malloc(strlen(line));
@@ -155,6 +156,7 @@ int main()
                                 userName = strtok(req, ",");
                                 if (strcmp(user, userName) == 0)
                                 {
+                                    count = 1;
                                     if (counter == 0)
                                     {
                                         strcpy(message, line);
@@ -165,12 +167,27 @@ int main()
                                     }
                                     counter++;
                                 }
+                                count2++;
                             }
-                            send(newSocket, message, strlen(message), 0);
-                            printf("%s \n", message);
+                            if (count == 1)
+                            {
+                                send(newSocket, message, strlen(message), 0);
+                            }
+                            else if (count == 0)
+                            {
+                                char naan[100] = "NaaN";
+                                char number[10];
+                                sprintf(number, "%d", count2);
+                                strcat(naan, ",");
+                                strcat(naan, number);
+                                strcat(naan, ",");
+                                printf("%s \n", naan);
+                                send(newSocket, naan, strlen(naan), 0);
+                            }
+                            // printf("%s \n", message);
                             char password[2];
                             recv(newSocket, password, sizeof(password), 0);
-                            printf("%s \n", password);
+                            // printf("%s \n", password);
                             rewind(errorFile);
                             char userDetails[1024];
                             char *newMember = (char *)malloc(30);
@@ -206,11 +223,26 @@ int main()
                                     strcat(userDetails, ",");
                                     strcat(userDetails, timeNow);
                                     printf("%s\n", userDetails);
-                                    fputs(lin, districtFile);
+                                    fputs(userDetails, districtFile);
                                     fputs("\n", districtFile);
-                                    // userDetails[0] = '\0';
                                 }
                             }
+                            rewind(errorFile);
+                            FILE *temp;
+                            temp = fopen("storage/app/error/temp.txt", "a+");
+                            while (getline(&line, &len, errorFile) != -1)
+                            {
+                                req = (char *)malloc(strlen(line));
+                                strcpy(req, line);
+                                userName = strtok(req, ",");
+                                if (strcmp(user, userName) != 0)
+                                {
+                                    fputs(line, temp);
+                                }
+                            }
+                            fclose(temp);
+                            rename(locationTemp, locationError);
+                            remove(locationTemp);
                             // free(sex);
                             // free(newMember);
                             // free(req);
@@ -226,18 +258,18 @@ int main()
                         printf("\n[+]Getting Statement\t\n");
                         FILE *fp1;
                         fp1 = fopen(location, "r");
-                        char message[5000] = "******Payment Details******\n";
+                        char messag[5000] = "******Payment Details******\n";
                         char lin[250];
                         while (!feof(fp1))
                         {
                             fgets(lin, 250, fp1);
-                            strcat(message, lin);
-                            strcat(message, "\n");
+                            strcat(messag, lin);
+                            strcat(messag, "\n");
                         }
-                        puts(message);
+                        puts(messag);
                         fclose(fp1);
-                        send(newSocket, message, strlen(message), 0);
-                        bzero(message, sizeof(message));
+                        send(newSocket, messag, strlen(messag), 0);
+                        bzero(messag, sizeof(messag));
                     }
                 }
             }

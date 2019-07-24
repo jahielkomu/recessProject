@@ -6,9 +6,9 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
-#define PORT 10007
+#define PORT 10008
 #define BUFFERSIZE 1024
-#define clear() printf("\033[H\033[J")
+#define CLEAR() printf("\033[H\033[J")
 
 /*
   Function Declarations for builtin shell commands:
@@ -26,6 +26,9 @@ int getPass();
 char district[30];
 char password[2];
 char user[30];
+char yes_no;
+//                                                                                                                                                         A                      B                 C                  D                  E                   F                 G                  H                   I                J                     K                 L                  M                N->n                0                  P                Q                  R                S                  T                U                  V                W                  X                 Y                 Z
+char *key[2][26] = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "010101101111101", "110101110101110", "001010100010001", "110101101101110", "111100111100111", "111101111100100", "001010100011010", "101101111101101", "111010010010111", "111010010010110", "101110100110101", "100100100100111", "101111101101101", "010101101101101", "010101101101010", "110101110100100", "010101101111011", "110101110101101", "111100111001111", "111010010010010", "101101101101111", "101101101101010", "101101101111101", "101101010101101", "101101111001111", "111001010100111"};
 char *builtin_str[] = {
     "cd",
     "help",
@@ -79,7 +82,7 @@ int uftes_Addmember(char **args)
         printf("[-]Error in connection.\n");
         exit(1);
     }
-    printf("[+]Client Socket is created.\n");
+    // printf("[+]Client Socket is created.\n");
 
     memset(&serverAddr, '\0', sizeof(serverAddr));
     serverAddr.sin_family = AF_INET;
@@ -92,12 +95,13 @@ int uftes_Addmember(char **args)
         printf("[-]Error in connection.\n");
         exit(1);
     }
-    printf("[+]Connected to Server.\n");
+    // printf("[+]Connected to Server.\n");
     if (strstr(line, req))
     {
         printf("\n\t*****Adding Member***** \t\n");
         send(clientSocket, buffer, strlen(buffer), 0);
         FILE *file;
+        int check = 0;
         file = fopen(line, "r");
         if (file)
         {
@@ -148,24 +152,52 @@ int uftes_Addmember(char **args)
         strcat(buffer, ",");
         strcat(buffer, password);
         strcat(buffer, ",");
-        strcat(buffer, line);
-        strcat(buffer, "|");
-        send(clientSocket, buffer, strlen(buffer), 0);
-
-        if (strcmp(buffer, ":exit") == 0)
+        char *check;
+        //////
+        int counter1 = 0;
+        for (int i = 0; i < strlen(line); i++)
         {
-            close(clientSocket);
-            printf("[-]Disconnected from server.\n");
-            exit(1);
+            if (line[i] == ',')
+            {
+                counter1++;
+            }
         }
-
-        if (recv(clientSocket, buffer, 1024, 0) < 0)
+        if (counter1 == 2)
         {
-            printf("[-]Error in receiving data.\n");
+            check = (char *)malloc(sizeof(line));
+            strcpy(check, line);
+            strtok(check, ",");
+            char *sex = strtok(NULL, ",");
+            if (strcmp(sex, "M") == 0 || strcmp(sex, "F") == 0)
+            {
+                strcat(buffer, line);
+                strcat(buffer, "|");
+                send(clientSocket, buffer, strlen(buffer), 0);
+
+                if (strcmp(buffer, ":exit") == 0)
+                {
+                    close(clientSocket);
+                    printf("[-]Disconnected from server.\n");
+                    exit(1);
+                }
+
+                if (recv(clientSocket, buffer, 1024, 0) < 0)
+                {
+                    printf("[-]Error in receiving data.\n");
+                }
+                else
+                {
+                    printf("Added: \t%s\n", buffer);
+                }
+            }
+            else
+            {
+                printf("Gender must be M of F\n");
+            }
         }
         else
         {
-            printf("Added: \t%s\n", buffer);
+            printf("Few arguments entered\n");
         }
     }
     close(clientSocket);
@@ -261,19 +293,61 @@ int uftes_Check_status(char **args)
         printf("[-]Disconnected from server.\n");
         exit(1);
     }
-
-    if (recv(clientSocket, buffer, sizeof(buffer), 0) < 0)
+    char buffer2[5000];
+    if (recv(clientSocket, buffer2, sizeof(buffer2), 0) < 0)
     {
         printf("[-]Error in receiving data.\n");
     }
     else
     {
-        printf("\n%s\n", buffer);
-        printf("please renter your password to fix the information.\n");
-        getPass();
-        send(clientSocket, password, sizeof(password), 0);
+        char *p = strstr(buffer2, "NaaN");
+        if (p)
+        {
+            strtok(buffer2, ",");
+            char *num = (char *)malloc(10);
+            num = strtok(NULL, ",");
+            printf("\nAll your records where added to the database but %s records of other members have errors\n", num);
+        }
+        else
+        {
+            printf("\n%s\n", buffer2);
+            printf("please renter your password to fix the information.\n");
+            while (getPass())
+            {
+                CLEAR();
+                printf("Wrong password key: \n");
+                while (1)
+                {
+                    printf("Would you like to view the keys(y/n): ");
+                    // fflush(stdin);
+                    // yes_no = getch();
+                    scanf(" %c", &yes_no);
+                    // yes_no = fgetc(stdin);
+                    if (yes_no == 'n' || yes_no == 'N' || yes_no == 'y' || yes_no == 'Y')
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        printf("Please enter y for yes and n for no\n");
+                    }
+                }
+                if (yes_no == 'n' || yes_no == 'N')
+                {
+                    CLEAR();
+                    continue;
+                }
+                else if (yes_no == 'y' || yes_no == 'Y')
+                {
+                    for (int i = 0; i < 26; i++)
+                    {
+                        printf("%s\t%s \n", key[0][i], key[1][i]);
+                    }
+                }
+            }
+            send(clientSocket, password, sizeof(password), 0);
+        }
     }
-
     close(clientSocket);
     return 1;
 }
@@ -465,9 +539,9 @@ void loop(void)
 {
     char *line;
     char **args;
-    int status;
+    int status = 1;
 
-    do
+    while (status)
     {
         printf("\nUFTES# ");
         line = uftes_read();
@@ -476,16 +550,15 @@ void loop(void)
 
         free(line);
         free(args);
-    } while (status);
+    }
 }
 int getPass()
 {
     char *str;
     int total = 0;
     int r = 5, c = 3, i, j;
+    int found = 0;
     char *message[r][c];
-    //                                                                                                                                                         A                      B                 C                  D                  E                   F                 G                  H                   I                J                     K                 L                  M                N->n                0                  P                Q                  R                S                  T                U                  V                W                  X                 Y                 Z
-    char *key[2][26] = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "010101101111101", "110101110101110", "001010100010001", "110101101101110", "111100111100111", "111101111100100", "001010100011010", "101101111101101", "111010010010111", "111010010010110", "101110100110101", "100100100100111", "101111101101101", "010101101101101", "010101101101010", "110101110100100", "010101101111011", "110101110101101", "111100111001111", "111010010010010", "101101101101111", "101101101101010", "101101101111101", "101101010101101", "101101111001111", "111001010100111"};
     for (int i = 0; i < r; i++)
     {
         for (int j = 0; j < c; j++)
@@ -534,7 +607,6 @@ int getPass()
             free(message[i][j]);
         }
     }
-    int found = 0;
     for (int n = 0; n < 26; n++)
     {
         if (strcmp(key[1][n], str) == 0)
@@ -544,17 +616,60 @@ int getPass()
             break;
         }
     }
-    if (found = 0)
+    free(str);
+    if (found == 0)
     {
-        printf("Wrong password was entered\n");
         return 1;
     }
-    free(str);
-    return 0;
+    else
+    {
+        return 0;
+    }
 }
 void init_shell()
 {
-    clear();
+    CLEAR();
+    printf("Enter district:\t");
+    gets(district);
+    printf("Username:\t");
+    gets(user);
+    printf("Enter password\n");
+    while (getPass())
+    {
+        CLEAR();
+        printf("Wrong password key: \n");
+        while (1)
+        {
+            printf("Would you like to view the keys(y/n): ");
+            // fflush(stdin);
+            // yes_no = getch();
+            scanf(" %c", &yes_no);
+            // yes_no = fgetc(stdin);
+            if (yes_no == 'n' || yes_no == 'N' || yes_no == 'y' || yes_no == 'Y')
+            {
+                break;
+            }
+            else
+            {
+                printf("Please enter y for yes and n for no\n");
+            }
+        }
+        if (yes_no == 'n' || yes_no == 'N')
+        {
+            CLEAR();
+            continue;
+        }
+        else if (yes_no == 'y' || yes_no == 'Y')
+        {
+            for (int i = 0; i < 26; i++)
+            {
+                printf("%s\t%s \n", key[0][i], key[1][i]);
+            }
+        }
+    }
+    printf("district %s password %s\n", district, password);
+    strcat(district, "|");
+    CLEAR();
     // uftes_help();
     printf("\n\n\n\n******************"
            "************************");
@@ -562,27 +677,15 @@ void init_shell()
     printf("\n\n\tT0 UFTES SYSTEM");
     printf("\n\n\n\n*******************"
            "***********************");
-    char *username = getenv("USER");
-    printf("\n\n\nUSER is: @%s", username);
-    // printf("\nType help to see available commands\n");
     int i;
-    printf("United Front For Transformation Enrollment System uftes\n");
+    printf("\nUnited Front For Transformation Enrollment System uftes\n");
     printf("Type program names and arguments, and hit enter.\n");
     printf("The following are built in:\n");
-
     for (i = 0; i < uftes_num_builtins(); i++)
     {
         printf("  %s\n", builtin_str[i]);
     }
     printf("Use the man command for information on other programs.\n");
-    printf("Enter district:\t");
-    gets(district);
-    printf("Username:\t");
-    gets(user);
-    printf("Enter password\n\t");
-    getPass();
-    printf("district %s password %s\n", district, password);
-    strcat(district, "|");
 }
 int main(int argc, char **argv)
 {
