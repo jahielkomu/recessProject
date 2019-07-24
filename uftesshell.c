@@ -6,7 +6,7 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
-#define PORT 9890
+#define PORT 9000
 #define BUFFERSIZE 1024
 #define clear() printf("\033[H\033[J")
 
@@ -107,6 +107,10 @@ int uftes_Addmember(char **args)
                 strcat(buffer, district);
                 strcat(buffer, ",");
                 strcat(buffer, lin);
+                strcat(buffer, ",");
+                strcat(buffer, user);
+                strcat(buffer, ",");
+                strcat(buffer, password);
                 strcat(buffer, "|");
                 send(clientSocket, buffer, strlen(buffer), 0);
                 if (strcmp(buffer, ":exit") == 0)
@@ -138,6 +142,10 @@ int uftes_Addmember(char **args)
         strcpy(buffer, command);
         strcat(buffer, district);
         strcat(buffer, line);
+        strcat(buffer, ",");
+        strcat(buffer, user);
+        strcat(buffer, ",");
+        strcat(buffer, password);
         strcat(buffer, "|");
         send(clientSocket, buffer, strlen(buffer), 0);
 
@@ -241,7 +249,6 @@ int uftes_Check_status(char **args)
     strcpy(buffer, "Check_status|");
     strcat(buffer, district);
     send(clientSocket, buffer, strlen(buffer), 0);
-
     if (strcmp(buffer, ":exit") == 0)
     {
         close(clientSocket);
@@ -255,7 +262,26 @@ int uftes_Check_status(char **args)
     }
     else
     {
-        printf("Server: \t%s\n", buffer);
+        char message[1025];
+        char ch;
+        printf("Server Response:\n \t%s\n", buffer);
+        while (1)
+        {
+            printf("Do you want to edit(y/n): ");
+            scanf("%c", &ch);
+            if (ch == 'y' || ch == 'Y')
+            {
+                break;
+            }
+            else if (ch == 'n' || ch == 'N')
+            {
+                break;
+            }
+            else
+            {
+                puts("\nPlease enter y for yes and n for no");
+            }
+        }
     }
 
     close(clientSocket);

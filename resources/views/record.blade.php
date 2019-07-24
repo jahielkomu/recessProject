@@ -71,20 +71,25 @@
                         <a   href="/high" style="background: #3980b5;"><i class="fa fa-desktop fa-3x"></i> Hierarchy</a>
                     </li>
                         <li>
-                        <a  href="/payment" style="background: #3980b5"><i class="fa fa-qrcode fa-3x"></i> Payments</a>
+                        <a  href="/payment" style="background: #3980b5;"><i class="fa fa-qrcode fa-3x"></i> Payments</a>
                     </li>
                    
 						   <li  >
-                        <a   href="/stat" style="background: #3980b5"><i class="fa fa-bar-chart-o fa-3x"></i> Statistics</a>
+                        <a   href="/stat" style="background: #3980b5;"><i class="fa fa-bar-chart-o fa-3x"></i> Statistics</a>
+                    </li>
+                    <li  >
+                        <a  href="/member" style="background: #3980b5;"><i class="fa fa-table fa-3x"></i> Members</a>
+                        
                     </li>	
                       <li  >
                         <a  href="/record" style="background: #104075;"><i class="fa fa-table fa-3x"></i> Records</a>
                     </li>
+                    
                     <li  >
-                        <a  href="/upgrade" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> Upgrade</a>
+                        <a  href="/upgrade" style="background: #3980b5;"><i class="fa fa-edit fa-3x"></i> Upgrade</a>
                     </li>				
 			        <li  >
-                        <a  href="/newuser" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> New record</a>
+                        <a  href="/newuser" style="background: #3980b5;"><i class="fa fa-edit fa-3x"></i> New record</a>
                     </li>	
                     <li  >
                             <a  href="/newdist" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> New District</a>
@@ -122,8 +127,8 @@
                 </div>
             </div>
                 <!-- /. ROW  -->
-            <div class="row">
-                <div class="col-md-6">
+            <div class="row" >
+                <div class="col-md-11" style="padding-left: 100px;">
                   <!--   Kitchen Sink -->
                     <div class="panel panel-default">
                         <div class="panel-heading">
@@ -134,19 +139,22 @@
                                 <table class="table table-striped table-bordered table-hover">
                                     <thead>
                                         <tr>
-                                            <th>AgentID</th>
-                                            <th>Agents Name</th>
+                                            <th>First Name</th>
+                                            <th>Last Name</th>
                                             <th>District</th>
+                                            <th>Role</th>
                                             <!-- <th>No. of enrolls</th> -->
-                                            <th>sign</th>
+                                            <th>Signature</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach($agentstable as $row)
                                        <tr>     
-                                          <td>{{$row->agentid}}</td>
-                                          <td>{{$row->userName}}</td>
+                                          
+                                          <td>{{$row->firstName}}</td>
+                                          <td>{{$row->lastName}}</td>
                                           <td>{{ $row->name}}</td>
+                                          <td>{{ $row->role}}</td>
                                           <td>{{$row->signature}}</td>
                                        </tr>
                                        @endforeach
@@ -158,126 +166,8 @@
                     </div>
                      <!-- End  Kitchen Sink -->
                 </div>
-                <div class="col-md-6">
-                     <!--   Basic Table  -->
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Members
-                        </div>
-                        <div class="panel-body">
-                            <div class="table-responsive">
-                                <form action="/record" method="POST">
-                                    {{ csrf_field() }}
-                                    <select name="district" id="">
-                                            @foreach($districttable as $row)
-                                              <option value="{{$row->id}}">{{ $row->name}}</option>
-                                            @endforeach    
-                                              </select>
-                                              <button  id="test" type="submit" class="btn btn-default">search</button>
-                                 </form>
-                                   
-
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Name</th>
-                                            <th>Gender</th>
-                                            <th>Recomended</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                  
-                                    @foreach($membertable as $row)
-                                       <tr>     
-                                          <td>{{$row->districtNO}}</td>
-                                          <td>{{$row->fname}}</td>
-                                          <td>{{ $row->gender}}</td>
-                                          <td>{{ $row->recommender}}</td>
-                                          <td>{{ $row->created_at}}</td>
-                                       </tr>
-                                       @endforeach
-                                            
-                                        
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                      <!-- End  Basic Table  -->
-                </div>
-            </div>
-                <!-- /. ROW  -->
-            <div class="row">
-
-
-
-            
-                <div class="col-md-6">
-                      <!--    Striped Rows Table  -->
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Head of agents
-                        </div>
-                        <div class="panel-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>First Name</th>
-                                            <th>District</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    @foreach($headtable as $row)
-                                       <tr>     
-                                          <td>{{$row->agentid}}</td>
-                                          <td>{{$row->userName}}</td>
-                                          <td>{{ $row->name}}</td>
-                                       </tr>
-                                       @endforeach
-                                        
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <!--  End  Striped Rows Table  -->
-                </div>
-                <div class="col-md-6">
-                    <!--    Bordered Table  -->
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Districts 
-                        </div>
-                        <!-- /.panel-heading -->
-                        <div class="panel-body">
-                            <div class="table-responsive table-bordered">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Code</th>
-                                            <th>Name</th>
-                                            <!-- <th>Number of agents</th> -->
-                                            
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                        @foreach($districttable as $row)
-                                       <tr>     
-                                          <td>{{$row->id}}</td>
-                                          <td>{{ $row->name}}</td>
-                                       </tr>
-                                       @endforeach
-                                        
-                                
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+                
+           
                      <!--  End  Bordered Table  -->
 
           

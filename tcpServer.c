@@ -8,7 +8,7 @@
 #include <arpa/inet.h>
 #include <time.h>
 #include <ctype.h>
-#define PORT 9890
+#define PORT 9000
 
 int main()
 {
@@ -88,7 +88,7 @@ int main()
 
                         printf("\n[+]Adding Member\t\n");
                         char info[1025];
-                        char location[50] = "storage/district_files/";
+                        char location[50] = "storage/app/district_files/";
                         strcat(location, district);
                         strcat(location, ".txt");
                         strcpy(info, district);
@@ -121,15 +121,34 @@ int main()
 
                     else if (strstr(command, "Check_status"))
                     {
+                        char message[5000] = "The following records have errors\n";
+                        char lin[250];
                         printf("\n[+]Checking Status\t\n");
                         printf("%s\t%s\n", command, district);
-                        send(newSocket, buffer, strlen(buffer), 0);
-                        printf("Added:\t %s\n", buffer);
-                        bzero(buffer, sizeof(buffer));
+                        char location[1024] = "storage/app/error/";
+                        strcat(location, district);
+                        strcat(location, ".txt");
+                        FILE *fp;
+                        fp = fopen(location, "a+");
+                        int counter = 0;
+                        char c;
+                        if (fp)
+                        {
+                            while (!feof(fp))
+                            {
+                                fgets(lin, 250, fp);
+                                strcat(message, lin);
+                                strcat(message, "\n");
+                                counter++;
+                            }
+                        }
+                        fclose(fp);
+                        send(newSocket, message, strlen(message), 0);
+                        bzero(message, sizeof(message));
                     }
                     else if (strstr(command, "Get_statement"))
                     {
-                        char location[200] = "storage/app/payment_files/payment.txt";
+                        char location[70] = "storage/app/payment_files/payment.txt";
                         printf("\n[+]Getting Statement\t\n");
                         FILE *fp1;
                         fp1 = fopen(location, "r");
