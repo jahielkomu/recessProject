@@ -8,7 +8,7 @@
 #include <arpa/inet.h>
 #include <time.h>
 #include <ctype.h>
-#define PORT 9000
+#define PORT 10007
 
 int main()
 {
@@ -121,30 +121,104 @@ int main()
 
                     else if (strstr(command, "Check_status"))
                     {
-                        char message[5000] = "The following records have errors\n";
-                        char lin[250];
                         printf("\n[+]Checking Status\t\n");
-                        printf("%s\t%s\n", command, district);
-                        char location[1024] = "storage/app/error/";
-                        strcat(location, district);
-                        strcat(location, ".txt");
-                        FILE *fp;
-                        fp = fopen(location, "a+");
+                        char message[5000];
+                        char locationError[100] = "storage/app/error/";
+                        char locationDistrict[100] = "storage/app/district_files/";
+                        char *user = strtok(NULL, "|");
+                        char *userName;
+                        userName = (char *)malloc(30);
+                        printf("%s\n", user);
+                        strcat(locationError, district);
+                        strcat(locationError, ".txt");
+                        strcat(locationDistrict, district);
+                        strcat(locationDistrict, ".txt");
+                        FILE *errorFile = fopen(locationError, "r+");
+                        FILE *districtFile = fopen(locationDistrict, "a+");
+                        char *line = NULL;
+                        char lin[1025];
+                        size_t len = 0;
                         int counter = 0;
-                        char c;
-                        if (fp)
+                        if (errorFile == NULL || districtFile == NULL)
                         {
-                            while (!feof(fp))
-                            {
-                                fgets(lin, 250, fp);
-                                strcat(message, lin);
-                                strcat(message, "\n");
-                                counter++;
-                            }
+                            perror("Unable to open file!");
+                            char error[] = "Unable to open file!";
+                            send(newSocket, error, strlen(error), 0);
                         }
-                        fclose(fp);
-                        send(newSocket, message, strlen(message), 0);
-                        bzero(message, sizeof(message));
+                        else
+                        {
+                            char *req;
+                            while (getline(&line, &len, errorFile) != -1)
+                            {
+                                req = (char *)malloc(strlen(line));
+                                strcpy(req, line);
+                                userName = strtok(req, ",");
+                                if (strcmp(user, userName) == 0)
+                                {
+                                    if (counter == 0)
+                                    {
+                                        strcpy(message, line);
+                                    }
+                                    else
+                                    {
+                                        strcat(message, line);
+                                    }
+                                    counter++;
+                                }
+                            }
+                            send(newSocket, message, strlen(message), 0);
+                            printf("%s \n", message);
+                            char password[2];
+                            recv(newSocket, password, sizeof(password), 0);
+                            printf("%s \n", password);
+                            rewind(errorFile);
+                            char userDetails[1024];
+                            char *newMember = (char *)malloc(30);
+                            char *recommemder = (char *)malloc(30);
+                            char *sex = (char *)malloc(2);
+
+                            while (getline(&line, &len, errorFile) != -1)
+                            {
+                                req = (char *)malloc(strlen(line));
+                                strcpy(req, line);
+                                userName = strtok(req, ",");
+                                if (strcmp(user, userName) == 0)
+                                {
+                                    strtok(NULL, ",");
+                                    newMember = strtok(NULL, ",");
+                                    sex = strtok(NULL, ",");
+                                    recommemder = strtok(NULL, ",");
+                                    recommemder[strlen(recommemder) - 1] = ' ';
+                                    strcpy(userDetails, district);
+                                    strcat(userDetails, ",");
+                                    strcat(userDetails, userName);
+                                    strcat(userDetails, ",");
+                                    strcat(userDetails, password);
+                                    strcat(userDetails, ",");
+                                    strcat(userDetails, newMember);
+                                    strcat(userDetails, ",");
+                                    strcat(userDetails, sex);
+                                    strcat(userDetails, ",");
+                                    strcat(userDetails, recommemder);
+                                    time_t now;
+                                    time(&now);
+                                    strcpy(timeNow, ctime(&now));
+                                    strcat(userDetails, ",");
+                                    strcat(userDetails, timeNow);
+                                    printf("%s\n", userDetails);
+                                    fputs(lin, districtFile);
+                                    fputs("\n", districtFile);
+                                    // userDetails[0] = '\0';
+                                }
+                            }
+                            // free(sex);
+                            // free(newMember);
+                            // free(req);
+                            // free(recommemder);
+                        }
+                        fclose(errorFile);
+                        fclose(districtFile);
+                        free(line);
                     }
                     else if (strstr(command, "Get_statement"))
                     {
