@@ -43,11 +43,13 @@ Route::get('/', 'HomeController@index');
 Route::get('/high', 'HomeController@hierca')->name('home');
 Route::get('/reco', 'HomeController@fetchs')->name('home');
 
+Route::get('/report','HomeController@report')->name('home');
+
 Route::get('/stat', 'HomeController@stat')->name('home');
 Route::post('/stat/district','HomeController@stat')->name('home');
 
 Route::get('/record', 'HomeController@records')->name('home');
-Route::post('/record', 'HomeController@records')->name('home');
+//Route::post('/record', 'HomeController@records')->name('home');
 
 Route::get('/member','HomeController@members')->name('home');
 Route::post('/member', 'HomeController@members')->name('home');

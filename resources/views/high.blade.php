@@ -40,16 +40,13 @@
               url:'{!! URL::to('reco') !!}',
               data:{'id':ids},
               success:function(data) {
-<<<<<<< HEAD
+
 
                  
                 // console.log('success');
                 // console.log(data);
 
-=======
-                 console.log('success');
-                console.log(data);
->>>>>>> 0c46a0847eac54b310b74cd3e88835431dc54d62
+
                 for(var i=0;i<data.length;i++){ 
                   if(data[i].role=='Agent head'){
                   op+='<label>Admininstrator</label><li>Aksam Lwanga </li> </label><label>Agent head </label><li value="">'+data[i].firstName+' '+data[i].LastName+'</li><label>Agents </label>'; 
@@ -59,7 +56,7 @@
                   }
                 }
             
-<<<<<<< HEAD
+
 
                 $('#agent_id').html(op);
                 
@@ -72,11 +69,7 @@
 
               },
 
-=======
-                $('#agent_id').html(op);          
 
-             },
->>>>>>> 0c46a0847eac54b310b74cd3e88835431dc54d62
               error:function(){
                 console.log(data);
 
@@ -132,13 +125,16 @@
         
           
                     <li style="background-color: rgb(0, 85, 182)">
-                        <a href="/" style="background: #3980b5;"><i class="fa fa-dashboard fa-3x"></i> Dashboard</a>
+                        <a href="/" style="background: #3980b5;"><i class="glyphicon glyphicon-home fa-3x"></i> Dashboard</a>
                     </li>
                     <li>
                         <a   href="/high" style="background: #104075;"><i class="fa fa-desktop fa-3x"></i> Hierarchy</a>
                     </li>
                         <li>
                         <a  href="/payment" style="background: #3980b5"><i class="fa fa-qrcode fa-3x"></i> Payments</a>
+                    </li>
+                      <li>
+                        <a  href="/report" style="background: #3980b5"><i class="fa fa-qrcode fa-3x"></i> Report</a>
                     </li>
                    
                <li  >

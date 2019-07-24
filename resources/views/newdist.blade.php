@@ -65,13 +65,16 @@
                     <img src="assets/img/find_user.png" class="user-image img-responsive"/>
 					</li>
 				    <li style="background-color: rgb(0, 85, 182)">
-                        <a href="/" style="background: #3980b5;"><i class="fa fa-dashboard fa-3x"></i> Dashboard</a>
+                        <a href="/" style="background: #3980b5;"><i class="glyphicon glyphicon-home fa-3x"></i> Dashboard</a>
                     </li>
                     <li>
                         <a   href="/high" style="background: #3980b5;"><i class="fa fa-desktop fa-3x"></i> Hierarchy</a>
                     </li>
                         <li>
                         <a  href="/payment" style="background: #3980b5"><i class="fa fa-qrcode fa-3x"></i> Payments</a>
+                    </li>
+                     <li>
+                        <a  href="/report" style="background: #3980b5"><i class="fa fa-qrcode fa-3x"></i> Report</a>
                     </li>
                    
 						   <li  >

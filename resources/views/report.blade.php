@@ -53,12 +53,10 @@
                                 </a>
                             </div>
                             
-                  </div>
-            
-                            
-        </nav>   
-           <!-- /. NAV TOP  -->
-        <nav class="navbar-default navbar-side" role="navigation">
+                  </div>                  
+        </nav>
+  <!-- /. NAV TOP  -->
+  <nav class="navbar-default navbar-side" role="navigation">
             <div class="sidebar-collapse" style="background-color: #999">
                 <ul class="nav" id="main-menu" style="background: #3980b5">
 				<li class="text-center" style="background: #3980b5">
@@ -67,98 +65,122 @@
 				
 					
                     <li style="background-color: rgb(0, 85, 182)">
-                        <a href="/" style="background: #3980b5;"><i class="fa fa-dashboard fa-3x"></i> Dashboard</a>
+                        <a href="/" style="background: #3980b5;"><i class="glyphicon glyphicon-home fa-3x"></i> Dashboard</a>
                     </li>
                     <li>
-                        <a   href="/high" style="background: #104075;"><i class="fa fa-desktop fa-3x"></i> Hierarchy</a>
+                        <a   href="/high" style="background: #3980b5;"><i class="fa fa-desktop fa-3x"></i> Hierarchy</a>
                     </li>
                         <li>
-                        <a  href="/payment" style="background: #3980b5"><i class="fa fa-qrcode fa-3x"></i> Payments</a>
+                        <a  href="/payment" style="background: #3980b5;"><i class="fa fa-qrcode fa-3x"></i> Payments</a>
+                    </li>
+                     <li>
+                        <a  href="/report" style="background: #104075"><i class="fa fa-qrcode fa-3x"></i> Report</a>
                     </li>
                    
 						   <li  >
-                        <a   href="/stat" style="background: #3980b5"><i class="fa fa-bar-chart-o fa-3x"></i> Statistics</a>
+                        <a   href="/stat" style="background: #3980b5;"><i class="fa fa-bar-chart-o fa-3x"></i> Statistics</a>
+                    </li>
+                    <li  >
+                        <a  href="/member" style="background: #3980b5;"><i class="fa fa-table fa-3x"></i> Members</a>
+                        
                     </li>	
                       <li  >
-                        <a  href="/record" style="background: #3980b5"><i class="fa fa-table fa-3x"></i> Records</a>
+                        <a  href="/record" style="background: #3980b5;"><i class="fa fa-table fa-3x"></i> Records</a>
                     </li>
+                    
                     <li  >
-                        <a  href="/upgrade" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> Upgrade</a>
-
-                    </li>
-                    <li  >
-                            <a  href="/newuser" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> New record</a>
-                        </li>
-                    <li >
-                        <a  href="/newdist" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> New District</a>
+                        <a  href="/upgrade" style="background: #3980b5;"><i class="fa fa-edit fa-3x"></i> Upgrade</a>
                     </li>				
-			
+			        <li  >
+                        <a  href="/newuser" style="background: #3980b5;"><i class="fa fa-edit fa-3x"></i> New record</a>
+                    </li>	
+                    <li  >
+                            <a  href="/newdist" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> New District</a>
+                        </li>
                 </ul>
                
             </div>
-            
         </nav> 
         <!-- /. NAV SIDE  -->
         <div id="page-wrapper" >
             <div id="page-inner">
                 <div class="row">
                     <div class="col-md-12">
-                     <h2>Hierarchy</h2>   
+                     <h2>Contributions Report</h2>   
                         <h5>Welcome Lwanga Aksam , Love to see you back. </h5>
                        
                     </div>
                 </div>
                  <!-- /. ROW  -->
                  <hr />
-                 <div class="row">
-                    
-                      <div class="col-md-7" style="width: 900px">
-                    <div class="panel panel-default" style="width: 900px">
-                        <div class="panel-heading" style="width: 900px">
-                          <?php
-                          global $color;
-                          global $data;
-                          global $work;-
-                          $connect = mysqli_connect('localhost','root','','utfes_database' );
-                          $resultset =$connect->query("SELECT id, name FROM districts");
-
-                          $color1="lightblue";
-                          $color2="blue";
-                          $color3=$color1;
-
-                          ?>
-                      
-                           <button  id="test" type="submit" class="btn btn-default" onclick="hierachy" height="3px" width="5px"style="float:right">view</button> 
-                         Select District to view <select name="district" id="id" style="float: right";">
-                          <?php 
-                          while ($rows = $resultset->fetch_assoc())
-                          {
-                            $color==$color1 ? $color=$color2:$color=$color1;
-                            $name = $rows['name'];
-                          echo"<option  value=".$rows['id']."  (HTML::link_to_route('districts',$name,array(&district_Id))) style='background:$color;'> $name </option>";
-                          }
-                          ?>                          
-                         </select>
-                        </div>
-                        <div class="panel" style="height: 350px;width: 500px;">
-                        
-                          <ul>
+               
+            <div class="row">
+                <div class="col-md-6">
+                    <!-- Advanced Tables -->
+                    <div class="panel panel-default">
+                        <div class="">
                             
-                            <li>{{$work}}</li>
-                          </ul>                                              
-                                                         
-                            </div>          
-                                   
-                           </div>
-                          </div>
-                          </div>
-                     
+                        </div>
+                        <div class="">
+                            
+                            
+                        </div>
+                    </div>
+                    <!--End Advanced Tables -->
+                </div>
+            </div>
                 <!-- /. ROW  -->
-               </div>
+            <div class="row" >
+                <div class="col-md-11" style="padding-left: 100px;">
+                  <!--   Kitchen Sink -->
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Wellwishers
+                        </div>
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Amount</th>
+                                            <th>District</th>
+                                            <th>Month</th>
+                                            <!-- <th>No. of enrolls</th> -->
+                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($contrtable as $row)
+                                       <tr>     
+                                          
+                                          <td>{{$row->source}}</td>
+                                          <td>{{$row->Amount}}</td>
+                                          <td>{{ $row->district}}</td>
+                                          <td>{{ $row->date}}</td>
+                                          
+                                       </tr>
+                                       @endforeach
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                     <!-- End  Kitchen Sink -->
+                </div>
+                
+           
+                     <!--  End  Bordered Table  -->
+
+          
+             
+        </div>
+               
+    </div>
              <!-- /. PAGE INNER  -->
             </div>
          <!-- /. PAGE WRAPPER  -->
-        </div>
      <!-- /. WRAPPER  -->
     <!-- SCRIPTS -AT THE BOTOM TO REDUCE THE LOAD TIME-->
     <!-- JQUERY SCRIPTS -->
@@ -167,28 +189,17 @@
     <script src="assets/js/bootstrap.min.js"></script>
     <!-- METISMENU SCRIPTS -->
     <script src="assets/js/jquery.metisMenu.js"></script>
-      <!-- CUSTOM SCRIPTS -->
+     <!-- DATA TABLE SCRIPTS -->
+    <script src="assets/js/dataTables/jquery.dataTables.js"></script>
+    <script src="assets/js/dataTables/dataTables.bootstrap.js"></script>
+        <script>
+            $(document).ready(function () {
+                $('#dataTables-example').dataTable();
+            });
+    </script>
+         <!-- CUSTOM SCRIPTS -->
     <script src="assets/js/custom.js"></script>
- 
+    
+   
 </body>
 </html>
-<img src="assets/img/hierachy.png" style="width:auto;height:420px;padding-left:15%;margin-top:0px;padding-top: 0 "> 
-                           <ul>
-                              <li>Administrator</li>
-                              <ul>
-                                <li>Agent Head</li>
-                                <ul>
-                                  <li>Agent stoni</li>
-                                 
-                                  <li>Agent levers</li>
-                                  
-                                  <li>Agent winschott</li>
-                                  
-                                  <li>Agent aple</li>
-                                </ul>
-
-                              </ul>
-
-                            </ul>
-                                                    
-                            

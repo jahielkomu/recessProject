@@ -65,13 +65,16 @@
 				
 					
                     <li style="background-color: rgb(0, 85, 182)">
-                        <a href="/" style="background: #3980b5;"><i class="fa fa-dashboard fa-3x"></i> Dashboard</a>
+                        <a href="/" style="background: #3980b5;"><i class="glyphicon glyphicon-home fa-3x"></i> Dashboard</a>
                     </li>
                     <li>
                         <a   href="/high" style="background: #3980b5;"><i class="fa fa-desktop fa-3x"></i> Hierarchy</a>
                     </li>
                         <li>
                         <a  href="/payment" style="background: #3980b5"><i class="fa fa-qrcode fa-3x"></i> Payments</a>
+                    </li>
+                     <li>
+                        <a  href="/report" style="background: #3980b5"><i class="fa fa-qrcode fa-3x"></i> Report</a>
                     </li>
                    
 						   <li  >
@@ -112,11 +115,11 @@
                  <!-- /. ROW  -->
                  <hr />
 
-                 <option>Select a particular district to see its members</option>
+                 <option style="padding-left: 15px">Select a particular district to see its members</option>
                        
                
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-7" style="padding-left: 30px" >
                     <!-- Advanced Tables -->
                     <div class="panel panel-default">
                         <div class="">
@@ -132,7 +135,7 @@
             </div>
                 <!-- /. ROW  -->
            
-                <div class="col-md-6">
+                <div class="col-md-7" >
                      <!--   Basic Table  -->
                     <div class="panel panel-default">
                         <div class="panel-heading">
@@ -157,7 +160,7 @@
                                             <th>ID</th>
                                             <th>Name</th>
                                             <th>Gender</th>
-                                            <th>Recomended</th>
+                                            <th>Recomender</th>
                                         </tr>
                                     </thead>
                                     <tbody>

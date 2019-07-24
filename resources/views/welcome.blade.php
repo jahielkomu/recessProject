@@ -8,6 +8,7 @@
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
+
         <link href="assets/css/bootstrap.css" rel="stylesheet" />
             <!-- FONTAWESOME STYLES-->
             <link href="assets/css/font-awesome.css" rel="stylesheet" />
@@ -15,6 +16,7 @@
             <link href="assets/js/morris/morris-0.4.3.min.css" rel="stylesheet" />
             <!-- CUSTOM STYLES-->
             <link href="assets/css/custom.css" rel="stylesheet" />
+            <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css' integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous'>
 
         <!-- Styles -->
         <style>
@@ -61,11 +63,11 @@
          <nav class="navbar-default navbar-side" role="navigation">
             <div class="sidebar-collapse" style="background-color: #999">
                 <ul class="nav" id="main-menu" style="background: #3980b5">
-				<li class="text-center" style="background: #3980b5">
+                <li class="text-center" style="background: #3980b5">
                     <img src="assets/img/find_user.png" class="user-image img-responsive"/>
-					</li>
-				    <li style="background-color: rgb(0, 85, 182)">
-                        <a href="/" style="background: #104075;"><i class="fa fa-dashboard fa-3x"></i> Dashboard</a>
+                    </li>
+                    <li style="background-color: rgb(0, 85, 182)">
+                        <a href="/" style="background: #104075;"><i class="glyphicon glyphicon-home fa-3x"></i> Dashboard</a>
                     </li>
                     <li>
                         <a   href="/high" style="background: #3980b5;"><i class="fa fa-desktop fa-3x"></i> Hierarchy</a>
@@ -73,24 +75,26 @@
                         <li>
                         <a  href="/payment" style="background: #3980b5"><i class="fa fa-qrcode fa-3x"></i> Payments</a>
                     </li>
-                   
-						   <li  >
-                        <a   href="/stat" style="background: #3980b5"><i class="fa fa-bar-chart-o fa-3x"></i> Statistics</a>
-                    </li>	
-                     <li  >
-                        <a  href="/member" style="background: #3980b5"><i class="fa fa-table fa-3x"></i> Members</a>
-                        
+                     <li>
+                        <a  href="/report" style="background: #3980b5"><i class="fa fa-qrcode fa-3x"></i> Report</a>
                     </li>
+                   
+                           <li  >
+                        <a   href="/stat" style="background: #3980b5"><i class="fa fa-bar-chart-o fa-3x"></i> Statistics</a>
+                    </li>   
                       <li  >
                         <a  href="/record" style="background: #3980b5"><i class="fa fa-table fa-3x"></i> Records</a>
                     </li>
-                   
+                    <li  >
+                        <a  href="/member" style="background: #3980b5"><i class="fa fa-table fa-3x"></i> Members</a>
+                        
+                    </li>
                     <li  >
                         <a  href="/upgrade" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> Upgrade</a>
-                    </li>				
-			        <li  >
+                    </li>               
+                    <li  >
                         <a  href="/newuser" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> New record</a>
-                    </li>	
+                    </li>   
                     <li  >
                             <a  href="/newdist" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> New Dist</a>
                         </li>
@@ -115,9 +119,9 @@
                   <hr />
                 <div class="row">
                 <div class="col-md-4 col-sm-6 col-xs-12" >           
-			<div class="panel panel-back noti-box">
+            <div class="panel panel-back noti-box">
                 <span class="icon-box bg-color-red set-icon">
-                    <i class="fa fa-envelope-o"></i>
+                    <i class="  fa fa-users"></i>
                 </span>
                 <div class="text-box" >
                     <p class="main-text">
@@ -127,12 +131,12 @@
                     <p class="text-muted">Members</p>
                 </div>
              </div>
-		     </div>
+             </div>
              
            <div class="col-md-4 col-sm-6 col-xs-12">           
-			<div class="panel panel-back noti-box">
+            <div class="panel panel-back noti-box">
                 <span class="icon-box bg-color-green set-icon">
-                    <i class="fa fa-bars"></i>
+                    <i class="fas fa-users"></i>
                 </span>
                 <div class="text-box" >
                          <!-- displaying all agents available  -->
@@ -140,11 +144,23 @@
                     <p class="text-muted">Available</p>
                 </div>
              </div>
-		     </div>
+             </div>
+             <div class="col-md-4 col-sm-6 col-xs-12">           
+                <div class="panel panel-back noti-box">
+                    <span class="icon-box bg-color-green set-icon">
+                        <i class="fas fa-user"></i>
+                    </span>
+                    <div class="text-box" >
+                             <!-- displaying all agents available  -->
+                        <p class="main-text">{{$agenthead}} Agent heads</p>
+                        <p class="text-muted">Available</p>
+                    </div>
+                 </div>
+                 </div>
             <div class="col-md-4 col-sm-6 col-xs-12">           
-			  <div class="panel panel-back noti-box">
+              <div class="panel panel-back noti-box">
                   <span class="icon-box bg-color-blue set-icon">
-                    <i class="fa fa-bell-o"></i>
+                    <i class="fas fa-location-arrow"></i>
                    </span>
                     <div class="text-box" >
                        <p class="main-text">
@@ -157,12 +173,28 @@
                     </div>
              </div>
              </div>
+             <div class="col-md-4 col-sm-6 col-xs-12">           
+                <div class="panel panel-back noti-box">
+                    <span class="icon-box bg-color-blue set-icon">
+                      <i class="fas fa-location-arrow"></i>
+                     </span>
+                      <div class="text-box" >
+                         <p class="main-text">
+                          <!-- displaying district with no agents -->
+                            @foreach($districtname as $dist)
+                             {{strtoupper($dist->name)}}
+                              @endforeach
+                              DISTRICT</p>
+                            <p class="text-muted">With highest enrollment</p>
+                      </div>
+               </div>
+               </div>
              
              
             <div class="col-md-4 col-sm-6 col-xs-12">           
-			<div class="panel panel-back noti-box">
+            <div class="panel panel-back noti-box">
                 <span class="icon-box bg-color-brown set-icon">
-                    <i class="fa fa-rocket"></i>
+                    <i class="  fas fa-user-graduate"></i>
                 </span>
                 <div class="text-box" >
                     <p class="main-text">
@@ -173,13 +205,31 @@
                     <p class="text-muted">Qualifed upgrade</p>
                 </div>
              </div>
-		     </div>
-			</div>
+             </div>
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12">           
+                <div class="panel panel-back noti-box">
+                    <span class="icon-box bg-color-black set-icon">
+                        <i class="fab fa-google-wallet"></i>
+                     </span>
+                      <div class="text-box" >
+                         <p class="main-text">
+                          <!-- displaying district with no agents -->
+                            @foreach($amount as $amo)
+                             {{$amo->amount}}
+                              @endforeach
+                              SHILLINGS</p>
+                            
+                            <p class="text-muted">Available at the end of the month</p>
+                      </div>
+               </div>
+               </div>
                     <!-- /. ROW  -->
                  <div class="row">
                     <div class="panel" style="height: 1000px">
-
+                  
                     </div>
+                    
                  </div>
                  <!-- /. ROW  -->
                 <!-- /. ROW  -->
@@ -200,70 +250,7 @@
                     </div>
                     <div class="col-md-9 col-sm-12 col-xs-12">
                
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                           Responsive Table Example
-                        </div>
-                        <div class="panel-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>First Name</th>
-                                            <th>Last Name</th>
-                                            <th>Username</th>
-                                             <th>User No.</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>Mark</td>
-                                            <td>Otto</td>
-                                            <td>@mdo</td>
-                                            <td>100090</td>
-                                        </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td>Jacob</td>
-                                            <td>Thornton</td>
-                                            <td>@fat</td>
-                                            <td>100090</td>
-                                        </tr>
-                                        <tr>
-                                            <td>3</td>
-                                            <td>Larry</td>
-                                            <td>the Bird</td>
-                                            <td>@twitter</td>
-                                            <td>100090</td>
-                                        </tr>
-                                         <tr>
-                                            <td>1</td>
-                                            <td>Mark</td>
-                                            <td>Otto</td>
-                                            <td>@mdo</td>
-                                            <td>100090</td>
-                                        </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td>Jacob</td>
-                                            <td>Thornton</td>
-                                            <td>@fat</td>
-                                            <td>1000</td>
-                                        </tr>
-                                        <tr>
-                                            <td>3</td>
-                                            <td>Larry</td>
-                                            <td>the Bird</td>
-                                            <td>@twitter</td>
-                                            <td>100</td>
-                                        </tr>
-
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                   
                     </div>
                     
                     </div>
