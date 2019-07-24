@@ -53,7 +53,12 @@ class addRecord extends Command
         $ini=substr($id->name,0,4);
         $new= strtoupper($ini).$memid;
         
+<<<<<<< HEAD
+        $files = Storage::files('app/district_files');
+        foreach($files as $district){
+=======
         return $new;
+>>>>>>> 5fe7e6e690c261a6ffe6f92ef6b79e602621e078
 
         } 
         function districtid($ids)
@@ -69,6 +74,18 @@ class addRecord extends Command
             // echo
             return  $agent;
 
+<<<<<<< HEAD
+        $contents = explode("\n",$content);
+            foreach($contents as $arrays){
+                $name = explode(",",$arrays);
+                if(!isset($name[1])){
+                    continue;
+                }
+                if(!isset($name[3])){
+                    DB::table('members')->updateOrInsert(
+                        ['fnam'=>$name[1],'gender'=>$name[2],'created_at'=>$name[3]]
+                    );
+=======
         } 
         function agentsid($username,$sign){
             $agentsname= str_replace(' ', '',$username);
@@ -76,27 +93,37 @@ class addRecord extends Command
             $agent=agent::where(['userName'=>$agentsname,'signature'=>$agentsign])->first();
             // echo
             return  $agent->agentid;
+>>>>>>> 5fe7e6e690c261a6ffe6f92ef6b79e602621e078
 
         } 
        
         
-        function deleterecord($arrays,$district,$content)
+        function deleterecord($arrays,$district)
         {
             foreach ($arrays as $url) 
             {
-                $tempcontent =" ";
+                $tempcontent ="  ";
                  $contents = $tempcontent;
                  Storage::put($district, $contents);
             }   
         }
         function getrecommendid($recom){
-            $recomid=member::where('member_Id',$recom)->first();
+            $recommender= str_replace(' ', '',$recom);
+            $recomid=member::where('recommender',$recommender)->first();
              if($recomid){
                  return 1;
              }
         }
           
 
+<<<<<<< HEAD
+                }else{
+                    DB::table('members')->updateOrInsert(
+                        ['fname'=>$name[1],'gender'=>$name[2],'recommender'=>$name[3],'created_at'=>$name[4]]
+                    );
+                    echo "hai";
+                }
+=======
         $files = Storage::files('/district_files');
        
         foreach($files as $district)
@@ -104,65 +131,97 @@ class addRecord extends Command
                $content = Storage::get($district);
                $contents = explode("\n",$content);
                $fail=0;
+               $counter=0;
                
+              
+>>>>>>> 5fe7e6e690c261a6ffe6f92ef6b79e602621e078
 
                 foreach($contents as $arrays)
-                {   
-                  
+                {   $counter=$counter+1;
+                    // echo($counter);
                   if(!isset($arrays)){
+                    
                       continue;
                   }
                     $name = explode(",",$arrays);
+                    // if(!isset($name[1]))
+                    // {
+                    //     deleterecord($contents,$district);
+                    //     // echo "deleted";
+                    //     continue;
+                    // }
                 
-                 if(!agentids('kkom','d')==null)
+                 if(!agentids(@$name[3],@$name[4])==null || !agentids(@$name[4],@$name[5])==null )
                   {
                       
-                    if(!isset($name[1])){
-                        deleterecord($contents,$district,$content);
-                        continue;
-                    }
-                    if(!isset($name[4])){
+                    if(!isset($name[6])){
                       
-                    if(count($name)>3){
+                    // if(count($name)>5){
                         
                         
                         DB::table('members')->updateOrInsert(
-                            ['districtNO'=>getdistrict($name[0]),'fname'=>$name[1],'gender'=>$name[2],'memberDistrict'=>districtid($name[0]),'agentid'=>agentsid('kkom','d')]
+                            ['districtNO'=>getdistrict($name[0]),'fname'=>strtoupper($name[1]),'gender'=>strtoupper($name[2]),'memberDistrict'=>districtid($name[0]),'agentid'=>agentsid($name[3],$name[4])]
                          
                         );
                         
-                    }
+                    // }
                     }
                     else
                     {
                         // doesnt allow to enter incomplete details
-                        if(count($name)>4)
-                        {
+                        // if(count($name)>6)
+                        // {
 
-                            if(getrecommendid('11')){
-                        DB::table('members')->updateOrInsert(
-                            ['districtNO'=>getdistrict($name[0]),'memberDistrict'=>districtid($name[0]),'fname'=>$name[1],'gender'=>$name[2],'recommender'=>$name[3],'agentid'=>agentsid('kkom','d')]
-                        );
+                            if(getrecommendid($name[3]))
+                            {  echo "hai";
+                              DB::table('members')->updateOrInsert(
+                              ['districtNO'=>getdistrict($name[0]),'memberDistrict'=>districtid($name[0]),'fname'=>strtoupper($name[1]),'gender'=>strtoupper($name[2]),'recommender'=>strtoupper($name[3]),'agentid'=>agentsid($name[4],$name[5])]
+                               );
+
+<<<<<<< HEAD
+        }
+        // $distname=district::all();
+        // $membern=DB::select('select * from districts,members where memberDistrict=id');
+     
+        
+           
+        //    foreach($membern as $mem)
+        //    { 
+        //     $ini=substr($mem->name,0,4);
+        //    $new= strtoupper($ini).$mem->member_Id;
+        
+        //    DB::statement("update members SET districtNO='$new' where member_Id='$mem->member_Id'");
+        //    echo "successful";   
+        //    }
+        return 'done!';
+        }
+           //echo "new";
+=======
                         
-                    }else{
-
-                    }      Storage::append('error/'.$district,'wrong recommender id  '.$arrays.'');
-                        }
+                            }
+                          else
+                             {
+                                Storage::append('error/'.$district,'wrong recommender id  '.$arrays.'');
+                             }      
+                        // }
                     }
                   }
                   else{
-                    if(!isset($name[1]) and $arrays==end($contents)){
-                        // deleterecord($contents,$district,$content);
-                       
+                    if(!isset($name[1])){
                         
-                                Storage::put('success/'.$district,' total records not inserted into the database '.$fail.'');
-
-                        
+                         
+                        if($counter==count($contents)){
+                            // print_r ("\n".count($contents)."\n");
+                            //   $su=Storage::append('success/'.$district,' total records not inserted into the database '.$fail.'');
+                              $su=Storage::prepend('success/'.$district,' total records not inserted into the database '.$fail.'');
+                        }
+                        deleterecord($contents,$district,$content);
                         
                         continue;
                     }
-                    Storage::put('error/'.$district,'invalid signature with the following details '.$arrays.'');
                     $fail=$fail+1;
+                    Storage::append('error/'.$district,''.$arrays.' #invalid signature with the following details ');
+                    
                     
                   }
                  
@@ -176,6 +235,7 @@ class addRecord extends Command
     
     }
            
+>>>>>>> 5fe7e6e690c261a6ffe6f92ef6b79e602621e078
     
     
 }
