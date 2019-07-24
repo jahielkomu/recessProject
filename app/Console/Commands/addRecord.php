@@ -13,7 +13,7 @@ class addRecord extends Command
      *
      * @var string
      */
-    protected $signature = 'command:addRecord';
+    protected $signature = 'addRecord';
 
     /**
      * The console command description.
@@ -40,7 +40,7 @@ class addRecord extends Command
     public function handle()
     {
         
-        $files = Storage::files('/district_files');
+        $files = Storage::files('app/district_files');
         foreach($files as $district){
 
         $content = Storage::get($district);
@@ -53,7 +53,7 @@ class addRecord extends Command
                 }
                 if(!isset($name[3])){
                     DB::table('members')->updateOrInsert(
-                        ['fname'=>$name[1],'gender'=>$name[2],'created_at'=>$name[3]]
+                        ['fnam'=>$name[1],'gender'=>$name[2],'created_at'=>$name[3]]
                     );
 
 
@@ -61,27 +61,29 @@ class addRecord extends Command
                     DB::table('members')->updateOrInsert(
                         ['fname'=>$name[1],'gender'=>$name[2],'recommender'=>$name[3],'created_at'=>$name[4]]
                     );
+                    echo "hai";
                 }
 
 
             }
 
         }
-        $distname=district::all();
-        $membern=DB::select('select * from districts,members where memberDistrict=id');
+        // $distname=district::all();
+        // $membern=DB::select('select * from districts,members where memberDistrict=id');
      
         
            
-           foreach($membern as $mem)
-           { 
-            $ini=substr($mem->name,0,4);
-           $new= strtoupper($ini).$mem->member_Id;
+        //    foreach($membern as $mem)
+        //    { 
+        //     $ini=substr($mem->name,0,4);
+        //    $new= strtoupper($ini).$mem->member_Id;
         
-           DB::statement("update members SET districtNO='$new' where member_Id='$mem->member_Id'");
-           echo "successful";   
-           }
+        //    DB::statement("update members SET districtNO='$new' where member_Id='$mem->member_Id'");
+        //    echo "successful";   
+        //    }
+        return 'done!';
         }
-           
+           //echo "new";
     
     
 }
