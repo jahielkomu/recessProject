@@ -19,7 +19,8 @@ class CreateTreasuriesTable extends Migration
             $table->string('source');
             $table->date('date');
             $table->string('district')->nullable();
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+             $table->timestamp('updated_at');
         });
     }
 

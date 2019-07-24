@@ -20,9 +20,10 @@ class CreateAgentsTable extends Migration
             $table->enum('role',['Agent','Agent head'])->default('Agent');
             $table->string('userName');
             $table->string('district_Id');
-            $table->boolean('status');
             $table->string('signature');
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at');
+
         });
     }
 

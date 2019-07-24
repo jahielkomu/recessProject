@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+
 use Illuminate\Console\Command;
 use DB;
 use Storage;
@@ -45,13 +46,14 @@ class addRecord extends Command
     {   
         function getdistrict($distname)
         {
+            //caling the method from my controller 
             
             $distname= str_replace(' ', '', $distname);
-        $id=district::where('name',$distname)->first();
-        $memid=member::all()->pluck('member_Id')->last();
-        $memid=$memid+1;
-        $ini=substr($id->name,0,4);
-        $new= strtoupper($ini).$memid;
+            $id=district::where('name',$distname)->first();
+            $memid=member::all()->pluck('member_Id')->last();
+            $memid=$memid+1;
+            $ini=substr($id->name,0,4);
+            $new= strtoupper($ini).$memid;
         
         return $new;
 

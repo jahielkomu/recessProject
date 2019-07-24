@@ -48,6 +48,7 @@ class HomeController extends Controller
         $agents= DB::table('agents')->where('role','Agent')->count();
         //fundings available per month 
         $amount=DB::select(DB::raw("SELECT amount from salaries"));
+
         //district with no agents .
         $district =DB::select(DB::raw('SELECT count(id) as nums from districts where id NOT IN (SELECT district_Id from agents)'));
          

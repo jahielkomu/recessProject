@@ -15,11 +15,16 @@ class CreateMembersTable extends Migration
     {
         Schema::create('members', function (Blueprint $table) {
             $table->bigIncrements('member_Id');
-            $table->string('name');
+            $table->integer('memberDistrict');
+            $table->string('fname');
+            $table->string('LName');
             $table->string('recommender');
-            $table->string('gender');
+            $table->enum('gender',['F','M']);
+            $table->boolean('status')->default('0');
+            $table->varchar('districtNO');
             $table->integer('agentid');
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at');
         });
     }
 

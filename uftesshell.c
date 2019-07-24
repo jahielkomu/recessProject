@@ -6,7 +6,7 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
-#define PORT 9000
+#define PORT 10007
 #define BUFFERSIZE 1024
 #define clear() printf("\033[H\033[J")
 
@@ -19,6 +19,7 @@ int uftes_exit(char **args);
 int uftes_Addmember(char **args);
 int uftes_Check_status(char **args);
 int uftes_Get_statement(char **args);
+int getPass();
 /*
   List of builtin commands, followed by their corresponding functions.
  */
@@ -63,7 +64,8 @@ int uftes_cd(char **args)
 int uftes_Addmember(char **args)
 {
     char command[] = "Addmember|";
-    char lin[300];
+    char *lin;
+    size_t len = 0;
     char *line = args[1];
     int clientSocket, ret;
     char req[5] = ".txt";
@@ -99,18 +101,18 @@ int uftes_Addmember(char **args)
         file = fopen(line, "r");
         if (file)
         {
-            while (!feof(file))
+            while (getline(&lin, &len, file) != -1)
             {
-                fgets(lin, 250, file);
+                buffer[0] = '\0';
                 printf("[+]Adding member..... \t\n");
                 strcpy(buffer, command);
                 strcat(buffer, district);
-                strcat(buffer, ",");
-                strcat(buffer, lin);
-                strcat(buffer, ",");
                 strcat(buffer, user);
                 strcat(buffer, ",");
                 strcat(buffer, password);
+                strcat(buffer, ",");
+                lin[strlen(lin) - 1] = ' ';
+                strcat(buffer, lin);
                 strcat(buffer, "|");
                 send(clientSocket, buffer, strlen(buffer), 0);
                 if (strcmp(buffer, ":exit") == 0)
@@ -128,6 +130,7 @@ int uftes_Addmember(char **args)
                 {
                     printf("Added: \t%s\n", buffer);
                 }
+                lin[0] = '\0';
             }
         }
         else
@@ -141,11 +144,11 @@ int uftes_Addmember(char **args)
         printf("[+]Adding member..... \t\n");
         strcpy(buffer, command);
         strcat(buffer, district);
-        strcat(buffer, line);
-        strcat(buffer, ",");
         strcat(buffer, user);
         strcat(buffer, ",");
         strcat(buffer, password);
+        strcat(buffer, ",");
+        strcat(buffer, line);
         strcat(buffer, "|");
         send(clientSocket, buffer, strlen(buffer), 0);
 
@@ -248,7 +251,10 @@ int uftes_Check_status(char **args)
     printf("\n\t*****Checking Status***** \t\n");
     strcpy(buffer, "Check_status|");
     strcat(buffer, district);
+    strcat(buffer, user);
+    strcat(buffer, "|");
     send(clientSocket, buffer, strlen(buffer), 0);
+
     if (strcmp(buffer, ":exit") == 0)
     {
         close(clientSocket);
@@ -256,42 +262,22 @@ int uftes_Check_status(char **args)
         exit(1);
     }
 
-    if (recv(clientSocket, buffer, 1024, 0) < 0)
+    if (recv(clientSocket, buffer, sizeof(buffer), 0) < 0)
     {
         printf("[-]Error in receiving data.\n");
     }
     else
     {
-        char message[1025];
-        char ch;
-        printf("Server Response:\n \t%s\n", buffer);
-        while (1)
-        {
-            printf("Do you want to edit(y/n): ");
-            scanf("%c", &ch);
-            if (ch == 'y' || ch == 'Y')
-            {
-                break;
-            }
-            else if (ch == 'n' || ch == 'N')
-            {
-                break;
-            }
-            else
-            {
-                puts("\nPlease enter y for yes and n for no");
-            }
-        }
+        printf("\n%s\n", buffer);
+        printf("please renter your password to fix the information.\n");
+        getPass();
+        send(clientSocket, password, sizeof(password), 0);
     }
 
     close(clientSocket);
     return 1;
 }
-/**
-   @brief Builtin command: print help.
-   @param args List of args.  Not examined.
-   @return Always returns 1, to continue executing.
- */
+
 int uftes_help(char **args)
 {
     int i;

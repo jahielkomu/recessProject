@@ -18,7 +18,8 @@ class CreatePaymentsTable extends Migration
             $table->integer('amountpaid');
             $table->string('payment_Id');
             $table->date('paymentDate');
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at');
 
         });
     }
