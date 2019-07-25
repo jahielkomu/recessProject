@@ -8,7 +8,7 @@
 #include <arpa/inet.h>
 #include <time.h>
 #include <ctype.h>
-#define PORT 10008
+#define PORT 9090
 int main()
 {
 
@@ -302,7 +302,7 @@ int main()
                         printf("\n[+]Getting Statement\t\n");
                         FILE *fp1;
                         fp1 = fopen(location, "r");
-                        char messag[5000] = "******Payment Details******\n";
+                        char messag[5000] = "\t******Payment Details******\n";
                         char lin[250];
                         while (!feof(fp1))
                         {
@@ -312,6 +312,36 @@ int main()
                         }
                         puts(messag);
                         fclose(fp1);
+                        send(newSocket, messag, strlen(messag), 0);
+                        bzero(messag, sizeof(messag));
+                    }
+                    else if (strstr(command, "search"))
+                    {
+                        char *criteria = strtok(NULL, "|");
+                        printf("%s %s\n", district, criteria);
+                        char location[70] = "storage/app/district_files/";
+                        printf("\n[+]Searching\t\n");
+                        FILE *fp1;
+                        strcat(location, district);
+                        strcat(location, ".txt");
+                        fp1 = fopen(location, "r");
+                        char messag[5000] = "\t*****Search results******\n";
+                        size_t len = 0;
+                        char *line;
+                        int count = 0;
+                        while (getline(&line, &len, fp1) != -1)
+                        {
+                            if (strstr(line, criteria))
+                            {
+                                strcat(messag, line);
+                                count++;
+                            }
+                        }
+                        fclose(fp1);
+                        if (count == 0)
+                        {
+                            strcat(messag, "No results matching search criteria\n");
+                        }
                         send(newSocket, messag, strlen(messag), 0);
                         bzero(messag, sizeof(messag));
                     }

@@ -9,7 +9,7 @@
 #include <readline/history.h>
 #include <arpa/inet.h>
 #include <err.h>
-#define PORT 10008
+#define PORT 9090
 #define BUFFERSIZE 1024
 #define CLEAR() printf("\033[H\033[J")
 
@@ -21,6 +21,7 @@ int uftes_help(char **args);
 int uftes_exit(char **args);
 int uftes_Addmember(char **args);
 int uftes_see(char **args);
+int uftes_search(char **args);
 int uftes_Check_status(char **args);
 int uftes_Get_statement(char **args);
 int getPass();
@@ -41,6 +42,7 @@ char *builtin_str[] = {
     "Check_status",
     "Get_statement",
     "see",
+    "search",
     "exit"};
 char **character_name_completion(const char *, int, int);
 char *character_name_generator(const char *, int);
@@ -56,6 +58,7 @@ char *character_names[] = {
     "cd",
     "nano",
     "see",
+    "search",
     NULL};
 int (*builtin_func[])(char **) = {
     &uftes_cd,
@@ -64,6 +67,7 @@ int (*builtin_func[])(char **) = {
     &uftes_Check_status,
     &uftes_Get_statement,
     &uftes_see,
+    &uftes_search,
     &uftes_exit};
 
 int uftes_num_builtins()
@@ -95,6 +99,57 @@ int uftes_see(char **args)
     {
         see = 0;
     }
+    return 1;
+}
+int uftes_search(char **args)
+{
+    int clientSocket, ret;
+    struct sockaddr_in serverAddr;
+    char buffer[1024];
+    clientSocket = socket(AF_INET, SOCK_STREAM, 0);
+    if (clientSocket < 0)
+    {
+        printf("[-]Error in connection.\n");
+        exit(1);
+    }
+    printf("[+]Client Socket is created.\n");
+
+    memset(&serverAddr, '\0', sizeof(serverAddr));
+    serverAddr.sin_family = AF_INET;
+    serverAddr.sin_port = htons(PORT);
+    serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+
+    ret = connect(clientSocket, (struct sockaddr *)&serverAddr, sizeof(serverAddr));
+    if (ret < 0)
+    {
+        printf("[-]Error in connection.\n");
+        exit(1);
+    }
+    printf("[+]Connected to Server.\n");
+
+    printf("\n\t*****Searching***** \t\n");
+    strcpy(buffer, "search|");
+    strcat(buffer, district);
+    strcat(buffer, args[1]);
+    strcat(buffer, "|");
+    send(clientSocket, buffer, strlen(buffer), 0);
+    char message[5000];
+    if (strcmp(buffer, ":exit") == 0)
+    {
+        close(clientSocket);
+        printf("[-]Disconnected from server.\n");
+        exit(1);
+    }
+
+    if (recv(clientSocket, message, sizeof(message), 0) < 0)
+    {
+        printf("[-]Error in receiving data.\n");
+    }
+    else
+    {
+        printf("%s", message);
+    }
+    close(clientSocket);
     return 1;
 }
 int uftes_Addmember(char **args)
@@ -131,43 +186,80 @@ int uftes_Addmember(char **args)
     // printf("[+]Connected to Server.\n");
     if (strstr(line, req))
     {
+        int counter1 = 0, status = 0;
         printf("\n\t*****Adding Member***** \t\n");
         send(clientSocket, buffer, strlen(buffer), 0);
         FILE *file;
-        int check = 0;
+        char messageE[5000] = "The following records where not added because they contain errors\n";
+        char *check;
         file = fopen(line, "r");
         if (file)
         {
+
             while (getline(&lin, &len, file) != -1)
             {
-                buffer[0] = '\0';
-                printf("[+]Adding member..... \t\n");
-                strcpy(buffer, command);
-                strcat(buffer, district);
-                strcat(buffer, user);
-                strcat(buffer, ",");
-                strcat(buffer, password);
-                strcat(buffer, ",");
-                lin[strlen(lin) - 1] = ' ';
-                strcat(buffer, lin);
-                strcat(buffer, "|");
-                send(clientSocket, buffer, strlen(buffer), 0);
-                if (strcmp(buffer, ":exit") == 0)
+                //
+                for (int i = 0; i < strlen(lin); i++)
                 {
-                    close(clientSocket);
-                    printf("[-]Disconnected from server.\n");
-                    exit(1);
+                    if (lin[i] == ',')
+                    {
+                        counter1++;
+                    }
                 }
-
-                if (recv(clientSocket, buffer, 1024, 0) < 0)
+                if (counter1 == 2)
                 {
-                    printf("[-]Error in receiving data.\n");
+                    check = (char *)malloc(sizeof(lin));
+                    strcpy(check, lin);
+                    strtok(check, ",");
+                    char *sex = strtok(NULL, ",");
+                    if (strcmp(sex, "M") == 0 || strcmp(sex, "F") == 0)
+                    {
+                        buffer[0] = '\0';
+                        printf("[+]Adding member..... \t\n");
+                        strcpy(buffer, command);
+                        strcat(buffer, district);
+                        strcat(buffer, user);
+                        strcat(buffer, ",");
+                        strcat(buffer, password);
+                        strcat(buffer, ",");
+                        lin[strlen(lin) - 1] = ' ';
+                        strcat(buffer, lin);
+                        strcat(buffer, "|");
+                        send(clientSocket, buffer, strlen(buffer), 0);
+                        if (strcmp(buffer, ":exit") == 0)
+                        {
+                            close(clientSocket);
+                            printf("[-]Disconnected from server.\n");
+                            exit(1);
+                        }
+
+                        if (recv(clientSocket, buffer, 1024, 0) < 0)
+                        {
+                            printf("[-]Error in receiving data.\n");
+                        }
+                        else
+                        {
+                            printf("Added: \t%s\n", buffer);
+                        }
+                        lin[0] = '\0';
+                    }
+                    else
+                    {
+                        strcat(messageE, lin);
+                        messageE[strlen(messageE) - 1] = ' ';
+                        strcat(messageE, "# Gender must be M of F\n");
+                        // printf("Gender must be M of F\n");
+                        status = 1;
+                    }
                 }
                 else
                 {
-                    printf("Added: \t%s\n", buffer);
+                    strcat(messageE, lin);
+                    strcat(messageE, "# Few arguments entered\n ");
+                    messageE[strlen(messageE) - 1] = ' ';
+                    status = 1;
                 }
-                lin[0] = '\0';
+                //
             }
         }
         else
@@ -175,6 +267,10 @@ int uftes_Addmember(char **args)
             printf("file doesn't exist");
         }
         fclose(file);
+        if (status)
+        {
+            printf("%s", messageE);
+        }
     }
     else
     {
@@ -281,7 +377,7 @@ int uftes_Get_statement(char **args)
     }
     else
     {
-        puts(message);
+        printf("%s", message);
     }
     close(clientSocket);
     return 1;
