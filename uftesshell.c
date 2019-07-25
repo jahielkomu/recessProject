@@ -339,7 +339,7 @@ int uftes_Check_status(char **args)
             strtok(buffer2, ",");
             char *num = (char *)malloc(10);
             num = strtok(NULL, ",");
-            printf("\nAll your records where added to the database but %s records of other members have errors\n", num);
+            printf("\nYou have no errors but %s records of other members have errors\n", num);
         }
         else
         {
