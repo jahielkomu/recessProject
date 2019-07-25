@@ -5,7 +5,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/socket.h>
+#include <readline/readline.h>
+#include <readline/history.h>
 #include <arpa/inet.h>
+#include <err.h>
 #define PORT 10008
 #define BUFFERSIZE 1024
 #define CLEAR() printf("\033[H\033[J")
@@ -17,6 +20,7 @@ int uftes_cd(char **args);
 int uftes_help(char **args);
 int uftes_exit(char **args);
 int uftes_Addmember(char **args);
+int uftes_see(char **args);
 int uftes_Check_status(char **args);
 int uftes_Get_statement(char **args);
 int getPass();
@@ -27,6 +31,7 @@ char district[30];
 char password[2];
 char user[30];
 char yes_no;
+int see = 1;
 //                                                                                                                                                         A                      B                 C                  D                  E                   F                 G                  H                   I                J                     K                 L                  M                N->n                0                  P                Q                  R                S                  T                U                  V                W                  X                 Y                 Z
 char *key[2][26] = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "010101101111101", "110101110101110", "001010100010001", "110101101101110", "111100111100111", "111101111100100", "001010100011010", "101101111101101", "111010010010111", "111010010010110", "101110100110101", "100100100100111", "101111101101101", "010101101101101", "010101101101010", "110101110100100", "010101101111011", "110101110101101", "111100111001111", "111010010010010", "101101101101111", "101101101101010", "101101101111101", "101101010101101", "101101111001111", "111001010100111"};
 char *builtin_str[] = {
@@ -35,14 +40,30 @@ char *builtin_str[] = {
     "Addmember",
     "Check_status",
     "Get_statement",
+    "see",
     "exit"};
+char **character_name_completion(const char *, int, int);
+char *character_name_generator(const char *, int);
+char *escape(const char *);
+int quote_detector(char *, int);
 
+char *character_names[] = {
+    "Addmember",
+    "Get_statement",
+    "Check_status",
+    "help",
+    "exit",
+    "cd",
+    "nano",
+    "see",
+    NULL};
 int (*builtin_func[])(char **) = {
     &uftes_cd,
     &uftes_help,
     &uftes_Addmember,
     &uftes_Check_status,
     &uftes_Get_statement,
+    &uftes_see,
     &uftes_exit};
 
 int uftes_num_builtins()
@@ -61,6 +82,18 @@ int uftes_cd(char **args)
         {
             perror("uftes");
         }
+    }
+    return 1;
+}
+int uftes_see(char **args)
+{
+    if (see == 0)
+    {
+        see = 1;
+    }
+    else
+    {
+        see = 0;
     }
     return 1;
 }
@@ -351,6 +384,95 @@ int uftes_Check_status(char **args)
     close(clientSocket);
     return 1;
 }
+char **
+character_name_completion(const char *text, int start, int end)
+{
+    rl_attempted_completion_over = 1;
+    return rl_completion_matches(text, character_name_generator);
+}
+
+char *
+character_name_generator(const char *text, int state)
+{
+    static int list_index, len;
+    char *name;
+
+    if (!state)
+    {
+        list_index = 0;
+        len = strlen(text);
+    }
+
+    while ((name = character_names[list_index++]))
+    {
+        if (rl_completion_quote_character)
+        {
+            name = strdup(name);
+        }
+        else
+        {
+            name = escape(name);
+        }
+
+        if (strncmp(name, text, len) == 0)
+        {
+            return name;
+        }
+        else
+        {
+            free(name);
+        }
+    }
+
+    return NULL;
+}
+
+char *
+escape(const char *original)
+{
+    size_t original_len;
+    int i, j, SIZE_MAX = 200;
+    char *escaped, *resized_escaped;
+
+    original_len = strlen(original);
+
+    if (original_len > SIZE_MAX / 2)
+    {
+        errx(1, "string too long to escape");
+    }
+
+    if ((escaped = malloc(2 * original_len + 1)) == NULL)
+    {
+        err(1, NULL);
+    }
+
+    for (i = 0, j = 0; i < original_len; ++i, ++j)
+    {
+        if (original[i] == ' ')
+        {
+            escaped[j++] = '\\';
+        }
+        escaped[j] = original[i];
+    }
+    escaped[j] = '\0';
+
+    if ((resized_escaped = realloc(escaped, j)) == NULL)
+    {
+        free(escaped);
+        resized_escaped = NULL;
+        err(1, NULL);
+    }
+
+    return resized_escaped;
+}
+
+int quote_detector(char *line, int index)
+{
+    return (
+        index > 0 &&
+        line[index - 1] == '\\' &&
+        !quote_detector(line, index - 1));
+}
 
 int uftes_help(char **args)
 {
@@ -537,17 +659,27 @@ char **parse(char *line)
 }
 void loop(void)
 {
+    char shell_prompt[500];
     char *line;
     char **args;
     int status = 1;
-
+    char district2[30];
+    strcpy(district2, district);
+    district2[strlen(district2) - 1] = '\0';
     while (status)
     {
-        printf("\nUFTES# ");
-        line = uftes_read();
+        if (see == 0)
+        {
+            snprintf(shell_prompt, sizeof(shell_prompt), "%s@%s:%s> ", user, district2, getcwd(NULL, 1024));
+            line = readline(shell_prompt);
+        }
+        else
+        {
+            line = readline("UFTES> ");
+        }
         args = parse(line);
         status = execute(args);
-
+        add_history(line);
         free(line);
         free(args);
     }
@@ -691,6 +823,12 @@ int main(int argc, char **argv)
 {
     // Load config files.
     init_shell();
+    fflush(stdin);
+    fflush(stdout);
+    rl_attempted_completion_function = character_name_completion;
+    rl_completer_quote_characters = "'\"";
+    rl_completer_word_break_characters = " ";
+    rl_char_is_quoted_p = &quote_detector;
     // Run command loop.
     loop();
 
