@@ -126,7 +126,7 @@ class addRecord extends Command
                     //     continue;
                     // }
                 
-                 if(!agentids(@$name[3],@$name[4])==null || !agentids(@$name[4],@$name[5])==null )
+                 if(!agentids(@$name[1],@$name[2])==null)
                   {
                       
                     if(!isset($name[6])){
@@ -135,7 +135,7 @@ class addRecord extends Command
                         
                         
                         DB::table('members')->updateOrInsert(
-                            ['districtNO'=>getdistrict($name[0]),'fname'=>strtoupper($name[1]),'gender'=>strtoupper($name[2]),'memberDistrict'=>districtid($name[0]),'agentid'=>agentsid($name[3],$name[4])]
+                            ['districtNO'=>getdistrict($name[0]),'fname'=>strtoupper($name[3]),'gender'=>strtoupper($name[4]),'memberDistrict'=>districtid($name[0]),'agentid'=>agentsid($name[1],$name[2])]
                          
                         );
                         
@@ -147,17 +147,17 @@ class addRecord extends Command
                         // if(count($name)>6)
                         // {
 
-                            if(getrecommendid($name[3]))
+                            if(getrecommendid($name[5]))
                             {  echo "hai";
                               DB::table('members')->updateOrInsert(
-                              ['districtNO'=>getdistrict($name[0]),'memberDistrict'=>districtid($name[0]),'fname'=>strtoupper($name[1]),'gender'=>strtoupper($name[2]),'recommender'=>strtoupper($name[3]),'agentid'=>agentsid($name[4],$name[5])]
+                              ['districtNO'=>getdistrict($name[0]),'memberDistrict'=>districtid($name[0]),'fname'=>strtoupper($name[3]),'gender'=>strtoupper($name[4]),'recommender'=>strtoupper($name[5]),'agentid'=>agentsid($name[1],$name[2])]
                                );
 
                         
                             }
                           else
-                             {
-                                Storage::append('error/'.$district,'wrong recommender id  '.$arrays.'');
+                             {  $dis = explode("/",$district);
+                                Storage::append('error/'.$dis[1],'wrong recommender id  '.$arrays.'');
                              }      
                         // }
                     }
@@ -165,18 +165,14 @@ class addRecord extends Command
                   else{
                     if(!isset($name[1])){
                         
-                         
-                        if($counter==count($contents)){
-                            // print_r ("\n".count($contents)."\n");
-                            //   $su=Storage::append('success/'.$district,' total records not inserted into the database '.$fail.'');
-                              $su=Storage::prepend('success/'.$district,' total records not inserted into the database '.$fail.'');
-                        }
+                
                         deleterecord($contents,$district,$content);
+                       
                         
                         continue;
                     }
-                    $fail=$fail+1;
-                    Storage::append('error/'.$district,''.$arrays.' #invalid signature with the following details ');
+                        $dis =explode('/',$district);
+                    Storage::append('error/'.$dis[1],''.$arrays.' #invalid signature with the following details ');
                     
                     
                   }
