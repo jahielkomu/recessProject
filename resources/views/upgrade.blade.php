@@ -120,6 +120,14 @@
                 <!--added for document purpose-->
                 <div id="upgrade panel panel-default">
                     <div class="qualify panel-body">
+                            @if(session('success'))
+                         
+                            <h4 style="color:green">{{session('success')}}</h4>
+                          @elseif ($errors->any()) 
+                            <h4 style="color:red">{{$errors->first()}}</h4>
+                           @else
+                                   <h4 style="color:orange">{{'Members available for upgrade'}}</h4>
+                          @endif
                         <h2 class="qualify">Qualify</h2>
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered table-hover">
@@ -145,11 +153,8 @@
                                 });
                                 </script> 
                                 <form>
-                        <button><a href="/upgrade/do">Random distribute</a></button>
-                        @if(session('success'))
-                 
-                         <h4 style="color:red">{{session('success')}}</h4>
-                       @endif
+                        <button><a href="/upgrade/do">Random distribution</a></button>
+                       
                     </div>
                     <div class="qualify panel-body">
                         <h2>Districts available</h2>

@@ -55,9 +55,9 @@ class HomeController extends Controller
          
         //members qualified to agents
 
-        $member =DB::select(DB::raw('SELECT  DISTINCT recommender
+        $member =DB::select(DB::raw('SELECT * from members where status=0 AND fname IN (SELECT DISTINCT recommender
         FROM members WHERE recommender IN
-          (SELECT recommender FROM members GROUP BY recommender HAVING COUNT(*) >=40)'));
+          (SELECT recommender FROM members GROUP BY recommender HAVING COUNT(*) >=40))'));
           $co=count($member);
           //district name with the higest enroll
           $districtname=DB::select(DB::raw('SELECT id,name, count(*) as total from districts,members where districts.id=members.memberDistrict  GROUP BY id ORDER BY 2 DESC limit 1'));
@@ -346,45 +346,46 @@ class HomeController extends Controller
      $Agent;
         $Agent=new agent;
       foreach($memberqualified as $member){
-       if($member->fname!==NULL){
+       if($member->fname!=NULL){
       $Agent->firstName=$member->fname;
-      $Agent->lastName=$member->fname;
+      $Agent->lastName=$member->LName;
       $Agent->userName=substr($member->fname,0,5);
       $Agent->signature=strtoupper(chr(rand(65,90)));
     DB::statement('UPDATE members Set status=1 where member_Id='.$member->member_Id);
-      $district_id=DB::select('SELECT id from districts where id NOT IN (SELECT district_Id from agents)
-      OR id=( SELECT  district_Id  FROM agents GROUP by district_Id order by COUNT(1) ASC LIMIT 1) ORDER BY RAND() LIMIT 5');
+    $district_id=DB::select('SELECT id from districts where id NOT IN (SELECT district_Id from agents)
+    OR id=( SELECT  district_Id  FROM agents GROUP by district_Id order by COUNT(1) ASC LIMIT 1) ORDER BY RAND() LIMIT 1');
    
-     foreach($district_id as $dist){
+   foreach($district_id as $dist){
                  global $distt;
                $distt=$dist->id;
             
-       }
-        $Agent->district_Id=$distt ;
-  
-        $distNoAgenthead=DB::select(DB::raw('SELECT id as nums from districts where id NOT IN (SELECT district_Id from agents)'));
-      
-         foreach ($distNoAgenthead as $head){
-                 global $headno;
-                 $headno=$head->nums;
-        }
-       if($headno==$Agent->district_Id && $headno!=NULL){
-           $Agent->role="Agent head";
-           $Agent->save();
-           return redirect()->back()->withSuccess('New member has been upgraded  successfully');;
-       }
-       else {
-           $Agent->role="Agent";
-           $Agent->save();
-           return redirect()->back()->withSuccess('New member has been upgraded  successfully');;
-       }
+    }
+    $Agent->district_Id=$distt ;
+    $Agent;
+    $distNoAgenthead=DB::select(DB::raw('SELECT id as nums from districts where '.$Agent->district_Id.' NOT IN (SELECT district_Id from agents)'));
+     global $headno;
+    // foreach ($distNoAgenthead as $head){
+                
+    //              $headno=$head->nums;
+    // }
+   if(!empty($distNoAgenthead) ){
+        $Agent->role="Agent head";
+    }
+    else {
+        $Agent->role="Agent";
+    }
+    $Agent->save();
+    if($Agent->save()){
+        
+        return redirect()->back()->withSuccess('New member has been added successfully');
+    }
        
     }
 
     
       
     }
-    return redirect()->back()->withSuccess('No member has the required criteria');         
+    return redirect()->back()->withErrors('No member has the required criteria');         
     }
 
 
