@@ -21,7 +21,7 @@ class CreateMembersTable extends Migration
             $table->string('recommender');
             $table->enum('gender',['F','M']);
             $table->boolean('status')->default('0');
-            $table->varchar('districtNO');
+            $table->string('districtNO');
             $table->integer('agentid');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at');

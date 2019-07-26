@@ -77,13 +77,14 @@
                            <li  >
                         <a   href="/stat" style="background: #3980b5"><i class="fa fa-bar-chart-o fa-3x"></i> Statistics</a>
                     </li>   
-                      <li  >
-                        <a  href="/record" style="background: #3980b5;"><i class="fa fa-table fa-3x"></i> Records</a>
-                    </li>
+                     
                     <li  >
                         <a  href="/member" style="background: #104075"><i class="fa fa-table fa-3x"></i> Members</a>
                         
                     </li>
+                     <li  >
+                        <a  href="/record" style="background: #3980b5;"><i class="fa fa-table fa-3x"></i> Records</a>
+                    </li>s
                     <li  >
                         <a  href="/upgrade" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> Upgrade</a>
                     </li>               
@@ -142,6 +143,7 @@
                                 <form action="/member" method="POST">
                                     {{ csrf_field() }}
                                     <select name="district" id="">
+                                        <option>select district</option>
                                             @foreach($districttable as $row)
                                               <option value="{{$row->id}}">{{ $row->name}}</option>
                                             @endforeach    
