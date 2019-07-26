@@ -105,11 +105,12 @@ class addRecord extends Command
         foreach($files as $district)
            {
                $content = Storage::get($district);
+
                $contents = explode("\n",$content);
                $fail=0;
                $counter=0;
                
-              
+            //    print_r($contents);
 
                 foreach($contents as $arrays)
                 {   $counter=$counter+1;
@@ -118,61 +119,68 @@ class addRecord extends Command
                     
                       continue;
                   }
-                    $name = explode(",",$arrays);
+                    $name = explode(" ",$arrays);
                     // if(!isset($name[1]))
                     // {
                     //     deleterecord($contents,$district);
                     //     // echo "deleted";
                     //     continue;
                     // }
-                
+                    
+                    // print_r($names);
+                    // exit();
                  if(!agentids(@$name[1],@$name[2])==null)
                   {
+                    $names=$name[3];
+                    $names=explode('_',$names);
+                    
                       
-                    if(!isset($name[6])){
-                      
-                    // if(count($name)>5){
-                        
+                    if($name[6]=='self'){
+                       
                         
                         DB::table('members')->updateOrInsert(
-                            ['districtNO'=>getdistrict($name[0]),'fname'=>strtoupper($name[3]),'gender'=>strtoupper($name[4]),'memberDistrict'=>districtid($name[0]),'agentid'=>agentsid($name[1],$name[2])]
+                            ['districtNO'=>getdistrict($name[0]),'fname'=>strtoupper($names[0]),'LName'=>strtoupper($names[1]),'gender'=>strtoupper($name[5]),'memberDistrict'=>districtid($name[0]),'agentid'=>agentsid($name[1],$name[2]),'recommender'=>'SELF']
                          
                         );
-                        
-                    // }
+                    
                     }
                     else
                     {
                         // doesnt allow to enter incomplete details
-                        // if(count($name)>6)
-                        // {
 
-                            if(getrecommendid($name[5]))
-                            {  echo "hai";
+                            // if(getrecommendid())
+                            // { 
+                                 
                               DB::table('members')->updateOrInsert(
-                              ['districtNO'=>getdistrict($name[0]),'memberDistrict'=>districtid($name[0]),'fname'=>strtoupper($name[3]),'gender'=>strtoupper($name[4]),'recommender'=>strtoupper($name[5]),'agentid'=>agentsid($name[1],$name[2])]
+                              ['districtNO'=>getdistrict($name[0]),'memberDistrict'=>districtid($name[0]),'fname'=>strtoupper($names[0]),'LName'=>strtoupper($names[1]),'gender'=>strtoupper($name[5]),'recommender'=>strtoupper($name[6]),'agentid'=>agentsid($name[1],$name[2])]
                                );
 
                         
-                            }
-                          else
-                             {  $dis = explode("/",$district);
-                                Storage::append('error/'.$dis[1],'wrong recommender id  '.$arrays.'');
-                             }      
+                            // }
+                        //   else
+                        //      {   $dis =explode('/',$district);
+                        //         $disnam= str_replace(".txt",'',$dis[1]);
+                        //         $cont= str_replace(''.$disnam.',','',$arrays);
+                        //         str_replace(','.$name[6].'','',$cont);
+                        //         print_r($cont);
+                        //         Storage::append('error/'.$dis[1],$cont);
+                        //      }      
                         // }
                     }
                   }
                   else{
-                    if(!isset($name[1])){
+                    if($counter==count($contents)){
                         
                 
-                        deleterecord($contents,$district,$content);
+                        deleterecord($contents,$district);
                        
                         
                         continue;
                     }
-                        $dis =explode('/',$district);
-                    Storage::append('error/'.$dis[1],''.$arrays.' #invalid signature with the following details ');
+                    $dis =explode('/',$district);
+                    $disnam= str_replace(".txt",'',$dis[1]);
+                    $cont= str_replace(''.$disnam.'','',$arrays);
+                    Storage::append('error/'.$dis[1],trim($cont));
                     
                     
                   }
