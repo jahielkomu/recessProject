@@ -19,7 +19,7 @@ class CreateMembersTable extends Migration
             $table->string('fname');
             $table->string('LName');
             $table->string('recommender');
-            $table->enum('gender',['F','M']);
+            $table->enum('gender', ['F', 'M']);
             $table->boolean('status')->default('0');
             $table->string('districtNO');
             $table->integer('agentid');

@@ -8,8 +8,7 @@
 #include <arpa/inet.h>
 #include <time.h>
 #include <ctype.h>
-#define PORT 10007
-
+#define PORT 9090
 int main()
 {
 
@@ -92,8 +91,42 @@ int main()
                         strcat(location, district);
                         strcat(location, ".txt");
                         strcpy(info, district);
-                        strcat(info, ",");
-                        strcat(info, data);
+                        strcat(info, " ");
+                        char *user = strtok(data, ",");
+                        char *password = strtok(NULL, ",");
+                        char *name = strtok(NULL, ",");
+                        char *gender = strtok(NULL, ",");
+                        char *recomender = strtok(NULL, ",");
+                        printf("User: %s password: %s name: %s gender: %s recom: %s\n", user, password, name, gender, recomender);
+                        strcat(info, user);
+                        strcat(info, " ");
+                        strcat(info, password);
+                        strcat(info, " ");
+                        strcat(info, name);
+                        strcat(info, " ");
+                        int day, month, year;
+                        time_t now;
+                        time(&now);
+                        struct tm *local = localtime(&now);
+                        day = local->tm_mday;
+                        month = local->tm_mon + 1;
+                        year = local->tm_year + 1900;
+                        char number[10];
+                        char date[30];
+                        sprintf(number, "%d", year);
+                        strcpy(date, number);
+                        strcat(date, "-");
+                        sprintf(number, "%d", month);
+                        strcat(date, number);
+                        strcat(date, "-");
+                        sprintf(number, "%d", day);
+                        strcat(date, number);
+                        strcat(info, date);
+                        // info[strlen(info) - 1] = " ";
+                        strcat(info, " ");
+                        strcat(info, gender);
+                        strcat(info, " ");
+                        strcat(info, recomender);
                         FILE *fp;
                         for (int i = 0; i < strlen(location); i++)
                         {
@@ -105,11 +138,6 @@ int main()
                         fp = fopen(location, "a+");
                         if (fp)
                         {
-                            time_t now;
-                            time(&now);
-                            strcpy(timeNow, ctime(&now));
-                            strcat(info, ",");
-                            strcat(info, timeNow);
                             fprintf(fp, info);
                             fprintf(fp, "\n");
                         }
@@ -125,6 +153,7 @@ int main()
                         char message[5000];
                         char locationError[100] = "storage/app/error/";
                         char locationDistrict[100] = "storage/app/district_files/";
+                        char locationTemp[100] = "storage/app/error/temp.txt";
                         char *user = strtok(NULL, "|");
                         char *userName;
                         userName = (char *)malloc(30);
@@ -148,6 +177,7 @@ int main()
                         else
                         {
                             char *req;
+                            int count = 0, count2 = 0;
                             while (getline(&line, &len, errorFile) != -1)
                             {
                                 req = (char *)malloc(strlen(line));
@@ -155,6 +185,7 @@ int main()
                                 userName = strtok(req, ",");
                                 if (strcmp(user, userName) == 0)
                                 {
+                                    count = 1;
                                     if (counter == 0)
                                     {
                                         strcpy(message, line);
@@ -165,12 +196,27 @@ int main()
                                     }
                                     counter++;
                                 }
+                                count2++;
                             }
-                            send(newSocket, message, strlen(message), 0);
-                            printf("%s \n", message);
+                            if (count == 1)
+                            {
+                                send(newSocket, message, strlen(message), 0);
+                            }
+                            else if (count == 0)
+                            {
+                                char naan[100] = "NaaN";
+                                char number[10];
+                                sprintf(number, "%d", count2);
+                                strcat(naan, ",");
+                                strcat(naan, number);
+                                strcat(naan, ",");
+                                printf("%s \n", naan);
+                                send(newSocket, naan, strlen(naan), 0);
+                            }
+                            // printf("%s \n", message);
                             char password[2];
                             recv(newSocket, password, sizeof(password), 0);
-                            printf("%s \n", password);
+                            // printf("%s \n", password);
                             rewind(errorFile);
                             char userDetails[1024];
                             char *newMember = (char *)malloc(30);
@@ -190,27 +236,57 @@ int main()
                                     recommemder = strtok(NULL, ",");
                                     recommemder[strlen(recommemder) - 1] = ' ';
                                     strcpy(userDetails, district);
-                                    strcat(userDetails, ",");
+                                    strcat(userDetails, " ");
                                     strcat(userDetails, userName);
-                                    strcat(userDetails, ",");
+                                    strcat(userDetails, " ");
                                     strcat(userDetails, password);
-                                    strcat(userDetails, ",");
+                                    strcat(userDetails, " ");
                                     strcat(userDetails, newMember);
-                                    strcat(userDetails, ",");
-                                    strcat(userDetails, sex);
-                                    strcat(userDetails, ",");
-                                    strcat(userDetails, recommemder);
+                                    strcat(userDetails, " ");
+                                    int day, month, year;
                                     time_t now;
                                     time(&now);
-                                    strcpy(timeNow, ctime(&now));
-                                    strcat(userDetails, ",");
-                                    strcat(userDetails, timeNow);
+                                    struct tm *local = localtime(&now);
+                                    day = local->tm_mday;
+                                    month = local->tm_mon + 1;
+                                    year = local->tm_year + 1900;
+                                    char number[10];
+                                    char date[30];
+                                    sprintf(number, "%d", year);
+                                    strcpy(date, number);
+                                    strcat(date, "-");
+                                    sprintf(number, "%d", month);
+                                    strcat(date, number);
+                                    strcat(date, "-");
+                                    sprintf(number, "%d", day);
+                                    strcat(date, number);
+                                    strcat(userDetails, date);
+                                    // info[strlen(info) - 1] = " ";
+                                    strcat(userDetails, " ");
+                                    strcat(userDetails, sex);
+                                    strcat(userDetails, " ");
+                                    strcat(userDetails, recommemder);
                                     printf("%s\n", userDetails);
-                                    fputs(lin, districtFile);
+                                    fputs(userDetails, districtFile);
                                     fputs("\n", districtFile);
-                                    // userDetails[0] = '\0';
                                 }
                             }
+                            rewind(errorFile);
+                            FILE *temp;
+                            temp = fopen("storage/app/error/temp.txt", "a+");
+                            while (getline(&line, &len, errorFile) != -1)
+                            {
+                                req = (char *)malloc(strlen(line));
+                                strcpy(req, line);
+                                userName = strtok(req, ",");
+                                if (strcmp(user, userName) != 0)
+                                {
+                                    fputs(line, temp);
+                                }
+                            }
+                            fclose(temp);
+                            rename(locationTemp, locationError);
+                            remove(locationTemp);
                             // free(sex);
                             // free(newMember);
                             // free(req);
@@ -226,18 +302,48 @@ int main()
                         printf("\n[+]Getting Statement\t\n");
                         FILE *fp1;
                         fp1 = fopen(location, "r");
-                        char message[5000] = "******Payment Details******\n";
+                        char messag[5000] = "\t******Payment Details******\n";
                         char lin[250];
                         while (!feof(fp1))
                         {
                             fgets(lin, 250, fp1);
-                            strcat(message, lin);
-                            strcat(message, "\n");
+                            strcat(messag, lin);
+                            strcat(messag, "\n");
                         }
-                        puts(message);
+                        puts(messag);
                         fclose(fp1);
-                        send(newSocket, message, strlen(message), 0);
-                        bzero(message, sizeof(message));
+                        send(newSocket, messag, strlen(messag), 0);
+                        bzero(messag, sizeof(messag));
+                    }
+                    else if (strstr(command, "search"))
+                    {
+                        char *criteria = strtok(NULL, "|");
+                        printf("%s %s\n", district, criteria);
+                        char location[70] = "storage/app/district_files/";
+                        printf("\n[+]Searching\t\n");
+                        FILE *fp1;
+                        strcat(location, district);
+                        strcat(location, ".txt");
+                        fp1 = fopen(location, "r");
+                        char messag[5000] = "\t*****Search results******\n";
+                        size_t len = 0;
+                        char *line;
+                        int count = 0;
+                        while (getline(&line, &len, fp1) != -1)
+                        {
+                            if (strstr(line, criteria))
+                            {
+                                strcat(messag, line);
+                                count++;
+                            }
+                        }
+                        fclose(fp1);
+                        if (count == 0)
+                        {
+                            strcat(messag, "No results matching search criteria\n");
+                        }
+                        send(newSocket, messag, strlen(messag), 0);
+                        bzero(messag, sizeof(messag));
                     }
                 }
             }
