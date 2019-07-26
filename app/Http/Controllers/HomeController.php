@@ -301,6 +301,18 @@ class HomeController extends Controller
         ->groupByMonth(date('Y'), true);
         return view('stat',["chart"=>$chart,"chart2"=>$chart2]);    
     } 
+
+//giving report of all contributions
+     public function report(){
+
+      $contrtable=DB::select('select * from treasuries  order by date desc');
+      return view('report',compact('contrtable'));
+    }
+
+
+
+
+
     // show records
     public function records(Request $requests){
         $agentstable=DB::select('select * from districts,agents where id=district_Id and role order by name,role desc');
