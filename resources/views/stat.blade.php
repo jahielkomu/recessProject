@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
@@ -16,7 +15,11 @@
             <link href="assets/js/morris/morris-0.4.3.min.css" rel="stylesheet" />
             <!-- CUSTOM STYLES-->
             <link href="assets/css/custom.css" rel="stylesheet" />
-
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js"></script>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+            <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.js"></script>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>  
         <!-- Styles -->
         
         <style>
@@ -26,6 +29,44 @@
         {!! Charts::styles() !!}
     </head>
     <body>
+            <script>
+                    // displays the agent records in hierachy format
+                    $(document).ready(function(){
+                      $(document).on('change','#charts',function()
+                      
+                      {
+                        console.log("its working");
+                        var month=$(this).val();
+                        var div=$(this).parent();
+                        op="";
+                        console.log(month);
+                        $.ajax({
+                          type:'get',
+                          url:'{!! URL::to('stats') !!}',
+                          data:{'month':month},
+                          success:function(array) {
+                             console.log('success');
+                            console.log(array);
+                           
+                            var chart = c3.generate({
+                            data: {
+                           columns:array,
+                           type: 'pie' 
+            }
+        });  
+            
+                         },
+                          error:function(){
+                            console.log(data);
+            
+                          }
+            
+            
+                      });
+                    });
+                  });
+                    
+                 </script>
       <div id="wrapper">
         <nav class="navbar navbar-default navbar-cls-top " role="navigation" style="margin-bottom: 0;background-color: rgb(0, 162, 255)">
             <div class="navbar-header">
@@ -66,16 +107,13 @@
 					</li>
 				
                     <li style="background-color: rgb(0, 85, 182)">
-                        <a href="/" style="background: #3980b5;"><i class="glyphicon glyphicon-home fa-3x"></i> Dashboard</a>
+                        <a href="/" style="background: #3980b5;"><i class="fa fa-dashboard fa-3x"></i> Dashboard</a>
                     </li>
                     <li>
                         <a   href="/high" style="background: #3980b5;"><i class="fa fa-desktop fa-3x"></i> Hierarchy</a>
                     </li>
                         <li>
                         <a  href="/payment" style="background: #3980b5"><i class="fa fa-qrcode fa-3x"></i> Payments</a>
-                    </li>
-                     <li>
-                        <a  href="/report" style="background: #3980b5"><i class="fa fa-qrcode fa-3x"></i> Report</a>
                     </li>
                    
 						   <li  >
@@ -103,7 +141,6 @@
             </div>
             
         </nav> 
-
          <!-- /. NAV SIDE  -->
          <div id="page-wrapper" >
             <div id="page-inner">
@@ -116,18 +153,46 @@
                 </div>
                  <!-- /. ROW  -->
                  <hr />
-             
+
+                
                   <div class="row">                     
                       
-                    <div class="col-md-10 col-sm-10 col-xs-10">                     
+                    <div class="col-md-10 col-sm-10 col-xs-10" style="padding-left:120px">                     
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                Wellwisher's contribution per month
+                            </div>
+                            <select id="charts" class="charts" style="float: right">
+                                <option value="">Select month</option>
+                                @foreach($district_list as $country)
+                                <option value="{{ $country->month}}"  onchange="function(data)">{{ date("F, Y",strtotime($country->month)) }}</option>
+                                @endforeach                 
+                            </select>
+                            <div class="panel-body">
+
+                                    
+                                        <div id="chart"></div>
+                                      
+                                  
+                                   
+                                  </div> 
+                            </div>
+                        </div>            
+                        
+                    
+               </div>
+                  <div class="row">                     
+                      
+                    <div class="col-md-10 col-sm-10 col-xs-10"  style="padding-left:120px">                     
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 Members  enrollment
+                               
                             </div>
                             <div class="panel-body">
                                 <div class="app" > 
                                     
-                                
+                                       
                   
                                       {!! $chart->html() !!}
                                   
@@ -143,22 +208,22 @@
                  <!-- /. ROW  -->
              <div class="row">                     
                       
-                <div class="col-md-10 col-sm-10 col-xs-10">                     
+                <div class="col-md-10 col-sm-10 col-xs-10"  style="padding-left:120px">                     
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            Wellwisher's contribution per month
+                            Total contribution per month
                         </div>
                         <div class="panel-body">
                             <div class="app" > 
                                 
-         
+                                
                                   {!! $chart2->html() !!}
                               
                                
                               </div> 
                         </div>
                     </div>            
-                
+                    
                 
            </div>
                  <!-- /. ROW  -->
@@ -170,13 +235,24 @@
             </div>
          <!-- /. PAGE WRAPPER  -->
         </div>
-        <
-    
+     <!-- /. WRAPPER  -->
+    <!-- SCRIPTS -AT THE BOTOM TO REDUCE THE LOAD TIME-->
+    <!-- JQUERY SCRIPTS -->
+    <script src="assets/js/jquery-1.10.2.js"></script>
+      <!-- BOOTSTRAP SCRIPTS -->
+    <script src="assets/js/bootstrap.min.js"></script>
+    <!-- METISMENU SCRIPTS -->
+    <script src="assets/js/jquery.metisMenu.js"></script>
+     <!-- MORRIS CHART SCRIPTS -->
+     <script src="assets/js/morris/raphael-2.1.0.min.js"></script>
+    <script src="assets/js/morris/morris.js"></script>
+      <!-- CUSTOM SCRIPTS -->
+    <script src="assets/js/custom.js"></script>
      {!! Charts::scripts() !!}
 
      {!! $chart->script() !!}
      {!! $chart2->script() !!}
-  
-</div>
+    
+   
 </body>
 </html>

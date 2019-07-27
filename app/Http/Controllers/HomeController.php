@@ -232,75 +232,95 @@ class HomeController extends Controller
 
 
 
-    // show statistics
-    public function stat()
+   // show statistics
+   public function stat()
         
-    { 
-    
+   { 
+   
 
 //  two alternatives to present the percentage choice any;
-           //member enrollment
-        $data = myviews::select(
-            \ DB::raw("DATE_FORMAT(created_at,'%M %Y') as months")
-            ,\DB::raw("total")
-            // \DB::raw("COALESCE((LEAD(total) OVER (ORDER BY months DESC)-total)/total, 0) Percent_Change")
-        )
-        ->get();
-        
-
-    // $chart = Charts::database($data, 'bar', 'highcharts')
-    //     ->title("PERCENTAGE CHANGE IN ENROLLMENT FIGURES")
-    //     ->elementLabel("Percentage change")
-    //     ->dimensions(1000, 500)
-    //     ->responsive(true)
-    //     ->groupBy('months')
-    //     ->values($data->pluck('Percent_Change'));
-    // $data=DB::table('myviews')->get();
-    $value=array();
-    $updatedvalue=array();
-    $month=array();
-    foreach($data as $i)
-    {
-    array_push($value,$i->total);
-    array_push($month,$i->months);
-    }
-    for($i=0;$i<count($value)-1;$i++){
-        array_push($updatedvalue,(($value[$i+1]-$value[$i])/$value[$i]));
-    }
-    // retreturn $dist;urn $aksam;
-    
-
-        $chart = Charts::create('bar', 'highcharts')
-
-        ->title('PERCENTAGE CHANGE IN ENROLLMENT FIGURES')
-
-        ->labels($month)
-        ->elementLabel("percentage change")
-        ->values($updatedvalue)
-        ->dimensions(1000,500)
-
-        ->responsive(true);
+          //member enrollment
+       $data = myviews::select(
+           \ DB::raw("DATE_FORMAT(created_at,'%M %Y') as months")
+           ,\DB::raw("total")
+           // \DB::raw("COALESCE((LEAD(total) OVER (ORDER BY months DESC)-total)/total, 0) Percent_Change")
+       )
+       ->get();
        
 
+   // $chart = Charts::database($data, 'bar', 'highcharts')
+   //     ->title("PERCENTAGE CHANGE IN ENROLLMENT FIGURES")
+   //     ->elementLabel("Percentage change")
+   //     ->dimensions(1000, 500)
+   //     ->responsive(true)
+   //     ->groupBy('months')
+   //     ->values($data->pluck('Percent_Change'));
+   // $data=DB::table('myviews')->get();
+   $value=array();
+   $updatedvalue=array();
+   $month=array();
+   foreach($data as $i)
+   {
+   array_push($value,$i->total);
+   array_push($month,$i->months);
+   }
+   for($i=0;$i<count($value)-1;$i++){
+       array_push($updatedvalue,(($value[$i+1]-$value[$i])/$value[$i]));
+   }
+   // retreturn $dist;urn $aksam;
+   
 
+       $chart = Charts::create('bar', 'highcharts')
 
-        $money = treasury::where(DB::raw("(DATE_FORMAT(created_at,'%Y'))"),date('Y'))
+       ->title('PERCENTAGE CHANGE IN ENROLLMENT FIGURES')
+
+       ->labels($month)
+       ->elementLabel("percentage change")
+       ->values($updatedvalue)
+       ->dimensions(1000,500)
+
+       ->responsive(true);
+      
+
+      // getting all districts from the database
+      $district_list=DB::select(DB::raw('SELECT DATE_FORMAT(date, "%Y-%m") AS month
+      FROM treasuries
+      GROUP BY DATE_FORMAT(date, "%m-%Y")'));
+       
+      
+
+       $money = treasury::where(DB::raw("(DATE_FORMAT(created_at,'%Y'))"),date('Y'))
     
-        ->get();
- 
-        $chart2 = Charts::database($money, 'bar', 'highcharts')
-        
-        ->title("Monthly funds")
-        
-        ->elementLabel("Total wellwishers")
-        
-        ->dimensions(1000, 500)
-        
-        ->responsive(false)
-        
-        ->groupByMonth(date('Y'), true);
-        return view('stat',["chart"=>$chart,"chart2"=>$chart2]);    
-    } 
+       ->get();
+
+       $chart2 = Charts::database($money, 'bar', 'highcharts')
+       
+       ->title("Monthly funds")
+       
+       ->elementLabel("Total wellwishers")
+       
+       ->dimensions(1000, 500)
+       
+       ->responsive(true)
+       
+       ->groupByMonth(date('Y'), true);
+       // return $district_list;
+       return view('stat',["chart"=>$chart,"chart2"=>$chart2,'district_list'=>$district_list]);    
+   } 
+   public function showcharts(Request $request){
+  
+       $mydata=DB::select(DB::raw('SELECT amount,source
+       FROM treasuries
+       WHERE   DATE_FORMAT(date, "%Y-%m")="'.$request->month.'"'));
+       // $value=array();
+       // $source=array();
+       $array[]=[];
+       foreach($mydata as $i=>$value)
+       {  
+           $array[++$i]=[$value->source,$value->amount];
+       }
+       return response()->json($array);
+   }
     // show records
     public function records(Request $requests){
         $agentstable=DB::select('select * from districts,agents where id=district_Id and role order by name,role desc');
