@@ -76,4 +76,10 @@ Route::group(['Middleware'=>'Auth'],function(){
     Route::get('/payment', 'HomeController@payment')->name('home');
 });
 
+<<<<<<< HEAD
+//Route::get('generate-pdf','HomeController@generatePDF');
+
+
+=======
+>>>>>>> 594e9228689b0be4212349d05c1db05b05021342
 ?>

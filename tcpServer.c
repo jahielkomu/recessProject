@@ -77,7 +77,7 @@ int main()
                 }
                 else
                 {
-                    printf("Client: %s\n", buffer);
+                    // printf("Client: %s\n", buffer);
                     char *command = strtok(buffer, "|");
                     char *district = strtok(NULL, "|");
                     printf("%s\n", command);
@@ -97,7 +97,7 @@ int main()
                         char *name = strtok(NULL, ",");
                         char *gender = strtok(NULL, ",");
                         char *recomender = strtok(NULL, ",");
-                        printf("User: %s password: %s name: %s gender: %s recom: %s\n", user, password, name, gender, recomender);
+                        // printf("User: %s password: %s name: %s gender: %s recom: %s\n", user, password, name, gender, recomender);
                         strcat(info, user);
                         strcat(info, " ");
                         strcat(info, password);
@@ -122,7 +122,6 @@ int main()
                         sprintf(number, "%d", day);
                         strcat(date, number);
                         strcat(info, date);
-                        // info[strlen(info) - 1] = " ";
                         strcat(info, " ");
                         strcat(info, gender);
                         strcat(info, " ");
@@ -143,7 +142,7 @@ int main()
                         }
                         fclose(fp);
                         send(newSocket, info, strlen(info), 0);
-                        printf("Added:\t %s\n", info);
+                        // printf("Added:\t %s\n", info);
                         bzero(info, sizeof(info));
                     }
 
@@ -157,7 +156,7 @@ int main()
                         char *user = strtok(NULL, "|");
                         char *userName;
                         userName = (char *)malloc(30);
-                        printf("%s\n", user);
+                        // printf("%s\n", user);
                         strcat(locationError, district);
                         strcat(locationError, ".txt");
                         strcat(locationDistrict, district);
@@ -182,7 +181,7 @@ int main()
                             {
                                 req = (char *)malloc(strlen(line));
                                 strcpy(req, line);
-                                userName = strtok(req, ",");
+                                userName = strtok(req, " ");
                                 if (strcmp(user, userName) == 0)
                                 {
                                     count = 1;
@@ -210,7 +209,7 @@ int main()
                                 strcat(naan, ",");
                                 strcat(naan, number);
                                 strcat(naan, ",");
-                                printf("%s \n", naan);
+                                // printf("%s \n", naan);
                                 send(newSocket, naan, strlen(naan), 0);
                             }
                             // printf("%s \n", message);
@@ -220,21 +219,23 @@ int main()
                             rewind(errorFile);
                             char userDetails[1024];
                             char *newMember = (char *)malloc(30);
-                            char *recommemder = (char *)malloc(30);
+                            char *recomender = (char *)malloc(30);
                             char *sex = (char *)malloc(2);
-
+                            char *date = (char *)malloc(30);
                             while (getline(&line, &len, errorFile) != -1)
                             {
                                 req = (char *)malloc(strlen(line));
                                 strcpy(req, line);
-                                userName = strtok(req, ",");
+                                userName = strtok(req, " ");
+                                // printf("%s \n", req);
                                 if (strcmp(user, userName) == 0)
                                 {
-                                    strtok(NULL, ",");
-                                    newMember = strtok(NULL, ",");
-                                    sex = strtok(NULL, ",");
-                                    recommemder = strtok(NULL, ",");
-                                    recommemder[strlen(recommemder) - 1] = ' ';
+                                    strtok(NULL, " ");
+                                    newMember = strtok(NULL, " ");
+                                    date = strtok(NULL, " ");
+                                    sex = strtok(NULL, " ");
+                                    recomender = strtok(NULL, " ");
+                                    // printf("district: %s user: %s password: %s new member: %s gender: %s recommender: %s  \n", district, user, password, newMember, date, sex, req);
                                     strcpy(userDetails, district);
                                     strcat(userDetails, " ");
                                     strcat(userDetails, userName);
@@ -243,30 +244,12 @@ int main()
                                     strcat(userDetails, " ");
                                     strcat(userDetails, newMember);
                                     strcat(userDetails, " ");
-                                    int day, month, year;
-                                    time_t now;
-                                    time(&now);
-                                    struct tm *local = localtime(&now);
-                                    day = local->tm_mday;
-                                    month = local->tm_mon + 1;
-                                    year = local->tm_year + 1900;
-                                    char number[10];
-                                    char date[30];
-                                    sprintf(number, "%d", year);
-                                    strcpy(date, number);
-                                    strcat(date, "-");
-                                    sprintf(number, "%d", month);
-                                    strcat(date, number);
-                                    strcat(date, "-");
-                                    sprintf(number, "%d", day);
-                                    strcat(date, number);
                                     strcat(userDetails, date);
-                                    // info[strlen(info) - 1] = " ";
                                     strcat(userDetails, " ");
                                     strcat(userDetails, sex);
                                     strcat(userDetails, " ");
-                                    strcat(userDetails, recommemder);
-                                    printf("%s\n", userDetails);
+                                    strcat(userDetails, recomender);
+                                    // printf("%s\n", userDetails);
                                     fputs(userDetails, districtFile);
                                     fputs("\n", districtFile);
                                 }
@@ -278,7 +261,7 @@ int main()
                             {
                                 req = (char *)malloc(strlen(line));
                                 strcpy(req, line);
-                                userName = strtok(req, ",");
+                                userName = strtok(req, " ");
                                 if (strcmp(user, userName) != 0)
                                 {
                                     fputs(line, temp);
@@ -318,7 +301,7 @@ int main()
                     else if (strstr(command, "search"))
                     {
                         char *criteria = strtok(NULL, "|");
-                        printf("%s %s\n", district, criteria);
+                        // printf("%s %s\n", district, criteria);
                         char location[70] = "storage/app/district_files/";
                         printf("\n[+]Searching\t\n");
                         FILE *fp1;

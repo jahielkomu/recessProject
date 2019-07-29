@@ -13,21 +13,32 @@ use Charts;
 use App\myviews;
 use App\salaries;
 use Storage;
+use PDF;
 
 
 
 class HomeController extends Controller
-{     
+{
     /**
      * Create a new controller instance.
      *
      * @return void
      */
+
+    // public function generatePDF()
+    // {
+    //     $data = ['title' => 'uft Report'];
+    //     $pdf = PDF::loadView('reportPDF', $data);
+
+    //     return $pdf->download('ufftreport.pdf');
+    // }
+
+
     public function __construct()
     {
         $this->middleware('auth');
-        
-    
+
+
     }
 
     /**
@@ -35,24 +46,24 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    
-    public function index()
-    {   //a helper function to count members from the database that have been enrolled 
 
-        
+    public function index()
+    {   //a helper function to count members from the database that have been enrolled
+
+
         $results = DB::table('members')->count();
 
         // counts All agents available in the all country
 
-        $agenthead= DB::table('agents')->where('role','Agent head')->count(); 
+        $agenthead= DB::table('agents')->where('role','Agent head')->count();
         // counts All agents heads available in the all country
 
         $agents= DB::table('agents')->where('role','Agent')->count();
-        //fundings available per month 
+        //fundings available per month
         $amount=DB::select(DB::raw("SELECT amount from salaries"));
         //district with no agents .
         $district =DB::select(DB::raw('SELECT count(id) as nums from districts where id NOT IN (SELECT district_Id from agents)'));
-         
+
         //members qualified to agents
 
         $member =DB::select(DB::raw('SELECT * from members where status=0 AND fname IN (SELECT DISTINCT recommender
@@ -61,38 +72,38 @@ class HomeController extends Controller
           $co=count($member);
           //district name with the higest enroll
           $districtname=DB::select(DB::raw('SELECT id,name, count(*) as total from districts,members where districts.id=members.memberDistrict  GROUP BY id ORDER BY 2 DESC limit 1'));
-        
+
         //send data to the views
         return view('welcome',['results'=>$results,'agents'=>$agents,'district'=>$district,'co'=>$co,'districtname'=>$districtname,'agenthead'=>$agenthead,'amount'=>$amount]);
-    
-        
+
+
     }
     // show the hierca'districts' display
 
     public function hierca()
-    {    
+    {
         // getting all districts from the database
         $district_list= district::orderby('name','ASC')->get(['id','name']);
-        
+
         return view('high',compact('district_list'));
 
-        
+
 
       }
       public function fetchs(Request $request)
-    {   
+    {
         // determines the agents belonging to  aparticular district
         $data = district::find($request->id)->AgentAvailable()->orderBy('role','DESC')->get(['agentid','LastName','firstName','role']);
-    
+
        return response()->json($data);
     }
-      
-  
 
- 
 
-    
-        // declare payment to the database 
+
+
+
+
+        // declare payment to the database
         public function newpayment(Request $request){
             $this->validate($request,[
                 'source'=>'required',
@@ -107,87 +118,87 @@ class HomeController extends Controller
                 if(treasury::create($time)){
                     return redirect()->back()->withSuccess('New payment declaration  has been added successfully');
                 }
-             
+
         }
 
    // show the payment details
    public function payment()
-    
+
    { $date=date('m-y');
-       global $amountagent; 
+       global $amountagent;
        global $totalamount;
        // calculating the amount of money recieved by agents ,admin agent headerspayment
        $amount=DB::select(DB::raw("SELECT amount from salaries"));
        // return $amount;
        $agents= DB::table('agents')->where('role','Agent')->count();
        $agenthead= DB::table('agents')->where('role','Agent head')->count();
-       
+
        $district =DB::select(DB::raw('SELECT id, count(*) as total from districts,members where districts.id=members.memberDistrict  GROUP BY id ORDER BY 2 DESC'));
-      
+
        // $head=DB::select(DB::raw('SELECT id,count(agentid) as agentid from districts,agents where districts.id=agents.district_Id and agents.role="Agent head" GROUP BY id'));
        // return $district;
 
-          
+
        foreach($district as $dist)
-         {  
-             
-   
-           // agents with district of the highest enrollment after getting the id 
+         {
+
+
+           // agents with district of the highest enrollment after getting the id
           $noagentsinhigh=DB::table('agents')->where('district_Id',$dist->id)->where('role','Agent')->count();
-         
-           
+
+
 
            // agents within other country
           $remainingagent=$agents-$noagentsinhigh;
-         
+
        //    return $noagentsinhigh;
          foreach($amount as $cash)
-         {  
+         {
            //total amount
            $totalamount;
           $totalamount=$cash->amount;
-         } 
-         
+         }
+
         // agent head with the other enrollment
          $remaininghead=$agenthead-1;
-      
+
           if ($totalamount>2000000){
-              
+
         // agent head with the other enrollment
         // agent head with the other enrollment
              $amountagent=($totalamount-2000000)/($remainingagent+0.5+(1.75*$remaininghead)+(2*$noagentsinhigh)+(7/2));
-             
-             
-                    // getting all agents with normal enrollment 
+
+
+                    // getting all agents with normal enrollment
                    $gentlowenr= DB::select(DB::raw('SELECT agentid ,role from agents where agentid  NOT in (select  agentid from agents where district_Id=(  SELECT district_Id from agents GROUP BY district_Id order by count(1) desc limit 1))'));
-           
-                   
+
+
                    // agents with the highest enrollment
                     $genthigenr= DB::select(DB::raw('SELECT agentid ,role from agents where agentid   in (select  agentid from agents where district_Id=(  SELECT district_Id from agents GROUP BY district_Id order by count(1) desc limit 1))'));
                     $dateofpayment=payment::all()->pluck('paymentDate')->last();
                      $dateofreciv=treasury::all()->pluck('date')->last();
                      $timepayment=date('m-y',strtotime($dateofreciv));
                      $lastpayment=date('m-y',strtotime($dateofpayment));
-   
+
                    //  return date('d',strtotime($dateofpayment));
                    if($timepayment==$lastpayment || $timepayment<$lastpayment){
-           
-           
+
+
                     return view('payment',['amountagent'=>$amountagent,'remainingagent'=>$remainingagent,'noagentsinhigh'=>$noagentsinhigh,'remaininghead'=>$remaininghead]);
                     }else{
-    
+
                     foreach($gentlowenr as $lown){
                           // adding payment details for each agent and agent not in highest enrollment
                            DB::statement('INSERT INTO  payments set payment_Id=(SELECT agentid from agents where agentid='.$lown->agentid.'),paymentDate=CURRENT_TIMESTAMP,amountpaid= case when (select role from agents where agentid='.$lown->agentid.')="Agent" then '. $amountagent.' when (select role from agents WHERE agentid='.$lown->agentid.')="Agent head"  then '.($amountagent * (7/4)).' end');
-                       
 
-                           
+
+
                        }
-                    
+
                     foreach($genthigenr as $higenr){
-                        // agents belonging to districts with the highest enrollment  
+                        // agents belonging to districts with the highest enrollment
                         DB::statement('INSERT INTO  payments set payment_Id=(SELECT agentid from agents where agentid='.$higenr->agentid.'),paymentDate=CURRENT_TIMESTAMP,amountpaid= case when (select role from agents where agentid='.$higenr->agentid.')="Agent" then '. ($amountagent * 2).' when (select role from agents WHERE agentid='.$higenr->agentid.')="Agent head"  then '.($amountagent *(7/4) *2).' end');
-                        
+
                        $content="\t \t Administrator - ".number_format($amountagent/2,0)."
                          Agent head- ".number_format($amountagent*(7/4),0)."
                          Agent - ".number_format($amountagent,0)."
@@ -200,43 +211,48 @@ class HomeController extends Controller
                    // fwrite($myfile,$content);
                    // fclose($myfile);
                    // return $content;
-                       
-           
-           
-                      
-                   
+
+
+
+
+
                    }
-               
+
        }}
          else{
              $amountagent=0;
              Storage::put('payment_files/payment.txt', 'No payments were made this month,sorry check next month ');
          }
-      
 
-       
+
+
 //         }
-//     
+//
    return view('payment',['amountagent'=>$amountagent,'remainingagent'=>$remainingagent,'noagentsinhigh'=>$noagentsinhigh,'remaininghead'=>$remaininghead]);
-   
+
 // }
    }
-   
+
 }
 
-      
-
-      
 
 
 
 
 
+
+<<<<<<< HEAD
+=======
+
+
+<<<<<<< HEAD
+>>>>>>> ccea9804da7c3425ae9921c606e286511d19a3fa
     // show statistics
     public function stat()
         
     { 
     
+<<<<<<< HEAD
 
 //  two alternatives to present the percentage choice any;
            //member enrollment
@@ -248,6 +264,58 @@ class HomeController extends Controller
         
        
 
+=======
+
+//  two alternatives to present the percentage choice any;
+           //member enrollment
+        $data = myviews::select(
+            \ DB::raw("DATE_FORMAT(created_at,'%M %Y') as months")
+            ,\DB::raw("total")
+            // \DB::raw("COALESCE((LEAD(total) OVER (ORDER BY months DESC)-total)/total, 0) Percent_Change")
+        )
+        ->get();
+        
+=======
+   // show statistics
+   public function stat()
+
+   {
+
+
+//  two alternatives to present the percentage choice any;
+          //member enrollment
+       $data = myviews::select(
+           \ DB::raw("DATE_FORMAT(created_at,'%M %Y') as months")
+           ,\DB::raw("total")
+           // \DB::raw("COALESCE((LEAD(total) OVER (ORDER BY months DESC)-total)/total, 0) Percent_Change")
+       )
+       ->get();
+
+
+   // $chart = Charts::database($data, 'bar', 'highcharts')
+   //     ->title("PERCENTAGE CHANGE IN ENROLLMENT FIGURES")
+   //     ->elementLabel("Percentage change")
+   //     ->dimensions(1000, 500)
+   //     ->responsive(true)
+   //     ->groupBy('months')
+   //     ->values($data->pluck('Percent_Change'));
+   // $data=DB::table('myviews')->get();
+   $value=array();
+   $updatedvalue=array();
+   $month=array();
+   foreach($data as $i)
+   {
+   array_push($value,$i->total);
+   array_push($month,$i->months);
+   }
+   for($i=0;$i<count($value)-1;$i++){
+       array_push($updatedvalue,(($value[$i+1]-$value[$i])/$value[$i]));
+   }
+   // retreturn $dist;urn $aksam;
+
+>>>>>>> 594e9228689b0be4212349d05c1db05b05021342
+
+>>>>>>> ccea9804da7c3425ae9921c606e286511d19a3fa
     // $chart = Charts::database($data, 'bar', 'highcharts')
     //     ->title("PERCENTAGE CHANGE IN ENROLLMENT FIGURES")
     //     ->elementLabel("Percentage change")
@@ -256,7 +324,10 @@ class HomeController extends Controller
     //     ->groupBy('months')
     //     ->values($data->pluck('Percent_Change'));
     // $data=DB::table('myviews')->get();
+<<<<<<< HEAD
     ->get();
+=======
+>>>>>>> ccea9804da7c3425ae9921c606e286511d19a3fa
     $value=array();
     $updatedvalue=array();
     $month=array();
@@ -275,6 +346,10 @@ class HomeController extends Controller
 
         ->title('PERCENTAGE CHANGE IN ENROLLMENT FIGURES')
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ccea9804da7c3425ae9921c606e286511d19a3fa
         ->labels($month)
         ->elementLabel("percentage change")
         ->values($updatedvalue)
@@ -283,11 +358,19 @@ class HomeController extends Controller
         ->responsive(true);
        
 
+<<<<<<< HEAD
         $district_list=DB::select(DB::raw('SELECT DATE_FORMAT(date, "%Y-%m") AS month FROM treasuries
         GROUP BY DATE_FORMAT(date, "%m-%Y")')); 
 
         $money = treasury::where(DB::raw("(DATE_FORMAT(created_at,'%Y'))"),date('Y'))
          ->get();
+=======
+
+
+        $money = treasury::where(DB::raw("(DATE_FORMAT(created_at,'%Y'))"),date('Y'))
+    
+        ->get();
+>>>>>>> ccea9804da7c3425ae9921c606e286511d19a3fa
  
         $chart2 = Charts::database($money, 'bar', 'highcharts')
         
@@ -303,6 +386,7 @@ class HomeController extends Controller
         //return $district_list
         return view('stat',["chart"=>$chart,"chart2"=>$chart2,'district_list'=>$district_list]);    
     } 
+<<<<<<< HEAD
     public function showcharts(Request $request){
       $mydata=DB::select(DB::raw('SELECT amount,source From treasuries WHERE DATE_FORMAT(date, "%y-%m")="'.$request->month.'"'));
       //$value=array();
@@ -315,31 +399,65 @@ class HomeController extends Controller
     }
 
 
-
-//giving report of all contributions
-     public function report(){
-
-      $contrtable=DB::select('select * from treasuries  order by date desc');
-      return view('report',compact('contrtable'));
-    }
-
-//shows payment report
-    public function repo(Request $requests){
-      $paymentsstable=DB::select('select * from payments order by paymentDate desc');
-      return view('payment report',compact('paymentsstable'));
-    }
+=======
+=======
+       ->responsive(true);
+>>>>>>> ccea9804da7c3425ae9921c606e286511d19a3fa
 
 
+      // getting all districts from the database
+      $district_list=DB::select(DB::raw('SELECT DATE_FORMAT(date, "%Y-%m") AS month
+      FROM treasuries
+      GROUP BY DATE_FORMAT(date, "%m-%Y")'));
+
+
+
+<<<<<<< HEAD
 // shows all reports
      public function reports(){
       return view ('reports');
      }
+=======
+       $money = treasury::where(DB::raw("(DATE_FORMAT(created_at,'%Y'))"),date('Y'))
+
+       ->get();
+
+       $chart2 = Charts::database($money, 'bar', 'highcharts')
+
+       ->title("Monthly funds")
+
+       ->elementLabel("Total wellwishers")
+
+       ->dimensions(1000, 500)
+
+       ->responsive(true)
+
+       ->groupByMonth(date('Y'), true);
+       // return $district_list;
+       return view('stat',["chart"=>$chart,"chart2"=>$chart2,'district_list'=>$district_list]);
+   }
+   public function showcharts(Request $request){
+
+       $mydata=DB::select(DB::raw('SELECT amount,source
+       FROM treasuries
+       WHERE   DATE_FORMAT(date, "%Y-%m")="'.$request->month.'"'));
+       // $value=array();
+       // $source=array();
+       $array[]=[];
+       foreach($mydata as $i=>$value)
+       {
+           $array[++$i]=[$value->source,$value->amount];
+       }
+       return response()->json($array);
+   }
+>>>>>>> 594e9228689b0be4212349d05c1db05b05021342
+>>>>>>> ccea9804da7c3425ae9921c606e286511d19a3fa
     // show records
     public function records(Request $requests){
         $agentstable=DB::select('select * from districts,agents where id=district_Id and role order by name,role desc');
         // $headtable=DB::select('select * from districts,agents where id=district_Id  and role="Agent head" order by name asc');
          //$districttable=DB::table('districts')->orderBy('name','desc')->get();
-        
+
         // return $membertable;
         // return view('record',compact('membertable','agentstable','headtable','districttable'));
         return view('record',compact('agentstable'));
@@ -357,12 +475,12 @@ class HomeController extends Controller
      }
     // show registration form
     public function upgrades(){
-        
+
 
         $memberqualify=DB::select(DB::raw('SELECT * from members where status=0 AND fname IN (SELECT DISTINCT recommender
         FROM members WHERE recommender IN
           (SELECT recommender FROM members GROUP BY recommender HAVING COUNT(*) >=40))'));
-          
+
           $districtAvailable=DB::select(DB::raw('SELECT * from districts where id NOT IN (SELECT district_Id from agents)
           OR id=( SELECT  district_Id  FROM agents GROUP by district_Id order by COUNT(1) ASC LIMIT 1) ORDER BY RAND() LIMIT 5'));
           return view('upgrade',compact('memberqualify','districtAvailable'));
@@ -372,7 +490,7 @@ class HomeController extends Controller
    // randomly distribute  members who qualify to be agents
    public function becomeAgent(){
 
-       
+
     $memberqualified=DB::select(DB::raw('SELECT * from members where status=0 AND fname IN (SELECT DISTINCT recommender
     FROM members WHERE recommender IN
     (SELECT recommender FROM members GROUP BY recommender HAVING COUNT(*) >=40))'));
@@ -387,18 +505,18 @@ class HomeController extends Controller
     DB::statement('UPDATE members Set status=1 where member_Id='.$member->member_Id);
     $district_id=DB::select('SELECT id from districts where id NOT IN (SELECT district_Id from agents)
     OR id=( SELECT  district_Id  FROM agents GROUP by district_Id order by COUNT(1) ASC LIMIT 1) ORDER BY RAND() LIMIT 1');
-   
+
    foreach($district_id as $dist){
                  global $distt;
                $distt=$dist->id;
-            
+
     }
     $Agent->district_Id=$distt ;
     $Agent;
     $distNoAgenthead=DB::select(DB::raw('SELECT id as nums from districts where '.$Agent->district_Id.' NOT IN (SELECT district_Id from agents)'));
      global $headno;
     // foreach ($distNoAgenthead as $head){
-                
+
     //              $headno=$head->nums;
     // }
    if(!empty($distNoAgenthead) ){
@@ -409,31 +527,31 @@ class HomeController extends Controller
     }
     $Agent->save();
     if($Agent->save()){
-        
+
         return redirect()->back()->withSuccess('New member has been added successfully');
     }
-       
+
     }
 
-    
-      
+
+
     }
-    return redirect()->back()->withErrors('No member has the required criteria');         
+    return redirect()->back()->withErrors('No member has the required criteria');
     }
 
 
 
     public function formdata(Request $request){
-        // defining the rules order_by('upload_time', 'desc')->first();that must be followed when submitting data 
+        // defining the rules order_by('upload_time', 'desc')->first();that must be followed when submitting data
         $this->validate($request,[
             'firstName'=>'required',
             'lastName'=>'required',
             // 'name'=>'required',
             'userName'=>'required',
         ]);
-     
 
-    
+
+
         $Agent=new agent;
         $Agent->firstName=strtoupper($request->firstName);
         $Agent->lastName=strtoupper($request->lastName);
@@ -445,18 +563,18 @@ class HomeController extends Controller
         // Select a random number from the database to return a value for the district
         $district_id=DB::select('SELECT id from districts where id NOT IN (SELECT district_Id from agents)
         OR id=( SELECT  district_Id  FROM agents GROUP by district_Id order by COUNT(1) ASC LIMIT 1) ORDER BY RAND() LIMIT 1');
-       
+
        foreach($district_id as $dist){
                      global $distt;
                    $distt=$dist->id;
-                
+
         }
         $Agent->district_Id=$distt ;
         $Agent;
         $distNoAgenthead=DB::select(DB::raw('SELECT id as nums from districts where '.$Agent->district_Id.' NOT IN (SELECT district_Id from agents)'));
          global $headno;
         // foreach ($distNoAgenthead as $head){
-                    
+
         //              $headno=$head->nums;
         // }
        if(!empty($distNoAgenthead) ){
@@ -467,19 +585,19 @@ class HomeController extends Controller
         }
         $Agent->save();
         if($Agent->save()){
-            
+
             return redirect()->back()->withSuccess('New member has been added successfully');
         }
               //   agent::create([$request->firstName,$request->lastName,$request->signature,$request->userName]);
-        
+
     }
     public function formdata1(Request $request){
-      
+
         $this->validate($request,[
             'name'=>'required',]);
-       
+
         $name=$request->name;
-        
+
        //checking if the record exits in the database
         $districtName=district::where('name','=',$name)->count();
       if($districtName>0){
@@ -510,35 +628,33 @@ class HomeController extends Controller
 // charts controller
     public function makecharts($type){
 
-     
+
 
     return view('stat', compact('chart'));
-    
+
     }
     //  change the id of the member to required id by the administrator
     public function changeid(){
         $distname=district::all();
         $membern=DB::select('select * from districts,members where memberDistrict=id');
-     
-        
-           
+
+
+
            foreach($membern as $mem)
-           { 
+           {
             $ini=substr($mem->name,0,4);
            $new= strtoupper($ini).$mem->member_Id;
-        
+
            DB::statement("update members SET districtNO='$new' where member_Id='$mem->member_Id'");
-           echo $new."<br>";   
+           echo $new."<br>";
            }
 
-         
+
     }
 
-        
+
 
 
 
 
 }
-
-?>

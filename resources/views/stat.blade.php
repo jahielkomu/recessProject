@@ -1,104 +1,7 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+@extends('layouts.set')
+@section("required")
 
-        <title>Laravel</title>
-
-        <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
-        <link href="assets/css/bootstrap.css" rel="stylesheet" />
-            <!-- FONTAWESOME STYLES-->
-            <link href="assets/css/font-awesome.css" rel="stylesheet" />
-            <!-- MORRIS CHART STYLES-->
-            <link href="assets/js/morris/morris-0.4.3.min.css" rel="stylesheet" />
-            <!-- CUSTOM STYLES-->
-            <link href="assets/css/custom.css" rel="stylesheet" />
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js"></script>
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-            <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.js"></script>
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>  
-        <!-- Styles -->
-        
-        <style>
-          
-          
-        </style>
         {!! Charts::styles() !!}
-    </head>
-    <body>
-            <script>
-                    // displays the agent records in hierachy format
-                    $(document).ready(function(){
-                      $(document).on('change','#charts',function()
-                      
-                      {
-                        console.log("its working");
-                        var month=$(this).val();
-                        var div=$(this).parent();
-                        op="";
-                        console.log(month);
-                        $.ajax({
-                          type:'get',
-                          url:'{!! URL::to('stats') !!}',
-                          data:{'month':month},
-                          success:function(array) {
-                             console.log('success');
-                            console.log(array);
-                           
-                            var chart = c3.generate({
-                            data: {
-                           columns:array,
-                           type: 'pie' 
-            }
-        });  
-            
-                         },
-                          error:function(){
-                            console.log(data);
-            
-                          }
-            
-            
-                      });
-                    });
-                  });
-                    
-                 </script>
-      <div id="wrapper">
-        <nav class="navbar navbar-default navbar-cls-top " role="navigation" style="margin-bottom: 0;background-color: rgb(0, 162, 255)">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="index.html" style="background: #2970b5" >Administrator</a> 
-            </div>
-            
-            <div style="color: white;padding: 15px 50px 5px 50px;float: right;font-size: 16px;background-color: "> Last access : <script>document.write(Date());</script> &nbsp; 
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  v-pre>
-                                   <b class="btn btn-danger square-btn-adjust"> {{ Auth::user()->name }}</b> <span class="caret"></span>
-                                </a>
-                                 
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                       <b  >  {{ __('Logout') }} </b>
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                        @csrf
-                                    </form>
-                                </a>
-                            </div>
-                            
-                  </div>                  
-        </nav>
         <nav class="navbar-default navbar-side" role="navigation">
             <div class="sidebar-collapse" style="background-color: #999">
                 <ul class="nav" id="main-menu" style="background: #3980b5">
@@ -115,12 +18,15 @@
                         <li>
                         <a  href="/payment" style="background: #3980b5"><i class="fa fa-qrcode fa-3x"></i> Payments</a>
                     </li>
+<<<<<<< HEAD
 
                      <li>
                         <a  href="/reports" style="background: #3980b5"><i class="fa fa-qrcode fa-3x"></i> Reports</a>
                     </li>
 
 
+=======
+>>>>>>> ccea9804da7c3425ae9921c606e286511d19a3fa
                    
 						   <li  >
                         <a   href="/stat" style="background: #104075;"><i class="fa fa-bar-chart-o fa-3x"></i> Statistics</a>
@@ -241,6 +147,7 @@
             </div>
          <!-- /. PAGE WRAPPER  -->
         </div>
+<<<<<<< HEAD
 
         
     
@@ -258,11 +165,13 @@
     <script src="assets/js/morris/morris.js"></script>
       <!-- CUSTOM SCRIPTS -->
     <script src="assets/js/custom.js"></script>
+=======
+     <!-- /. WRAPPER  -->
+   <script src="assets/js/custom.js"></script>
+>>>>>>> ccea9804da7c3425ae9921c606e286511d19a3fa
      {!! Charts::scripts() !!}
 
      {!! $chart->script() !!}
      {!! $chart2->script() !!}
     
-   
-</body>
-</html>
+  @endsection

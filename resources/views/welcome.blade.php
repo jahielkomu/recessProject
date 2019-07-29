@@ -5,7 +5,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+        <title>UFT Enrollment System</title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
@@ -97,7 +97,7 @@
                         <a  href="/newuser" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> New record</a>
                     </li>   
                     <li  >
-                            <a  href="/newdist" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> New Dist</a>
+                            <a  href="/newdist" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> New District</a>
                         </li>
                 </ul>
                 </ul>

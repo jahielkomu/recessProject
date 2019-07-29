@@ -177,6 +177,8 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        //PDF generation
+        // Lynx39\LaraPdfMerger\PdfMergerServiceProvider::class,
 
     ],
 
@@ -231,6 +233,8 @@ return [
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
         'Charts' => ConsoleTVs\Charts\Facades\Charts::class,
+
+        // 'PdfMerger' => LynX39\LaraPdfMerger\Facades\PdfMerger::class,
 
     ],
 
