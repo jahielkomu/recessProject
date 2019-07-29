@@ -46,6 +46,7 @@ Route::get('/reco', 'HomeController@fetchs')->name('home');
 Route::get('/report','HomeController@report')->name('home');
 
 Route::get('/stat', 'HomeController@stat')->name('home');
+Route::get('/stats', 'HomeController@showcharts')->name('home');
 Route::post('/stat/district','HomeController@stat')->name('home');
 
 Route::get('/record', 'HomeController@records')->name('home');
