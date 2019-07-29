@@ -20,7 +20,7 @@
                         <a  href="/payment" style="background: #3980b5"><i class="fa fa-qrcode fa-3x"></i> Payments</a>
                     </li>
                      <li>
-                        <a  href="/report" style="background: #3980b5"><i class="fa fa-qrcode fa-3x"></i> Report</a>
+                        <a  href="/reports" style="background: #3980b5"><i class="fa fa-qrcode fa-3x"></i> Reports</a>
                     </li>
                    
 						   <li  >
@@ -65,14 +65,6 @@
                 <!--added for document purpose-->
                 <div id="upgrade panel panel-default">
                     <div class="qualify panel-body">
-                            @if(session('success'))
-                         
-                            <h4 style="color:green">{{session('success')}}</h4>
-                          @elseif ($errors->any()) 
-                            <h4 style="color:red">{{$errors->first()}}</h4>
-                           @else
-                                   <h4 style="color:orange">{{'Members available for upgrade'}}</h4>
-                          @endif
                         <h2 class="qualify">Qualify</h2>
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered table-hover">
@@ -97,9 +89,18 @@
                                     });
                                 });
                                 </script> 
+<<<<<<< HEAD
                  <!-- <form> -->
                         <button><a href="/upgrade/do">Random distribution</a></button>
                        
+=======
+                                <form>
+                        <button><a href="/upgrade/do">Random distribute</a></button>
+                        @if(session('success'))
+                 
+                         <h4 style="color:red">{{session('success')}}</h4>
+                       @endif
+>>>>>>> 594e9228689b0be4212349d05c1db05b05021342
                     </div>
                     <div class="qualify panel-body">
                         <h2>Districts available</h2>
@@ -142,4 +143,4 @@
 </div>
 </div>
 </body>
-</html>
+</html> 

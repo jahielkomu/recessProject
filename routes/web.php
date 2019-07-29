@@ -43,7 +43,7 @@ Route::get('/', 'HomeController@index');
 Route::get('/high', 'HomeController@hierca')->name('home');
 Route::get('/reco', 'HomeController@fetchs')->name('home');
 
-Route::get('/report','HomeController@report')->name('home');
+Route::get('/reports','HomeController@reports')->name('home');
 
 Route::get('/stat', 'HomeController@stat')->name('home');
 Route::get('/stats', 'HomeController@showcharts')->name('home');
@@ -54,6 +54,9 @@ Route::get('/record', 'HomeController@records')->name('home');
 
 Route::get('/member','HomeController@members')->name('home');
 Route::post('/member', 'HomeController@members')->name('home');
+
+Route::get('/payments','HomeController@repo')->name('home');
+Route::get('/contributions','HomeController@report')->name('home');
 
 
 Route::get('/upgrade', 'HomeController@upgrades')->name('home');
@@ -73,7 +76,10 @@ Route::group(['Middleware'=>'Auth'],function(){
     Route::get('/payment', 'HomeController@payment')->name('home');
 });
 
+<<<<<<< HEAD
 //Route::get('generate-pdf','HomeController@generatePDF');
 
 
+=======
+>>>>>>> 594e9228689b0be4212349d05c1db05b05021342
 ?>
