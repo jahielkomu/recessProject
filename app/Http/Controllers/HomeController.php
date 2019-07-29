@@ -13,6 +13,7 @@ use Charts;
 use App\myviews;
 use App\salaries;
 use Storage;
+use PDF;
 
 
 
@@ -23,6 +24,15 @@ class HomeController extends Controller
      *
      * @return void
      */
+
+    public function generatePDF()
+    {
+        $data = ['title' => 'uft Report'];
+        $pdf = PDF::loadView('reportPDF', $data);
+
+        return $pdf->download('ufftreport.pdf');
+    }
+
     public function __construct()
     {
         $this->middleware('auth');

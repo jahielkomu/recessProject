@@ -1,61 +1,6 @@
+@extends('layouts.set')
+@section("required")
 
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-
-        <title>Laravel</title>
-
-        <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
-        <link href="assets/css/bootstrap.css" rel="stylesheet" />
-            <!-- FONTAWESOME STYLES-->
-            <link href="assets/css/font-awesome.css" rel="stylesheet" />
-            <!-- MORRIS CHART STYLES-->
-            <link href="assets/js/morris/morris-0.4.3.min.css" rel="stylesheet" />
-            <!-- CUSTOM STYLES-->
-            <link href="assets/css/custom.css" rel="stylesheet" />
-
-        <!-- Styles -->
-        <style>
-          
-          
-        </style>
-    </head>
-    <body>
-      <div id="wrapper">
-        <nav class="navbar navbar-default navbar-cls-top " role="navigation" style="margin-bottom: 0;background-color: rgb(0, 162, 255)">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="index.html" style="background: #2970b5" >Administrator</a> 
-            </div>
-            
-            <div style="color: white;padding: 15px 50px 5px 50px;float: right;font-size: 16px;background-color: "> Last access : <script>document.write(Date());</script> &nbsp; 
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  v-pre>
-                                   <b class="btn btn-danger square-btn-adjust"> {{ Auth::user()->name }}</b> <span class="caret"></span>
-                                </a>
-                                 
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                       <b  >  {{ __('Logout') }} </b>
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                        @csrf
-                                    </form>
-                                </a>
-                            </div>
-                            
-                  </div>                  
-        </nav>
         <nav class="navbar-default navbar-side" role="navigation">
             <div class="sidebar-collapse" style="background-color: #999">
                 <ul class="nav" id="main-menu" style="background: #3980b5">
@@ -160,5 +105,4 @@
                </div>
                <!-- inner page --> 
  </div>
-   </body>
-   </html>
+ @endsection

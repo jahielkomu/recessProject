@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+        <title>UFT Enrollment System</title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
@@ -58,7 +58,7 @@
                             
         </nav>   
            <!-- /. NAV TOP  -->
-         <nav class="navbar-default navbar-side" role="navigation">
+         <!-- <nav class="navbar-default navbar-side" role="navigation">
             <div class="sidebar-collapse" style="background-color: #999">
                 <ul class="nav" id="main-menu" style="background: #3980b5">
 				<li class="text-center" style="background: #3980b5">
@@ -94,7 +94,7 @@
                
             </div>
             
-        </nav>
+        </nav> --> -->
 
         @yield('required')
 
