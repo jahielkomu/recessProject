@@ -19,12 +19,12 @@
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
             <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.js"></script>
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>  
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <!-- Styles -->
-        
+
         <style>
-          
-          
+
+
         </style>
         {!! Charts::styles() !!}
     </head>
@@ -33,7 +33,7 @@
                     // displays the agent records in hierachy format
                     $(document).ready(function(){
                       $(document).on('change','#charts',function()
-                      
+
                       {
                         console.log("its working");
                         var month=$(this).val();
@@ -47,25 +47,25 @@
                           success:function(array) {
                              console.log('success');
                             console.log(array);
-                           
+
                             var chart = c3.generate({
                             data: {
                            columns:array,
-                           type: 'pie' 
+                           type: 'pie'
             }
-        });  
-            
+        });
+
                          },
                           error:function(){
                             console.log(data);
-            
+
                           }
-            
-            
+
+
                       });
                     });
                   });
-                    
+
                  </script>
       <div id="wrapper">
         <nav class="navbar navbar-default navbar-cls-top " role="navigation" style="margin-bottom: 0;background-color: rgb(0, 162, 255)">
@@ -76,14 +76,14 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.html" style="background: #2970b5" >Administrator</a> 
+                <a class="navbar-brand" href="index.html" style="background: #2970b5" >Administrator</a>
             </div>
-            
-            <div style="color: white;padding: 15px 50px 5px 50px;float: right;font-size: 16px;background-color: "> Last access : <script>document.write(Date());</script> &nbsp; 
+
+            <div style="color: white;padding: 15px 50px 5px 50px;float: right;font-size: 16px;background-color: "> Last access : <script>document.write(Date());</script> &nbsp;
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  v-pre>
                                    <b class="btn btn-danger square-btn-adjust"> {{ Auth::user()->name }}</b> <span class="caret"></span>
                                 </a>
-                                 
+
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
@@ -96,8 +96,8 @@
                                     </form>
                                 </a>
                             </div>
-                            
-                  </div>                  
+
+                  </div>
         </nav>
         <nav class="navbar-default navbar-side" role="navigation">
             <div class="sidebar-collapse" style="background-color: #999">
@@ -105,7 +105,7 @@
 				<li class="text-center" style="background: #3980b5">
                     <img src="assets/img/find_user.png" class="user-image img-responsive"/>
 					</li>
-				
+
                     <li style="background-color: rgb(0, 85, 182)">
                         <a href="/" style="background: #3980b5;"><i class="fa fa-dashboard fa-3x"></i> Dashboard</a>
                     </li>
@@ -115,49 +115,49 @@
                         <li>
                         <a  href="/payment" style="background: #3980b5"><i class="fa fa-qrcode fa-3x"></i> Payments</a>
                     </li>
-                   
+
 						   <li  >
                         <a   href="/stat" style="background: #104075;"><i class="fa fa-bar-chart-o fa-3x"></i> Statistics</a>
-                    </li>	
+                    </li>
                     <li  >
                         <a  href="/member" style="background: #3980b5"><i class="fa fa-table fa-3x"></i> Members</a>
-                        
+
                     </li>
                       <li  >
                         <a  href="/record" style="background: #3980b5"><i class="fa fa-table fa-3x"></i> Records</a>
                     </li>
                     <li>
                         <a  href="/upgrade" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> Upgrade</a>
-                    </li>				
+                    </li>
 			        <li>
                       <a  href="/newuser" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> New record</a>
                     </li>
                     <li>
                       <a  href="/newdist" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> New District</a>
-                    </li>	
+                    </li>
                 </ul>
                 </ul>
-               
+
             </div>
-            
-        </nav> 
+
+        </nav>
          <!-- /. NAV SIDE  -->
          <div id="page-wrapper" >
             <div id="page-inner">
                 <div class="row">
                     <div class="col-md-12">
-                     <h2>Statistics</h2>   
+                     <h2>Statistics</h2>
                         <h5>Welcome Lwanga Aksam , Love to see you back. </h5>
-                       
+
                     </div>
                 </div>
                  <!-- /. ROW  -->
                  <hr />
 
-                
-                  <div class="row">                     
-                      
-                    <div class="col-md-10 col-sm-10 col-xs-10" style="padding-left:120px">                     
+
+                  <div class="row">
+
+                    <div class="col-md-10 col-sm-10 col-xs-10" style="padding-left:120px">
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 Wellwisher's contribution per month
@@ -166,75 +166,79 @@
                                 <option value="">Select month</option>
                                 @foreach($district_list as $country)
                                 <option value="{{ $country->month}}"  onchange="function(data)">{{ date("F, Y",strtotime($country->month)) }}</option>
-                                @endforeach                 
+                                @endforeach
                             </select>
                             <div class="panel-body">
 
-                                    
+
                                         <div id="chart"></div>
-                                      
-                                  
-                                   
-                                  </div> 
+
+
+
+                                  </div>
                             </div>
-                        </div>            
-                        
-                    
+                        </div>
+
+
                </div>
-                  <div class="row">                     
-                      
-                    <div class="col-md-10 col-sm-10 col-xs-10"  style="padding-left:120px">                     
+                  <div class="row">
+
+                    <div class="col-md-10 col-sm-10 col-xs-10"  style="padding-left:120px">
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 Members  enrollment
-                               
+
                             </div>
                             <div class="panel-body">
-                                <div class="app" > 
-                                    
-                                       
-                  
+                                <div class="app" >
+
+
+
                                       {!! $chart->html() !!}
-                                  
-                                   
-                                  </div> 
+
+
+                                  </div>
                             </div>
-                        </div>            
-                    
-                    
+                        </div>
+
+
                </div>
                      <!-- /. ROW  -->
         </div>
                  <!-- /. ROW  -->
-             <div class="row">                     
-                      
-                <div class="col-md-10 col-sm-10 col-xs-10"  style="padding-left:120px">                     
+             <div class="row">
+
+                <div class="col-md-10 col-sm-10 col-xs-10"  style="padding-left:120px">
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             Total contribution per month
                         </div>
                         <div class="panel-body">
-                            <div class="app" > 
-                                
-                                
+                            <div class="app" >
+
+
                                   {!! $chart2->html() !!}
-                              
-                               
-                              </div> 
+
+
+                              </div>
                         </div>
-                    </div>            
-                    
-                
+                    </div>
+
+
            </div>
                  <!-- /. ROW  -->
     </div>
              <!-- /. PAGE INNER  -->
-            
-        
+
+
 
             </div>
          <!-- /. PAGE WRAPPER  -->
         </div>
+<<<<<<< HEAD
+
+
+=======
      <!-- /. WRAPPER  -->
     <!-- SCRIPTS -AT THE BOTOM TO REDUCE THE LOAD TIME-->
     <!-- JQUERY SCRIPTS -->
@@ -248,11 +252,12 @@
     <script src="assets/js/morris/morris.js"></script>
       <!-- CUSTOM SCRIPTS -->
     <script src="assets/js/custom.js"></script>
+>>>>>>> 219b12a331aacc230c2e8766938bd2cbd44c05e9
      {!! Charts::scripts() !!}
 
      {!! $chart->script() !!}
      {!! $chart2->script() !!}
-    
-   
+
+
 </body>
 </html>
