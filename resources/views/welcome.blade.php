@@ -97,7 +97,7 @@
                         <a  href="/newuser" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> New record</a>
                     </li>   
                     <li  >
-                            <a  href="/newdist" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> New Dist</a>
+                            <a  href="/newdist" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> New District</a>
                         </li>
                 </ul>
                 </ul>
