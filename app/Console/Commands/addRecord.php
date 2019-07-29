@@ -9,6 +9,8 @@ use Storage;
 use App\district;
 use App\member;
 use App\agent;
+use App\payment;
+use App\treasury;
 class addRecord extends Command
 
 {
@@ -44,9 +46,111 @@ class addRecord extends Command
     public function handle()
 
     {   
+
+           function payment()
+    
+        { $date=date('m-y');
+            global $amountagent; 
+            global $totalamount;
+            // calculating the amount of money recieved by agents ,admin agent headerspayment
+            $amount=DB::select(DB::raw("SELECT amount from salaries"));
+            // return $amount;
+            $agents= DB::table('agents')->where('role','Agent')->count();
+            $agenthead= DB::table('agents')->where('role','Agent head')->count();
+            
+            $district =DB::select(DB::raw('SELECT id, count(*) as total from districts,members where districts.id=members.memberDistrict  GROUP BY id ORDER BY 2 DESC'));
+           
+            // $head=DB::select(DB::raw('SELECT id,count(agentid) as agentid from districts,agents where districts.id=agents.district_Id and agents.role="Agent head" GROUP BY id'));
+            // return $district;
+     
+               
+            foreach($district as $dist)
+              {  
+                  
+        
+                // agents with district of the highest enrollment after getting the id 
+               $noagentsinhigh=DB::table('agents')->where('district_Id',$dist->id)->where('role','Agent')->count();
+              
+                
+     
+                // agents within other country
+               $remainingagent=$agents-$noagentsinhigh;
+              
+            //    return $noagentsinhigh;
+              foreach($amount as $cash)
+              {  
+                //total amount
+                $totalamount;
+               $totalamount=$cash->amount;
+              } 
+              
+             // agent head with the other enrollment
+              $remaininghead=$agenthead-1;
+           
+               if ($totalamount>2000000){
+                   
+             // agent head with the other enrollment
+             // agent head with the other enrollment
+                  $amountagent=($totalamount-2000000)/($remainingagent+0.5+(1.75*$remaininghead)+(2*$noagentsinhigh)+(7/2));
+                  
+                  
+                         // getting all agents with normal enrollment 
+                        $gentlowenr= DB::select(DB::raw('SELECT agentid ,role from agents where agentid  NOT in (select  agentid from agents where district_Id=(  SELECT district_Id from agents GROUP BY district_Id order by count(1) desc limit 1))'));
+                
+                        
+                        // agents with the highest enrollment
+                         $genthigenr= DB::select(DB::raw('SELECT agentid ,role from agents where agentid   in (select  agentid from agents where district_Id=(  SELECT district_Id from agents GROUP BY district_Id order by count(1) desc limit 1))'));
+                         $dateofpayment=payment::all()->pluck('paymentDate')->last();
+                          $dateofreciv=treasury::all()->pluck('date')->last();
+                          $timepayment=date('m-y',strtotime($dateofreciv));
+                          $lastpayment=date('m-y',strtotime($dateofpayment));
+        
+                        //  return date('d',strtotime($dateofpayment));
+                        if($timepayment==$lastpayment || $timepayment<$lastpayment){
+                      }else{
+         
+                         foreach($gentlowenr as $lown){
+                               // adding payment details for each agent and agent not in highest enrollment
+                                DB::statement('INSERT INTO  payments set payment_Id=(SELECT agentid from agents where agentid='.$lown->agentid.'),paymentDate=CURRENT_TIMESTAMP,amountpaid= case when (select role from agents where agentid='.$lown->agentid.')="Agent" then '. $amountagent.' when (select role from agents WHERE agentid='.$lown->agentid.')="Agent head"  then '.($amountagent * (7/4)).' end');
+                            
+     
+                                
+                            }
+                         
+                         foreach($genthigenr as $higenr){
+                             // agents belonging to districts with the highest enrollment  
+                             DB::statement('INSERT INTO  payments set payment_Id=(SELECT agentid from agents where agentid='.$higenr->agentid.'),paymentDate=CURRENT_TIMESTAMP,amountpaid= case when (select role from agents where agentid='.$higenr->agentid.')="Agent" then '. ($amountagent * 2).' when (select role from agents WHERE agentid='.$higenr->agentid.')="Agent head"  then '.($amountagent *(7/4) *2).' end');
+                             
+                            $content="\t \t Administrator - ".number_format($amountagent/2,0)."
+                              Agent head- ".number_format($amountagent*(7/4),0)."
+                              Agent - ".number_format($amountagent,0)."
+                              Agent with highest enrollment - ".number_format(2*$amountagent,0)."
+                              Agent head with highest enrollment- " .number_format((7/2)*$amountagent,0)."
+                              payment Date -".date('d-m-y');
+                        //    one approach to write to file or i will consider the know php
+                          Storage::put('payment_files/payment.txt', $content);
+                        // $myfile=fopen("payment_files/payment.txt",'w+') or die("unble to open") ;
+                        // fwrite($myfile,$content);
+                        // fclose($myfile);
+                        // return $content;
+                            
+                
+                
+                           
+                        
+                        }
+                    
+            }}
+              else{
+                  $amountagent=0;
+                  Storage::put('payment_files/payment.txt', 'No payments were made this month,sorry check next month ');
+              }
+        }
+        
+     }
+
         function getdistrict($distname)
         {
-            //caling the method from my controller 
             
             $distname= str_replace(' ', '', $distname);
             $id=district::where('name',$distname)->first();
@@ -105,11 +209,12 @@ class addRecord extends Command
         foreach($files as $district)
            {
                $content = Storage::get($district);
+
                $contents = explode("\n",$content);
                $fail=0;
                $counter=0;
                
-              
+            //    print_r($contents);
 
                 foreach($contents as $arrays)
                 {   $counter=$counter+1;
@@ -118,61 +223,68 @@ class addRecord extends Command
                     
                       continue;
                   }
-                    $name = explode(",",$arrays);
+                    $name = explode(" ",$arrays);
                     // if(!isset($name[1]))
                     // {
                     //     deleterecord($contents,$district);
                     //     // echo "deleted";
                     //     continue;
                     // }
-                
+                    
+                    // print_r($names);
+                    // exit();
                  if(!agentids(@$name[1],@$name[2])==null)
                   {
+                    $names=$name[3];
+                    $names=explode('_',$names);
+                    
                       
-                    if(!isset($name[6])){
-                      
-                    // if(count($name)>5){
-                        
+                    if($name[6]=='self'){
+                       
                         
                         DB::table('members')->updateOrInsert(
-                            ['districtNO'=>getdistrict($name[0]),'fname'=>strtoupper($name[3]),'gender'=>strtoupper($name[4]),'memberDistrict'=>districtid($name[0]),'agentid'=>agentsid($name[1],$name[2])]
+                            ['districtNO'=>getdistrict($name[0]),'fname'=>strtoupper($names[0]),'LName'=>strtoupper($names[1]),'gender'=>strtoupper($name[5]),'memberDistrict'=>districtid($name[0]),'agentid'=>agentsid($name[1],$name[2]),'recommender'=>'SELF']
                          
                         );
-                        
-                    // }
+                    
                     }
                     else
                     {
                         // doesnt allow to enter incomplete details
-                        // if(count($name)>6)
-                        // {
 
-                            if(getrecommendid($name[5]))
-                            {  echo "hai";
+                            // if(getrecommendid())
+                            // { 
+                                 
                               DB::table('members')->updateOrInsert(
-                              ['districtNO'=>getdistrict($name[0]),'memberDistrict'=>districtid($name[0]),'fname'=>strtoupper($name[3]),'gender'=>strtoupper($name[4]),'recommender'=>strtoupper($name[5]),'agentid'=>agentsid($name[1],$name[2])]
+                              ['districtNO'=>getdistrict($name[0]),'memberDistrict'=>districtid($name[0]),'fname'=>strtoupper($names[0]),'LName'=>strtoupper($names[1]),'gender'=>strtoupper($name[5]),'recommender'=>strtoupper($name[6]),'agentid'=>agentsid($name[1],$name[2])]
                                );
 
                         
-                            }
-                          else
-                             {  $dis = explode("/",$district);
-                                Storage::append('error/'.$dis[1],'wrong recommender id  '.$arrays.'');
-                             }      
+                            // }
+                        //   else
+                        //      {   $dis =explode('/',$district);
+                        //         $disnam= str_replace(".txt",'',$dis[1]);
+                        //         $cont= str_replace(''.$disnam.',','',$arrays);
+                        //         str_replace(','.$name[6].'','',$cont);
+                        //         print_r($cont);
+                        //         Storage::append('error/'.$dis[1],$cont);
+                        //      }      
                         // }
                     }
                   }
                   else{
-                    if(!isset($name[1])){
+                    if($counter==count($contents)){
                         
                 
-                        deleterecord($contents,$district,$content);
+                        deleterecord($contents,$district);
                        
                         
                         continue;
                     }
-                        $dis =explode('/',$district);
-                    Storage::append('error/'.$dis[1],''.$arrays.' #invalid signature with the following details ');
+                    $dis =explode('/',$district);
+                    $disnam= str_replace(".txt",'',$dis[1]);
+                    $cont= str_replace(''.$disnam.'','',$arrays);
+                    Storage::append('error/'.$dis[1],trim($cont));
                     
                     
                   }
@@ -184,7 +296,7 @@ class addRecord extends Command
             }
     
         
-    
+            payment();
     }
            
     

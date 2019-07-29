@@ -55,9 +55,9 @@ class HomeController extends Controller
          
         //members qualified to agents
 
-        $member =DB::select(DB::raw('SELECT  DISTINCT recommender
+        $member =DB::select(DB::raw('SELECT * from members where status=0 AND fname IN (SELECT DISTINCT recommender
         FROM members WHERE recommender IN
-          (SELECT recommender FROM members GROUP BY recommender HAVING COUNT(*) >=40)'));
+          (SELECT recommender FROM members GROUP BY recommender HAVING COUNT(*) >=40))'));
           $co=count($member);
           //district name with the higest enroll
           $districtname=DB::select(DB::raw('SELECT id,name, count(*) as total from districts,members where districts.id=members.memberDistrict  GROUP BY id ORDER BY 2 DESC limit 1'));
@@ -232,60 +232,66 @@ class HomeController extends Controller
 
 
 
-    // show statistics
-    public function stat()
+   // show statistics
+   public function stat()
         
-    { 
-    
+   { 
+   
 
 //  two alternatives to present the percentage choice any;
-           //member enrollment
-        $data = myviews::select(
-            \ DB::raw("DATE_FORMAT(created_at,'%M %Y') as months")
-            ,\DB::raw("total")
-            // \DB::raw("COALESCE((LEAD(total) OVER (ORDER BY months DESC)-total)/total, 0) Percent_Change")
-        )
-        ->get();
-        
-
-    // $chart = Charts::database($data, 'bar', 'highcharts')
-    //     ->title("PERCENTAGE CHANGE IN ENROLLMENT FIGURES")
-    //     ->elementLabel("Percentage change")
-    //     ->dimensions(1000, 500)
-    //     ->responsive(true)
-    //     ->groupBy('months')
-    //     ->values($data->pluck('Percent_Change'));
-    // $data=DB::table('myviews')->get();
-    $value=array();
-    $updatedvalue=array();
-    $month=array();
-    foreach($data as $i)
-    {
-    array_push($value,$i->total);
-    array_push($month,$i->months);
-    }
-    for($i=0;$i<count($value)-1;$i++){
-        array_push($updatedvalue,(($value[$i+1]-$value[$i])/$value[$i]));
-    }
-    // retreturn $dist;urn $aksam;
-    
-
-        $chart = Charts::create('bar', 'highcharts')
-
-        ->title('PERCENTAGE CHANGE IN ENROLLMENT FIGURES')
-
-        ->labels($month)
-        ->elementLabel("percentage change")
-        ->values($updatedvalue)
-        ->dimensions(1000,500)
-
-        ->responsive(true);
+          //member enrollment
+       $data = myviews::select(
+           \ DB::raw("DATE_FORMAT(created_at,'%M %Y') as months")
+           ,\DB::raw("total")
+           // \DB::raw("COALESCE((LEAD(total) OVER (ORDER BY months DESC)-total)/total, 0) Percent_Change")
+       )
+       ->get();
        
 
+   // $chart = Charts::database($data, 'bar', 'highcharts')
+   //     ->title("PERCENTAGE CHANGE IN ENROLLMENT FIGURES")
+   //     ->elementLabel("Percentage change")
+   //     ->dimensions(1000, 500)
+   //     ->responsive(true)
+   //     ->groupBy('months')
+   //     ->values($data->pluck('Percent_Change'));
+   // $data=DB::table('myviews')->get();
+   $value=array();
+   $updatedvalue=array();
+   $month=array();
+   foreach($data as $i)
+   {
+   array_push($value,$i->total);
+   array_push($month,$i->months);
+   }
+   for($i=0;$i<count($value)-1;$i++){
+       array_push($updatedvalue,(($value[$i+1]-$value[$i])/$value[$i]));
+   }
+   // retreturn $dist;urn $aksam;
+   
 
+       $chart = Charts::create('bar', 'highcharts')
 
-        $money = treasury::where(DB::raw("(DATE_FORMAT(created_at,'%Y'))"),date('Y'))
+       ->title('PERCENTAGE CHANGE IN ENROLLMENT FIGURES')
+
+       ->labels($month)
+       ->elementLabel("percentage change")
+       ->values($updatedvalue)
+       ->dimensions(1000,500)
+
+       ->responsive(true);
+      
+
+      // getting all districts from the database
+      $district_list=DB::select(DB::raw('SELECT DATE_FORMAT(date, "%Y-%m") AS month
+      FROM treasuries
+      GROUP BY DATE_FORMAT(date, "%m-%Y")'));
+       
+      
+
+       $money = treasury::where(DB::raw("(DATE_FORMAT(created_at,'%Y'))"),date('Y'))
     
+<<<<<<< HEAD
         ->get();
  
         $chart2 = Charts::database($money, 'bar', 'highcharts')
@@ -301,6 +307,57 @@ class HomeController extends Controller
         ->groupByMonth(date('Y'), true);
         return view('stat',["chart"=>$chart,"chart2"=>$chart2]);    
     } 
+
+//giving report of all contributions
+     public function report(){
+
+      $contrtable=DB::select('select * from treasuries  order by date desc');
+      return view('report',compact('contrtable'));
+    }
+
+//shows payment report
+    public function repo(Request $requests){
+      $paymentsstable=DB::select('select * from payments order by paymentDate desc');
+      return view('payment report',compact('paymentsstable'));
+    }
+
+
+// shows all reports
+     public function reports(){
+      return view ('reports');
+     }
+=======
+       ->get();
+
+       $chart2 = Charts::database($money, 'bar', 'highcharts')
+       
+       ->title("Monthly funds")
+       
+       ->elementLabel("Total wellwishers")
+       
+       ->dimensions(1000, 500)
+       
+       ->responsive(true)
+       
+       ->groupByMonth(date('Y'), true);
+       // return $district_list;
+       return view('stat',["chart"=>$chart,"chart2"=>$chart2,'district_list'=>$district_list]);    
+   } 
+   public function showcharts(Request $request){
+  
+       $mydata=DB::select(DB::raw('SELECT amount,source
+       FROM treasuries
+       WHERE   DATE_FORMAT(date, "%Y-%m")="'.$request->month.'"'));
+       // $value=array();
+       // $source=array();
+       $array[]=[];
+       foreach($mydata as $i=>$value)
+       {  
+           $array[++$i]=[$value->source,$value->amount];
+       }
+       return response()->json($array);
+   }
+>>>>>>> 219b12a331aacc230c2e8766938bd2cbd44c05e9
     // show records
     public function records(Request $requests){
         $agentstable=DB::select('select * from districts,agents where id=district_Id and role order by name,role desc');
@@ -346,51 +403,52 @@ class HomeController extends Controller
      $Agent;
         $Agent=new agent;
       foreach($memberqualified as $member){
-       if($member->fname!==NULL){
+       if($member->fname!=NULL){
       $Agent->firstName=$member->fname;
-      $Agent->lastName=$member->fname;
+      $Agent->lastName=$member->LName;
       $Agent->userName=substr($member->fname,0,5);
       $Agent->signature=strtoupper(chr(rand(65,90)));
     DB::statement('UPDATE members Set status=1 where member_Id='.$member->member_Id);
-      $district_id=DB::select('SELECT id from districts where id NOT IN (SELECT district_Id from agents)
-      OR id=( SELECT  district_Id  FROM agents GROUP by district_Id order by COUNT(1) ASC LIMIT 1) ORDER BY RAND() LIMIT 5');
+    $district_id=DB::select('SELECT id from districts where id NOT IN (SELECT district_Id from agents)
+    OR id=( SELECT  district_Id  FROM agents GROUP by district_Id order by COUNT(1) ASC LIMIT 1) ORDER BY RAND() LIMIT 1');
    
-     foreach($district_id as $dist){
+   foreach($district_id as $dist){
                  global $distt;
                $distt=$dist->id;
             
-       }
-        $Agent->district_Id=$distt ;
-  
-        $distNoAgenthead=DB::select(DB::raw('SELECT id as nums from districts where id NOT IN (SELECT district_Id from agents)'));
-      
-         foreach ($distNoAgenthead as $head){
-                 global $headno;
-                 $headno=$head->nums;
-        }
-       if($headno==$Agent->district_Id && $headno!=NULL){
-           $Agent->role="Agent head";
-           $Agent->save();
-           return redirect()->back()->withSuccess('New member has been upgraded  successfully');;
-       }
-       else {
-           $Agent->role="Agent";
-           $Agent->save();
-           return redirect()->back()->withSuccess('New member has been upgraded  successfully');;
-       }
+    }
+    $Agent->district_Id=$distt ;
+    $Agent;
+    $distNoAgenthead=DB::select(DB::raw('SELECT id as nums from districts where '.$Agent->district_Id.' NOT IN (SELECT district_Id from agents)'));
+     global $headno;
+    // foreach ($distNoAgenthead as $head){
+                
+    //              $headno=$head->nums;
+    // }
+   if(!empty($distNoAgenthead) ){
+        $Agent->role="Agent head";
+    }
+    else {
+        $Agent->role="Agent";
+    }
+    $Agent->save();
+    if($Agent->save()){
+        
+        return redirect()->back()->withSuccess('New member has been added successfully');
+    }
        
     }
 
     
       
     }
-    return redirect()->back()->withSuccess('No member has the required criteria');         
+    return redirect()->back()->withErrors('No member has the required criteria');         
     }
 
 
 
     public function formdata(Request $request){
-        // defininf the rules order_by('upload_time', 'desc')->first();that must be followed when submitting data 
+        // defining the rules order_by('upload_time', 'desc')->first();that must be followed when submitting data 
         $this->validate($request,[
             'firstName'=>'required',
             'lastName'=>'required',
