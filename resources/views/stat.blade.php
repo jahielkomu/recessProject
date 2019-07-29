@@ -107,7 +107,7 @@
 					</li>
 				
                     <li style="background-color: rgb(0, 85, 182)">
-                        <a href="/" style="background: #3980b5;"><i class="fa fa-dashboard fa-3x"></i> Dashboard</a>
+                        <a href="/" style="background: #3980b5;"><i class="glyphicon glyphicon-home fa-3x"></i> Dashboard</a>
                     </li>
                     <li>
                         <a   href="/high" style="background: #3980b5;"><i class="fa fa-desktop fa-3x"></i> Hierarchy</a>
@@ -115,12 +115,12 @@
                         <li>
                         <a  href="/payment" style="background: #3980b5"><i class="fa fa-qrcode fa-3x"></i> Payments</a>
                     </li>
-<<<<<<< HEAD
+
                      <li>
                         <a  href="/reports" style="background: #3980b5"><i class="fa fa-qrcode fa-3x"></i> Reports</a>
                     </li>
-=======
->>>>>>> 219b12a331aacc230c2e8766938bd2cbd44c05e9
+
+
                    
 						   <li  >
                         <a   href="/stat" style="background: #104075;"><i class="fa fa-bar-chart-o fa-3x"></i> Statistics</a>
@@ -241,10 +241,10 @@
             </div>
          <!-- /. PAGE WRAPPER  -->
         </div>
-<<<<<<< HEAD
+
         
     
-=======
+
      <!-- /. WRAPPER  -->
     <!-- SCRIPTS -AT THE BOTOM TO REDUCE THE LOAD TIME-->
     <!-- JQUERY SCRIPTS -->
@@ -258,7 +258,6 @@
     <script src="assets/js/morris/morris.js"></script>
       <!-- CUSTOM SCRIPTS -->
     <script src="assets/js/custom.js"></script>
->>>>>>> 219b12a331aacc230c2e8766938bd2cbd44c05e9
      {!! Charts::scripts() !!}
 
      {!! $chart->script() !!}
