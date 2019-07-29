@@ -75,7 +75,7 @@
                         <a  href="/payment" style="background: #3980b5"><i class="fa fa-qrcode fa-3x"></i> Payments</a>
                     </li>
                      <li>
-                        <a  href="/report" style="background: #3980b5"><i class="fa fa-qrcode fa-3x"></i> Report</a>
+                        <a  href="/reports" style="background: #3980b5"><i class="fa fa-qrcode fa-3x"></i> Reports</a>
                     </li>
                    
 						   <li  >
@@ -170,7 +170,7 @@
             </div>
          <!-- /. PAGE WRAPPER  -->
         </div>
-        <
+        
     
      {!! Charts::scripts() !!}
 

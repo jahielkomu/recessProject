@@ -309,10 +309,17 @@ class HomeController extends Controller
       return view('report',compact('contrtable'));
     }
 
+//shows payment report
+    public function repo(Request $requests){
+      $paymentsstable=DB::select('select * from payments order by paymentDate desc');
+      return view('payment report',compact('paymentsstable'));
+    }
 
 
-
-
+// shows all reports
+     public function reports(){
+      return view ('reports');
+     }
     // show records
     public function records(Request $requests){
         $agentstable=DB::select('select * from districts,agents where id=district_Id and role order by name,role desc');
@@ -403,7 +410,7 @@ class HomeController extends Controller
 
 
     public function formdata(Request $request){
-        // defininf the rules order_by('upload_time', 'desc')->first();that must be followed when submitting data 
+        // defining the rules order_by('upload_time', 'desc')->first();that must be followed when submitting data 
         $this->validate($request,[
             'firstName'=>'required',
             'lastName'=>'required',

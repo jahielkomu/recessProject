@@ -73,6 +73,9 @@
                         <li>
                         <a  href="/payment" style="background: #3980b5"><i class="fa fa-qrcode fa-3x"></i> Payments</a>
                     </li>
+                    <li>
+                        <a  href="/reports" style="background: #3980b5"><i class="fa fa-qrcode fa-3x"></i> Reports</a>
+                    </li>
                    
                            <li  >
                         <a   href="/stat" style="background: #3980b5"><i class="fa fa-bar-chart-o fa-3x"></i> Statistics</a>
@@ -84,7 +87,7 @@
                     </li>
                      <li  >
                         <a  href="/record" style="background: #3980b5;"><i class="fa fa-table fa-3x"></i> Records</a>
-                    </li>s
+                    </li>
                     <li  >
                         <a  href="/upgrade" style="background: #3980b5"><i class="fa fa-edit fa-3x"></i> Upgrade</a>
                     </li>               
