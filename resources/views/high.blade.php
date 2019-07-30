@@ -64,7 +64,7 @@
             <div class="sidebar-collapse" style="background-color: #999">
                 <ul class="nav" id="main-menu" style="background: #3980b5">
         <li class="text-center" style="background: #3980b5">
-                    <img src="assets/img/find_user.png" class="user-image img-responsive"/>
+                    <img src="assets/img/logo.png" class="user-image img-responsive"/>
           </li>
         
           
