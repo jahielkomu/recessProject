@@ -60,14 +60,14 @@
      </script>
 
            <!-- /. NAV TOP  -->
-        <nav class="navbar-default navbar-side" role="navigation">
+        <!-- <nav class="navbar-default navbar-side" role="navigation">
             <div class="sidebar-collapse" style="background-color: #999">
                 <ul class="nav" id="main-menu" style="background: #3980b5">
         <li class="text-center" style="background: #3980b5">
                     <img src="assets/img/logo.png" class="user-image img-responsive"/>
           </li>
         
-          
+           -->
                     <li style="background-color: rgb(0, 85, 182)">
                         <a href="/" style="background: #3980b5;"><i class="glyphicon glyphicon-home fa-3x"></i> Dashboard</a>
                     </li>
